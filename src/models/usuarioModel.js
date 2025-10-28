@@ -1,32 +1,24 @@
-import { db } from "../config/db.js";
 
-export const UsuarioModel = {
-  async getAll() {
-    const [rows] = await db.query("SELECT * FROM usuario WHERE activo = 1");
-    return rows;
-  },
+module.exports = (sequelize, DataTypes) => {
+  const Usuario = sequelize.define('Usuario', {
+    usuarioid: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    rolid: { type: DataTypes.INTEGER, allowNull: false },
+    nombre: { type: DataTypes.STRING(100), allowNull: false },
+    email: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+    telefono: { type: DataTypes.STRING(30) },
+    dni: { type: DataTypes.STRING(20), unique: true },
+    direccion: { type: DataTypes.STRING(255) },
+    passwordhash: { type: DataTypes.STRING(255), allowNull: false },
+    activo: { type: DataTypes.BOOLEAN, defaultValue: true }
+  }, {
+    tableName: 'usuario',
+    timestamps: false
+  });
 
-  async getById(id) {
-    const [rows] = await db.query("SELECT * FROM usuario WHERE usuarioid = ?", [id]);
-    return rows[0];
-  },
+  Usuario.associate = models => {
+    Usuario.belongsTo(models.Rol, { foreignKey: 'rolid' });
+    Usuario.hasMany(models.Solicitud, { foreignKey: 'usuarioid' });
+  };
 
-  async create(usuario) {
-    const { rolid, nombre, email, telefono, dni, direccion, passwordhash } = usuario;
-    const [result] = await db.query(
-      "INSERT INTO usuario (rolid, nombre, email, telefono, dni, direccion, passwordhash) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [rolid, nombre, email, telefono, dni, direccion, passwordhash]
-    );
-    return { id: result.insertId, ...usuario };
-  },
-
-  async update(id, data) {
-    const [result] = await db.query("UPDATE usuario SET ? WHERE usuarioid = ?", [data, id]);
-    return result.affectedRows;
-  },
-
-  async delete(id) {
-    const [result] = await db.query("UPDATE usuario SET activo = 0 WHERE usuarioid = ?", [id]);
-    return result.affectedRows;
-  }
+  return Usuario;
 };
