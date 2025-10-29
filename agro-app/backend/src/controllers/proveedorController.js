@@ -4,7 +4,7 @@ const ProveedorResponseDTO = require('../DTOs/proveedor/proveedorResponseDTO');
 const {
   listarProveedores,
   crearProveedor
-} = require('../services/proveedorService');
+} = require('../../../../src/services/proveedorService');
 
 async function getProveedores(req, res) {
   try {
