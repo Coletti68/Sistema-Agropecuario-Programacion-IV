@@ -1,13 +1,38 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Insumo = sequelize.define('Insumo', {
-    insumoid: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    nombre: { type: DataTypes.STRING(100), allowNull: false },
-    descripcion: { type: DataTypes.TEXT },
-    precio_unitario: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-    stock_actual: { type: DataTypes.INTEGER, defaultValue: 0 },
-    proveedorid: { type: DataTypes.INTEGER, allowNull: false }
+    insumoid: { 
+      type: DataTypes.INTEGER, 
+      primaryKey: true,
+       autoIncrement: true 
+      },
+    nombre: { 
+      type: DataTypes.STRING(100),
+       allowNull: false 
+      },
+    descripcion: { 
+      type: DataTypes.TEXT
+     },
+    precio: {
+       type: DataTypes.DECIMAL(10,2),
+        allowNull: false 
+      },
+    proveedorid: {
+       type: DataTypes.INTEGER 
+      },
+    estado: {
+       type: DataTypes.INTEGER, 
+       defaultValue: 1 
+      },
+    stock: {
+       type: DataTypes.INTEGER 
+      },
+    stock_minimo: { 
+      type: DataTypes.INTEGER 
+    }
   }, {
+
+
     tableName: 'insumo',
     timestamps: false
   });
