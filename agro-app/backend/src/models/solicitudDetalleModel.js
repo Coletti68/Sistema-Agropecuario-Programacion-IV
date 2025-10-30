@@ -1,11 +1,34 @@
 // src/models/SolicitudDetalle.js
 module.exports = (sequelize, DataTypes) => {
   const SolicitudDetalle = sequelize.define('SolicitudDetalle', {
-    detalleid: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    solicitudid: { type: DataTypes.INTEGER, allowNull: false },
-    insumoid: { type: DataTypes.INTEGER, allowNull: false },
-    cantidad: { type: DataTypes.INTEGER, allowNull: false }
+    solicituddetalleid: { 
+      type: DataTypes.INTEGER,
+       primaryKey: true,
+        autoIncrement: true 
+      },
+    solicitudid: { 
+      type: DataTypes.INTEGER,
+       allowNull: false 
+      },
+    insumoid: {
+       type: DataTypes.INTEGER,
+        allowNull: false 
+      },
+    cantidad: {
+       type: DataTypes.INTEGER,
+        allowNull: false 
+      },
+    preciounitario: { 
+      type: DataTypes.DECIMAL(10,2),
+       allowNull: false 
+      },
+    activo: { 
+      type: DataTypes.BOOLEAN,
+       defaultValue: true 
+      }
   }, {
+
+
     tableName: 'solicituddetalle',
     timestamps: false
   });
@@ -14,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     SolicitudDetalle.belongsTo(models.Solicitud, { foreignKey: 'solicitudid' });
     SolicitudDetalle.belongsTo(models.Insumo, { foreignKey: 'insumoid' });
   };
+
 
   return SolicitudDetalle;
 };

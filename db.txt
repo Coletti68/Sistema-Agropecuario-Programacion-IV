@@ -6,7 +6,8 @@ use sist_agropecuario;
 -- ========================
 create table rol (
     rolid int auto_increment primary key,
-    nombre varchar(50) not null
+    nombre varchar(50) not null,
+    activo boolean default true
 );
 
 create table usuario (
@@ -28,7 +29,8 @@ create table usuario (
 create table cultivo (
     cultivoid int auto_increment primary key,
     nombre varchar(100) not null,
-    descripcion text
+    descripcion text,
+    activo boolean default true
 );
 
 create table usuariocultivo (
@@ -40,6 +42,18 @@ create table usuariocultivo (
     fechasiembra date,
     foreign key (usuarioid) references usuario(usuarioid),
     foreign key (cultivoid) references cultivo(cultivoid)
+);
+
+create table historialcultivo (
+    historialid int auto_increment primary key,
+    usuariocultivoid int not null,        -- referencia al cultivo actual
+    usuarioid int not null,                        -- quién hizo el cambio
+    latitud decimal(10,8) not null,
+    longitud decimal(11,8) not null,
+    fecha datetime default current_timestamp,
+    observaciones text,
+    foreign key (usuariocultivoid) references usuariocultivo(usuariocultivoid),
+    foreign key (usuarioid) references usuario(usuarioid)
 );
 
 -- ========================
@@ -73,6 +87,7 @@ create table solicitud (
     solicitudid int auto_increment primary key,
     usuarioid int not null, -- productor
     fechasolicitud datetime default current_timestamp,
+    activo boolean default true,
     foreign key (usuarioid) references usuario(usuarioid)
 );
 
@@ -83,9 +98,9 @@ create table solicituddetalle (
     cantidad int not null,
     preciounitario decimal(10,2) not null,
     foreign key (solicitudid) references solicitud(solicitudid),
+    activo boolean default true,
     foreign key (insumoid) references insumo(insumoid)
 );
-
 
 -- ANIADIR PAGO
 create table pago (
@@ -97,6 +112,7 @@ create table pago (
     metodo_pago varchar(50),              -- 'efectivo', 'transferencia', 'tarjeta', etc.
     estado_pago varchar(20) default 'pendiente', -- 'pendiente', 'completado', 'fallido'
     observaciones text,
+    activo boolean default true,
     foreign key (solicitudid) references solicitud(solicitudid),
     foreign key (usuarioid) references usuario(usuarioid)
 );
@@ -122,5 +138,8 @@ create table comprobanteentrega (
     solicitudid int not null,
     fechaentrega datetime,
     total decimal(12,2),
+    entregadopor int not null,
+    recibidopor int not null,
+    activo boolean default true,
     foreign key (solicitudid) references solicitud(solicitudid)
 );
