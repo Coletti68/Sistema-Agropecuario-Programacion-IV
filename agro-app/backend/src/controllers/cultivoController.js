@@ -1,54 +1,51 @@
-// src/controllers/cultivoController.js
-const CultivoCreateDTO = require('../DTOs/cultivo/CultivoCreateDTO');
-const CultivoResponseDTO = require('../DTOs/cultivo/CultivoResponseDTO');
-const {
+const cultivoService = require ('../services/cultivoService');
+
+
+const listarCultivos = async (req,res,next) => {
+  try {
+    const cultivos = await cultivoService.listarCultivos();
+    res.status(200).json(cultivos);
+  } catch (err) {
+    next (err);
+  }
+  
+};
+
+const crearCultivo = async (req,res,next) => {
+  try {
+    const cultivo = await cultivoService.crearCultivo(req.validatedBody);
+    res.status(200).json(cultivo);
+  } catch (err) {
+    next(err);
+  }
+  
+};
+
+const actualizarCultivo = async (req, res, next) => {
+  try {
+    const cultivo = await cultivoService.actualizarCultivo(req.validated.params.id, req.validatedBody);
+    res.status(200).json(cultivo);
+  } catch (err) {
+    next(err);
+  }
+  
+};
+
+const eliminarCultivo = async (req, res ,next) => {
+  try {
+    await cultivoService.eliminarCultivo(req.validated.params.id);
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+    
+  }
+
+};
+
+module.exports = {
   listarCultivos,
   crearCultivo,
   actualizarCultivo,
   eliminarCultivo
-} = require('../services/cultivoService');
-
-async function getCultivos(req, res) {
-  try {
-    const cultivos = await listarCultivos();
-    res.json(cultivos.map(c => new CultivoResponseDTO(c)));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function postCultivo(req, res) {
-  try {
-    const dto = new CultivoCreateDTO(req.body);
-    const nuevo = await crearCultivo(dto);
-    res.status(201).json(new CultivoResponseDTO(nuevo));
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-}
-
-async function putCultivo(req, res) {
-  try {
-    const dto = new CultivoCreateDTO(req.body);
-    const actualizado = await actualizarCultivo(req.params.id, dto);
-    res.json(new CultivoResponseDTO(actualizado));
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-}
-
-async function deleteCultivo(req, res) {
-  try {
-    await eliminarCultivo(req.params.id);
-    res.sendStatus(204);
-  } catch (error) {
-    res.status(404).json({ error: error.message });
-  }
-}
-
-module.exports = {
-  getCultivos,
-  postCultivo,
-  putCultivo,
-  deleteCultivo
 };
+

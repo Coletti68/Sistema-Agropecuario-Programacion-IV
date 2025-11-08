@@ -1,12 +1,183 @@
-
 const express = require('express');
 const router = express.Router();
+const solicitudController = require('../controllers/solicitudController');
+const validate = require('../middlewares/validate');
 const {
-  postSolicitud,
-  getSolicitudesPorUsuario
-} = require('../controllers/solicitudController');
+  usuarioIdParamSchema,
+  solicitudIdParamSchema,
+  idParamSchema,
+  estadoIdParamSchema
+} = require('../validations/paramSchemas');
+const { cambiarEstadoSchema } = require('../validations/solicitudValidation');
 
-router.post('/', postSolicitud);
-router.get('/usuario/:usuarioid', getSolicitudesPorUsuario);
+/**
+ * @swagger
+ * /solicitudes:
+ *   get:
+ *     summary: Listar todas las solicitudes
+ *     tags: [Solicitudes]
+ *     responses:
+ *       200:
+ *         description: Lista completa de solicitudes
+ */
+router.get('/solicitudes', solicitudController.listarSolicitudes);
+
+/**
+ * @swagger
+ * /solicitudes/detalles:
+ *   get:
+ *     summary: Listar todas las solicitudes con sus detalles
+ *     tags: [Solicitudes]
+ *     responses:
+ *       200:
+ *         description: Lista de solicitudes con detalles
+ */
+router.get('/solicitudes/detalles', solicitudController.listarSolicitudesConDetalles);
+
+/**
+ * @swagger
+ * /solicitudes/estado/{estadoId}:
+ *   get:
+ *     summary: Listar solicitudes por estado
+ *     tags: [Solicitudes]
+ *     parameters:
+ *       - in: path
+ *         name: estadoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del estado
+ *     responses:
+ *       200:
+ *         description: Lista de solicitudes filtradas por estado
+ */
+router.get(
+  '/solicitudes/estado/:estadoId',
+  validate({ params: estadoIdParamSchema }),
+  solicitudController.listarSolicitudesPorEstado
+);
+
+/**
+ * @swagger
+ * /solicitudes/{usuarioId}:
+ *   post:
+ *     summary: Crear una nueva solicitud para un usuario
+ *     tags: [Solicitudes]
+ *     parameters:
+ *       - in: path
+ *         name: usuarioId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario que realiza la solicitud
+ *     responses:
+ *       201:
+ *         description: Solicitud creada exitosamente
+ */
+router.post(
+  '/solicitudes/:usuarioId',
+  validate({ params: usuarioIdParamSchema }),
+  solicitudController.crearSolicitud
+);
+
+/**
+ * @swagger
+ * /solicitudes/usuario/{usuarioId}:
+ *   get:
+ *     summary: Listar todas las solicitudes de un usuario
+ *     tags: [Solicitudes]
+ *     parameters:
+ *       - in: path
+ *         name: usuarioId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Lista de solicitudes del usuario
+ */
+router.get(
+  '/solicitudes/usuario/:usuarioId',
+  validate({ params: usuarioIdParamSchema }),
+  solicitudController.listarSolicitudesPorUsuario
+);
+
+/**
+ * @swagger
+ * /solicitudes/{solicitudId}:
+ *   get:
+ *     summary: Obtener una solicitud por ID
+ *     tags: [Solicitudes]
+ *     parameters:
+ *       - in: path
+ *         name: solicitudId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la solicitud
+ *     responses:
+ *       200:
+ *         description: Solicitud encontrada
+ *       404:
+ *         description: Solicitud no encontrada
+ */
+router.get(
+  '/solicitudes/:solicitudId',
+  validate({ params: solicitudIdParamSchema }),
+  solicitudController.obtenerSolicitudesPorId
+);
+
+/**
+ * @swagger
+ * /solicitudes/{id}/cancelar:
+ *   put:
+ *     summary: Cancelar una solicitud
+ *     tags: [Solicitudes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la solicitud a cancelar
+ *     responses:
+ *       200:
+ *         description: Solicitud cancelada exitosamente
+ */
+router.put(
+  '/solicitudes/:id/cancelar',
+  validate({ params: idParamSchema }),
+  solicitudController.cancelarSolicitud
+);
+
+/**
+ * @swagger
+ * /solicitudes/{id}/estado:
+ *   put:
+ *     summary: Cambiar el estado de una solicitud
+ *     tags: [Solicitudes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la solicitud
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CambioEstado'
+ *     responses:
+ *       200:
+ *         description: Estado actualizado exitosamente
+ */
+router.put(
+  '/solicitudes/:id/estado',
+  validate({ params: idParamSchema, body: cambiarEstadoSchema }),
+  solicitudController.cambiarEstadoSolicitud
+);
 
 module.exports = router;
