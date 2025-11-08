@@ -1,31 +1,25 @@
-// src/controllers/proveedorController.js
-const ProveedorCreateDTO = require('../DTOs/proveedor/proveedorCreateDTO');
-const ProveedorResponseDTO = require('../DTOs/proveedor/proveedorResponseDTO');
-const {
-  listarProveedores,
-  crearProveedor
-} = require('../../../../src/services/proveedorService');
+const proveedorService = require ('../services/proveedorService');
 
-async function getProveedores(req, res) {
+const listarProveedores = async (req,res,next) => {
   try {
-    const proveedores = await listarProveedores();
-    res.json(proveedores.map(p => new ProveedorResponseDTO(p)));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const proveedores = await proveedorService.listarProveedores();
+    res.status(200).json(proveedores);
+  } catch (err) {
+    next(err);
   }
-}
+};
 
-async function postProveedor(req, res) {
+const crearProveedor = async (req,res,next) => {
   try {
-    const dto = new ProveedorCreateDTO(req.body);
-    const nuevo = await crearProveedor(dto);
-    res.status(201).json(new ProveedorResponseDTO(nuevo));
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const nuevo = await proveedorService.crearProveedor(req.validatedBody);
+    res.status(201).json(nuevo);
+  } catch (err) {
+    next(err);
   }
-}
+};
 
 module.exports = {
-  getProveedores,
-  postProveedor
+  listarProveedores,
+  crearProveedor
 };
+

@@ -1,31 +1,24 @@
-// src/controllers/pagoController.js
-const PagoCreateDTO = require('../DTOs/pago/pagoCreateDTO');
-const PagoResponseDTO = require('../DTOs/pago/pagoResponseDTO');
-const {
-  registrarPago,
-  obtenerPagosPorSolicitud
-} = require('../services/pagoService');
+const pagoService = require('../services/pagoService');
 
-async function postPago(req, res) {
+const registrarPago = async (req,res,next) => {
   try {
-    const dto = new PagoCreateDTO(req.body);
-    const nuevo = await registrarPago(dto);
-    res.status(201).json(new PagoResponseDTO(nuevo));
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const pago = await pagoService.registrarPago(req.validatedBody);
+    res.status(201).json(pago);
+  } catch (err) {
+    next(err);
   }
-}
+};
 
-async function getPagosPorSolicitud(req, res) {
+const obtenerPagosPorSolicitud = async (req,res,next) => {
   try {
-    const pagos = await obtenerPagosPorSolicitud(req.params.solicitudid);
-    res.json(pagos.map(p => new PagoResponseDTO(p)));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const listar = await pagoService.obtenerPagosPorSolicitud(req.validated.params.solicitudId);
+    res.status(200).json(listar);
+  } catch (err) {
+    next(err);
   }
-}
+};
 
 module.exports = {
-  postPago,
-  getPagosPorSolicitud
+  registrarPago,
+  obtenerPagosPorSolicitud
 };

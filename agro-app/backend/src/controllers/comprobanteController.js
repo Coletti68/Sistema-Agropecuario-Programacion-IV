@@ -1,31 +1,25 @@
-// src/controllers/comprobanteController.js
-const ComprobanteCreateDTO = require('../DTOs/comprobante/comprobanteCreateDTO');
-const ComprobanteResponseDTO = require('../DTOs/comprobante/comprobanteResponseDTO');
-const {
-  registrarComprobante,
-  obtenerComprobantesPorSolicitud
-} = require('../services/comprobanteService');
+const comprobanteService = require('../services/comprobanteService');
 
-async function postComprobante(req, res) {
-  try {
-    const dto = new ComprobanteCreateDTO(req.body);
-    const nuevo = await registrarComprobante(dto);
-    res.status(201).json(new ComprobanteResponseDTO(nuevo));
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+const registrarComprobante = async (req,res,next) => {
+try {
+  const nuevo = await comprobanteService.registrarComprobante(req.validatedBody);
+  res.status(200).json(nuevo);
+} catch (err) {
+  next(err);
 }
+};
 
-async function getComprobantesPorSolicitud(req, res) {
+const obtenerComprobantesPorSolicitud = async (req,res,next) => {
   try {
-    const comprobantes = await obtenerComprobantesPorSolicitud(req.params.solicitudid);
-    res.json(comprobantes.map(c => new ComprobanteResponseDTO(c)));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+   const comprobantes = await comprobanteService.obtenerComprobantesPorSolicitud(req.validated.params.solicitudId);
+   res.status(200).json(comprobantes); 
+  } catch (err) {
+    next(err);
   }
-}
+  
+};
 
 module.exports = {
-  postComprobante,
-  getComprobantesPorSolicitud
+  registrarComprobante,
+  obtenerComprobantesPorSolicitud
 };
