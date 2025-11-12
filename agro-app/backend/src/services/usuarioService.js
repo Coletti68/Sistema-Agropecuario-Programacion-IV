@@ -1,6 +1,44 @@
-// src/services/usuarioService.js
-const { Usuario } = require('../models/usuarioModel');
+const sequelize = require('../config/db');
+const Usuario = require('../models/usuarioModel')(sequelize);
 
+// 🔍 Buscar por email
+async function obtenerUsuarioPorEmail(email) {
+  try {
+    return await Usuario.findOne({ where: { email } });
+  } catch (error) {
+    console.error("Error al buscar usuario por email:", error.message);
+    throw new Error("No se pudo buscar el usuario por email");
+  }
+}
+
+// 🔍 Buscar por DNI
+async function obtenerUsuarioPorDni(dni) {
+  try {
+    return await Usuario.findOne({ where: { dni } });
+  } catch (error) {
+    console.error("Error al buscar usuario por DNI:", error.message);
+    throw new Error("No se pudo buscar el usuario por DNI");
+  }
+}
+
+// 🆕 Crear usuario (sin DTO)
+async function crearUsuario(data) {
+  const camposObligatorios = ['rolid', 'nombre', 'email', 'telefono', 'dni', 'direccion', 'passwordhash'];
+  for (const campo of camposObligatorios) {
+    if (!data[campo] || typeof data[campo] !== 'string' && typeof data[campo] !== 'number') {
+      throw new Error(`El campo '${campo}' es obligatorio`);
+    }
+}
+
+  try {
+    return await Usuario.create(data);
+  } catch (error) {
+    console.error("Error al crear usuario:", error.message);
+    throw new Error("No se pudo crear el usuario");
+  }
+}
+
+// 🧾 Listar todos
 async function listarUsuarios() {
   try {
     return await Usuario.findAll();
@@ -10,24 +48,7 @@ async function listarUsuarios() {
   }
 }
 
-async function registrarUsuario(dto) {
-  try {
-    dto.validate();
-    return await Usuario.create({
-      rolid: dto.rolid,
-      nombre: dto.nombre,
-      email: dto.email,
-      telefono: dto.telefono,
-      dni: dto.dni,
-      direccion: dto.direccion,
-      passwordhash: dto.passwordhash
-    });
-  } catch (error) {
-    console.error("Error al registrar usuario:", error.message);
-    throw new Error("No se pudo registrar el usuario");
-  }
-}
-
+// 🔍 Buscar por ID
 async function obtenerUsuarioPorId(id) {
   try {
     const usuario = await Usuario.findByPk(id);
@@ -40,7 +61,9 @@ async function obtenerUsuarioPorId(id) {
 }
 
 module.exports = {
+  obtenerUsuarioPorEmail,
+  obtenerUsuarioPorDni,
+  crearUsuario,
   listarUsuarios,
-  registrarUsuario,
   obtenerUsuarioPorId
 };
