@@ -29,7 +29,7 @@ async function listarSolicitudes() {
 
 async function listarSolicitudesPorUsuario(usuarioId) {
   try {
-    if (!usuarioId) throw new Error('usuarioId es obligatorio');
+  
     return await Solicitud.findAll({
       where: { usuarioid: usuarioId },
       include: [{ model: EstadoSolicitud, attributes: ['nombre'] }]
@@ -42,7 +42,7 @@ async function listarSolicitudesPorUsuario(usuarioId) {
 
 async function obtenerSolicitudPorId(solicitudId) {
   try {
-    if (!solicitudId) throw new Error('solicitudId es obligatorio');
+    
     const solicitud = await Solicitud.findByPk(solicitudId, {
       include: [
         { model: Usuario, attributes: ['nombre'] },
@@ -59,7 +59,7 @@ async function obtenerSolicitudPorId(solicitudId) {
 
 async function cancelarSolicitud(solicitudId) {
   try {
-    if (!solicitudId) throw new Error('solicitudId es obligatorio');
+    
     const [actualizados] = await Solicitud.update({ activo: false }, { where: { solicitudid: solicitudId } });
     if (actualizados === 0) throw new Error('Solicitud no encontrada o ya inactiva');
     return { mensaje: 'Solicitud cancelada exitosamente' };
@@ -71,9 +71,7 @@ async function cancelarSolicitud(solicitudId) {
 
 async function cambiarEstadoSolicitud(solicitudId, estadoId, usuarioId) {
   try {
-    if (!solicitudId || !estadoId || !usuarioId) {
-      throw new Error('solicitudId, estadoId y usuarioId son obligatorios');
-    }
+   
     await Solicitud.update({ estadosolicitudid: estadoId }, { where: { solicitudid: solicitudId } });
     await HistorialEstadoSolicitud.create({
       solicitudid: solicitudId,
@@ -103,7 +101,6 @@ async function listarSolicitudesConDetalles() {
 
 async function listarSolicitudesPorEstado(estadoId) {
   try {
-    if (!estadoId) throw new Error('estadoId es obligatorio');
     return await Solicitud.findAll({
       where: { estadosolicitudid: estadoId },
       include: [{ model: Usuario, attributes: ['nombre'] }]

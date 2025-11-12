@@ -3,12 +3,9 @@ const { Usuario } = require('../models/usuarioModel');
 const { UsuarioCultivo } = require('../models/usuarioCultivoModel');
 const { Cultivo } = require('../models/cultivoModel');
 
-async function registrarCambio(dto) {
+async function registrarCambio(data) {
   try {
-    if (!dto.usuariocultivoid || !dto.usuarioid || !dto.latitud || !dto.longitud) {
-      throw new Error('Campos obligatorios: usuariocultivoid, usuarioid, latitud, longitud');
-    }
-    return await historialcultivo.create(dto);
+    return await HistorialCultivo.create(data);
   } catch (error) {
     console.error('Error al registrar cambio:', error.message);
     throw new Error('No se pudo registrar el cambio en el historial');
@@ -17,10 +14,10 @@ async function registrarCambio(dto) {
 
 async function listarHistorial() {
   try {
-    return await historialcultivo.findAll({
+    return await HistorialCultivo.findAll({
       include: [
-        { model: usuario, attributes: ['nombre', 'email'] },
-        { model: usuariocultivo, include: [{ model: cultivo, attributes: ['nombre'] }] }
+        { model: Usuario, attributes: ['nombre', 'email'] },
+        { model: UsuarioCultivo, include: [{ model: Cultivo, attributes: ['nombre'] }] }
       ]
     });
   } catch (error) {
@@ -31,11 +28,10 @@ async function listarHistorial() {
 
 async function obtenerPorId(historialId) {
   try {
-    if (!historialId) throw new Error('historialId es obligatorio');
-    const registro = await historialcultivo.findByPk(historialId, {
+    const registro = await HistorialCultivo.findByPk(historialId, {
       include: [
-        { model: usuario, attributes: ['nombre'] },
-        { model: usuariocultivo, include: [{ model: cultivo, attributes: ['nombre'] }] }
+        { model: Usuario, attributes: ['nombre'] },
+        { model: UsuarioCultivo, include: [{ model: Cultivo, attributes: ['nombre'] }] }
       ]
     });
     if (!registro) throw new Error('Registro no encontrado');
@@ -48,8 +44,7 @@ async function obtenerPorId(historialId) {
 
 async function eliminarRegistro(historialId) {
   try {
-    if (!historialId) throw new Error('historialId es obligatorio');
-    const eliminados = await historialcultivo.destroy({ where: { historialid: historialId } });
+    const eliminados = await HistorialCultivo.destroy({ where: { historialid: historialId } });
     if (eliminados === 0) throw new Error('Registro no encontrado');
     return { mensaje: 'Registro eliminado exitosamente' };
   } catch (error) {
@@ -60,10 +55,9 @@ async function eliminarRegistro(historialId) {
 
 async function listarPorUsuario(usuarioId) {
   try {
-    if (!usuarioId) throw new Error('usuarioId es obligatorio');
-    return await historialcultivo.findAll({
+    return await HistorialCultivo.findAll({
       where: { usuarioid: usuarioId },
-      include: [{ model: usuariocultivo, include: [{ model: cultivo, attributes: ['nombre'] }] }]
+      include: [{ model: UsuarioCultivo, include: [{ model: Cultivo, attributes: ['nombre'] }] }]
     });
   } catch (error) {
     console.error('Error al listar historial por usuario:', error.message);
@@ -73,10 +67,9 @@ async function listarPorUsuario(usuarioId) {
 
 async function listarPorAsignacion(usuariocultivoId) {
   try {
-    if (!usuariocultivoId) throw new Error('usuariocultivoId es obligatorio');
-    return await historialcultivo.findAll({
+    return await HistorialCultivo.findAll({
       where: { usuariocultivoid: usuariocultivoId },
-      include: [{ model: usuario, attributes: ['nombre'] }]
+      include: [{ model: Usuario, attributes: ['nombre'] }]
     });
   } catch (error) {
     console.error('Error al listar historial por asignación:', error.message);
@@ -86,12 +79,11 @@ async function listarPorAsignacion(usuariocultivoId) {
 
 async function listarConDetalles(usuariocultivoId) {
   try {
-    if (!usuariocultivoId) throw new Error('usuariocultivoId es obligatorio');
-    return await historialcultivo.findAll({
+    return await HistorialCultivo.findAll({
       where: { usuariocultivoid: usuariocultivoId },
       include: [
-        { model: usuario, attributes: ['nombre', 'email'] },
-        { model: usuariocultivo, include: [{ model: cultivo, attributes: ['nombre', 'descripcion'] }] }
+        { model: Usuario, attributes: ['nombre', 'email'] },
+        { model: UsuarioCultivo, include: [{ model: Cultivo, attributes: ['nombre', 'descripcion'] }] }
       ]
     });
   } catch (error) {

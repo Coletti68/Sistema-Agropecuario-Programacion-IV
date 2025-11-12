@@ -12,12 +12,15 @@ async function listarProveedores() {
 
 async function crearProveedor(dto) {
   try {
-    dto.validate();
+    if (!data || typeof data !== 'object') {
+      throw new Error('Datos de proveedor inválidos');
+    }
+
     return await Proveedor.create({
-      nombre: dto.nombre,
-      contacto: dto.contacto,
-      telefono: dto.telefono,
-      direccion: dto.direccion
+      nombre: data.nombre,
+      contacto: data.contacto,
+      telefono: data.telefono,
+      direccion: data.direccion
     });
   } catch (error) {
     console.error("Error al crear proveedor:", error.message);

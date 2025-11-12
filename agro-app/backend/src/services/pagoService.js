@@ -1,15 +1,17 @@
 // src/services/pagoService.js
 const { Pago } = require('../models/pagoModel');
 
-async function registrarPago(dto) {
+async function registrarPago(data) {
   try {
-    dto.validate();
+    if(!data || typeof data !== 'object'){
+      throw new Error('Datos de proveedor invalidos');
+    }
     return await Pago.create({
-      solicitudid: dto.solicitudid,
-      metodo: dto.metodo,
-      monto: dto.monto,
-      fecha_pago: dto.fecha_pago,
-      confirmado: dto.confirmado
+      solicitudid: data.solicitudid,
+      metodo: data.metodo,
+      monto: data.monto,
+      fecha_pago: data.fecha_pago,
+      confirmado: data.confirmado
     });
   } catch (error) {
     console.error("Error al registrar pago:", error.message);
