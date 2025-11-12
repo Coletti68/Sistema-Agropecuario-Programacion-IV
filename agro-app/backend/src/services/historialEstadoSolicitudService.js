@@ -5,9 +5,6 @@ const { Solicitud } = require('../models/solicitudModel');
 
 async function registrarCambioEstado(solicitudId, estadoId, usuarioId) {
   try {
-    if (!solicitudId || !estadoId || !usuarioId) {
-      throw new Error('solicitudId, estadoId y usuarioId son obligatorios');
-    }
     return await HistorialEstadoSolicitud.create({
       solicitudid: solicitudId,
       estadosolicitudid: estadoId,
@@ -36,7 +33,6 @@ async function listarHistorial() {
 
 async function obtenerPorId(historialId) {
   try {
-    if (!historialId) throw new Error('historialId es obligatorio');
     const registro = await HistorialEstadoSolicitud.findByPk(historialId, {
       include: [
         { model: Solicitud, attributes: ['solicitudid'] },
@@ -54,7 +50,6 @@ async function obtenerPorId(historialId) {
 
 async function listarPorSolicitud(solicitudId) {
   try {
-    if (!solicitudId) throw new Error('solicitudId es obligatorio');
     return await HistorialEstadoSolicitud.findAll({
       where: { solicitudid: solicitudId },
       include: [

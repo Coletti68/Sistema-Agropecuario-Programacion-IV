@@ -12,26 +12,32 @@ async function listarCultivos() {
 
 async function crearCultivo(dto) {
   try {
-    dto.validate();
+    if (!data || typeof data !== 'object') {
+      throw new Error('Datos de cultivo inválidos');
+    }
+
     return await Cultivo.create({
-      nombre: dto.nombre,
-      descripcion: dto.descripcion
+      nombre: data.nombre,
+      descripcion: data.descripcion
     });
+
   } catch (error) {
     console.error("Error al crear cultivo:", error.message);
     throw new Error("No se pudo crear el cultivo");
   }
 }
 
-async function actualizarCultivo(id, dto) {
+async function actualizarCultivo(id, data) {
   try {
-    dto.validate();
     const cultivo = await Cultivo.findByPk(id);
-    if (!cultivo) throw new Error("Cultivo no encontrado");
+    if (!cultivo) throw new Error('Cultivo no encontrado');
+
     await cultivo.update({
-      nombre: dto.nombre,
-      descripcion: dto.descripcion
+      nombre: data.nombre,
+      descripcion: data.descripcion
     });
+
+
     return cultivo;
   } catch (error) {
     console.error("Error al actualizar cultivo:", error.message);
@@ -42,8 +48,11 @@ async function actualizarCultivo(id, dto) {
 async function eliminarCultivo(id) {
   try {
     const cultivo = await Cultivo.findByPk(id);
-    if (!cultivo) throw new Error("Cultivo no encontrado");
+    if (!cultivo) throw new Error('Cultivo no encontrado');
+
     await cultivo.destroy();
+    return { mensaje: 'Cultivo eliminado exitosamente' };
+
   } catch (error) {
     console.error("Error al eliminar cultivo:", error.message);
     throw new Error("No se pudo eliminar el cultivo");

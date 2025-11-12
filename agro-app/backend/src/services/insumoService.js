@@ -10,16 +10,21 @@ async function listarInsumos() {
   }
 }
 
-async function crearInsumo(dto) {
+async function crearInsumo(data) {
   try {
-    dto.validate();
+    if (!data || typeof data !== 'object') {
+      throw new Error('Datos de insumo inválidos');
+    }
+
     return await Insumo.create({
-      nombre: dto.nombre,
-      descripcion: dto.descripcion,
-      precio_unitario: dto.precio_unitario,
-      stock_actual: dto.stock_actual,
-      proveedorid: dto.proveedorid
+      nombre: data.nombre,
+      descripcion: data.descripcion,
+      precio_unitario: data.precio_unitario,
+      stock_actual: data.stock_actual,
+      proveedorid: data.proveedorid
     });
+
+
   } catch (error) {
     console.error("Error al crear insumo:", error.message);
     throw new Error("No se pudo registrar el insumo");
@@ -28,15 +33,16 @@ async function crearInsumo(dto) {
 
 async function actualizarInsumo(insumoId, dto) {
   try {
-    dto.validate();
+    
     const insumo = await Insumo.findByPk(insumoId);
     if (!insumo) throw new Error("Insumo no encontrado");
     await insumo.update({
-      descripcion: dto.descripcion,
-      precio_unitario: dto.precio_unitario,
-      stock_actual: dto.stock_actual,
-      proveedorid: dto.proveedorid
+      descripcion: data.descripcion,
+      precio_unitario: data.precio_unitario,
+      stock_actual: data.stock_actual,
+      proveedorid: data.proveedorid
     });
+
     return insumo;
   } catch (error) {
     console.error("Error al actualizar insumo:", error.message);

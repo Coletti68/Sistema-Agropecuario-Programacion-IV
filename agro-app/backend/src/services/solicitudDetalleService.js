@@ -4,9 +4,6 @@ const { Solicitud } = require('../models/solicitudModel');
 
 async function agregarDetalle(solicitudId, insumoId, cantidad, precioUnitario) {
   try {
-    if (!solicitudId || !insumoId || !cantidad || !precioUnitario) {
-      throw new Error('Todos los campos son obligatorios');
-    }
     return await SolicitudDetalle.create({
       solicitudid: solicitudId,
       insumoid: insumoId,
@@ -21,7 +18,6 @@ async function agregarDetalle(solicitudId, insumoId, cantidad, precioUnitario) {
 
 async function listarDetallesPorSolicitud(solicitudId) {
   try {
-    if (!solicitudId) throw new Error('solicitudId es obligatorio');
     return await SolicitudDetalle.findAll({
       where: { solicitudid: solicitudId },
       include: [{ model: Insumo, attributes: ['nombre', 'descripcion', 'precio'] }]
@@ -34,7 +30,6 @@ async function listarDetallesPorSolicitud(solicitudId) {
 
 async function obtenerDetallePorId(detalleId) {
   try {
-    if (!detalleId) throw new Error('detalleId es obligatorio');
     const detalle = await SolicitudDetalle.findByPk(detalleId, {
       include: [{ model: Insumo, attributes: ['nombre'] }]
     });
@@ -48,7 +43,7 @@ async function obtenerDetallePorId(detalleId) {
 
 async function actualizarCantidad(detalleId, nuevaCantidad) {
   try {
-    if (!detalleId || !nuevaCantidad) throw new Error('detalleId y nuevaCantidad son obligatorios');
+  
     const [actualizados] = await SolicitudDetalle.update(
       { cantidad: nuevaCantidad },
       { where: { solicituddetalleid: detalleId } }
@@ -63,7 +58,6 @@ async function actualizarCantidad(detalleId, nuevaCantidad) {
 
 async function actualizarPrecio(detalleId, nuevoPrecio) {
   try {
-    if (!detalleId || !nuevoPrecio) throw new Error('detalleId y nuevoPrecio son obligatorios');
     const [actualizados] = await SolicitudDetalle.update(
       { preciounitario: nuevoPrecio },
       { where: { solicituddetalleid: detalleId } }
@@ -78,7 +72,6 @@ async function actualizarPrecio(detalleId, nuevoPrecio) {
 
 async function eliminarDetalle(detalleId) {
   try {
-    if (!detalleId) throw new Error('detalleId es obligatorio');
     const eliminados = await SolicitudDetalle.destroy({ where: { solicituddetalleid: detalleId } });
     if (eliminados === 0) throw new Error('Detalle no encontrado');
     return { mensaje: 'Detalle eliminado exitosamente' };

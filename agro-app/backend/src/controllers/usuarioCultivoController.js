@@ -49,7 +49,7 @@ const actualizarAsignacion = async (req, res, next) => {
 const eliminarAsignacion = async (req,res,next) => {
     try {
         const eliminar = await usuarioCultivoService.eliminarAsignacion(req.validated.params.id);
-        res.status(201).json(eliminar)
+        res.status(200).json(eliminar)
     } catch (err) {
         next(err);
     }

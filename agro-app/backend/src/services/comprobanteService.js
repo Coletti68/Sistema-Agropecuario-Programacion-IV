@@ -1,16 +1,20 @@
 // src/services/comprobanteService.js
 const { ComprobanteEntrega } = require('../models/comprobanteEntregaModel');
 
-async function registrarComprobante(dto) {
+async function registrarComprobante(data) {
   try {
-    dto.validate();
+    if (!data || typeof data !== 'object') {
+      throw new Error('Datos de comprobante inválidos');
+    }
+
     return await ComprobanteEntrega.create({
-      solicitudid: dto.solicitudid,
-      fecha_entrega: dto.fecha_entrega,
-      entregado_por: dto.entregado_por,
-      recibido_por: dto.recibido_por,
-      observaciones: dto.observaciones
+      solicitudid: data.solicitudid,
+      fecha_entrega: data.fecha_entrega,
+      entregado_por: data.entregado_por,
+      recibido_por: data.recibido_por,
+      observaciones: data.observaciones
     });
+
   } catch (error) {
     console.error("Error al registrar comprobante:", error.message);
     throw new Error("No se pudo registrar el comprobante");
