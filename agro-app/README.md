@@ -5,3 +5,4 @@ Dependencias instaladas hasta el momento:
 - *mysql2*: Driver que permite a Sequelize conectarse con MySQL.
 - *dotenv*: Carga variables de entorno desde un archivo .env, evitando hardcodear credenciales sensibles.
 - *bcryp*: Sirve para registrar las contrasenias en el registro.
+- *swagger-jsdoc*: Generador de documentacion Swagger

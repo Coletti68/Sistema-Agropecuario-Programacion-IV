@@ -1,46 +1,27 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'API de Gestión de Solicitudes',
-    version: '1.0.0',
-    description: 'Documentación de la API para el sistema de gestión de solicitudes, cultivos e insumos'
-  },
-  servers: [
-    {
-      url: 'http://localhost:3000',
-      description: 'Servidor local'
-    }
-  ],
-  components: {
-    schemas: {
-      Detalle: {
-        type: 'object',
-        properties: {
-          insumoid: { type: 'integer' },
-          cantidad: { type: 'number' },
-          preciounitario: { type: 'number' }
-        },
-        required: ['insumoid', 'cantidad', 'preciounitario']
-      },
-      CambioEstado: {
-        type: 'object',
-        properties: {
-          estadoid: { type: 'integer' },
-          usuarioid: { type: 'integer' }
-        },
-        required: ['estadoid', 'usuarioid']
-      }
-    }
-  }
-};
-
 const options = {
-  swaggerDefinition,
-  apis: ['./routes/*.js']
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Agropecuario',
+      version: '1.0.0',
+      description: 'Documentación de la API del sistema agropecuario',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Servidor local',
+      },
+    ],
+    components: {
+      schemas: {}, //sirve para escribir aca una unica vez un mismo schema y despues llamarlo en cada endpoint, en vez de definirlos uno x uno.
+    },
+  },
+  apis: ['./src/routes/**/*.js'], // Le dice a swagger donde buscar los comentarios para generar la documentacion. Busca todos los arc '.js' dentro d src/routes.
 };
 
+//genera el objeto swagger y lo importa
 const swaggerSpec = swaggerJSDoc(options);
 
 module.exports = swaggerSpec;

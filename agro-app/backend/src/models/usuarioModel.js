@@ -1,47 +1,49 @@
+const { DataTypes } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   const Usuario = sequelize.define('Usuario', {
-    usuarioid: { type: DataTypes.INTEGER,
-       primaryKey: true, 
-       autoIncrement: true 
-      },
-    rolid: { 
+    usuarioid: {
       type: DataTypes.INTEGER,
-       allowNull: false 
-      },
-    nombre: { 
+      primaryKey: true,
+      autoIncrement: true
+    },
+    rolid: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    nombre: {
       type: DataTypes.STRING(100),
-       allowNull: false 
-      },
-    email: { 
-      type: DataTypes.STRING(100), 
-      allowNull: false, 
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
       unique: true
     },
-    telefono: { 
-      type: DataTypes.STRING(30) 
+    telefono: {
+      type: DataTypes.STRING(30)
     },
-    dni: { 
+    dni: {
       type: DataTypes.STRING(20),
-       unique: true 
-      },
-    direccion: { 
-      type: DataTypes.STRING(255) 
+      unique: true
     },
-    passwordhash: { 
-      type: DataTypes.STRING(255), 
-      allowNull: false 
+    direccion: {
+      type: DataTypes.STRING(255)
+    },
+    passwordhash: {
+      type: DataTypes.STRING(255),
+      allowNull: false
     },
     activo: {
-       type: DataTypes.BOOLEAN, 
-       defaultValue: true 
-      }
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   }, {
     tableName: 'usuario',
     timestamps: false
   });
 
-  Usuario.associate = models => {
+  Usuario.associate = (models) => {
     Usuario.belongsTo(models.Rol, { foreignKey: 'rolid' });
     Usuario.hasMany(models.Solicitud, { foreignKey: 'usuarioid' });
     Usuario.hasMany(models.UsuarioCultivo, { foreignKey: 'usuarioid' });

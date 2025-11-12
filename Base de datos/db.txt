@@ -1,9 +1,7 @@
 create database sist_agropecuario;
 use sist_agropecuario;
 
--- ========================
 -- roles y usuarios
--- ========================
 create table rol (
     rolid int auto_increment primary key,
     nombre varchar(50) not null,
@@ -23,9 +21,8 @@ create table usuario (
     foreign key (rolid) references rol(rolid)
 );
 
--- ========================
+
 -- cultivos y lotes
--- ========================
 create table cultivo (
     cultivoid int auto_increment primary key,
     nombre varchar(100) not null,
@@ -56,9 +53,8 @@ create table historialcultivo (
     foreign key (usuarioid) references usuario(usuarioid)
 );
 
--- ========================
+
 -- insumos y proveedores
--- ========================
 create table proveedor (
     proveedorid int auto_increment primary key,
     nombre varchar(100) not null,
@@ -80,9 +76,8 @@ create table insumo (
     foreign key (proveedorid) references proveedor(proveedorid)
 );
 
--- ========================
+
 -- solicitudes y estados
--- ========================
 create table solicitud (
     solicitudid int auto_increment primary key,
     usuarioid int not null, -- productor
@@ -143,3 +138,5 @@ create table comprobanteentrega (
     activo boolean default true,
     foreign key (solicitudid) references solicitud(solicitudid)
 );
+
+INSERT INTO rol (nombre, activo) VALUES ('productor', TRUE), ('admin', TRUE); 
