@@ -10,7 +10,7 @@ async function listarCultivos() {
   }
 }
 
-async function crearCultivo(dto) {
+async function crearCultivo(data) {
   try {
     if (!data || typeof data !== 'object') {
       throw new Error('Datos de cultivo inválidos');

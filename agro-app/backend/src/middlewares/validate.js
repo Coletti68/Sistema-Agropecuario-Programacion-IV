@@ -1,35 +1,29 @@
 const Joi = require('joi');
 
-function validate({ body, params }) {
+function validate(schema, source = 'body') {
   return (req, res, next) => {
-    const validated = {};
+    const data = req[source];
+    const { error, value } = schema.validate(data, {
+      abortEarly: false,
+      stripUnknown: true
+    });
 
-     if (body) {
-      const { error, value } = body.validate(req.body, {
-        abortEarly: false,
-        stripUnknown: true
+    if (error) {
+      return res.status(400).json({
+        error: 'Datos inválidos',
+        detalles: error.details.map(d => d.message)
       });
-      if (error) {
-        const detalles = error.details.map(d => d.message);
-        return res.status(400).json({ error: 'Body inválido', detalles });
-      }
-      req.validatedbBody = value;
     }
 
+    // Guarda el resultado validado
+    const key = `validated${source.charAt(0).toUpperCase() + source.slice(1)}`;
+    req[key] = value;
 
-    if (params) {
-      const { error, value } = params.validate(req.params, {
-        abortEarly: false,
-        stripUnknown: true
-      });
-      if (error) {
-        const detalles = error.details.map(d => d.message);
-        return res.status(400).json({ error: 'Params inválidos', detalles });
-      }
-      req.validated.params = value;
-    }
+    // (opcional) también lo guarda en req.validated.body / params / query
+    req.validated = req.validated || {};
+    req.validated[source] = value;
 
-next();
+    next();
   };
 }
 

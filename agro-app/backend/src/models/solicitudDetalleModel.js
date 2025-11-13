@@ -1,5 +1,6 @@
-// src/models/SolicitudDetalle.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const SolicitudDetalle = sequelize.define('SolicitudDetalle', {
     solicituddetalleid: { 
       type: DataTypes.INTEGER,

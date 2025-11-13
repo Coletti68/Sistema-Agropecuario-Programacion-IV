@@ -1,5 +1,6 @@
-// src/models/Proveedor.js
-module.exports = (sequelize, DataTypes) => {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   const Proveedor = sequelize.define('Proveedor', {
     proveedorid: { 
       type: DataTypes.INTEGER,

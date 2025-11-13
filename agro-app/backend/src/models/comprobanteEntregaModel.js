@@ -1,5 +1,6 @@
+const { DataTypes } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   const ComprobanteEntrega = sequelize.define('ComprobanteEntrega', {
     comprobanteid: { 
       type: DataTypes.INTEGER, 

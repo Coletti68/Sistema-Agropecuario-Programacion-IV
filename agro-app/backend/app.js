@@ -1,48 +1,38 @@
-const express = require('express'); //framework para levantar el sv
-const cors = require('cors'); //middleware para permitir peticiones desde otros origenes (frontend)
-require('dotenv').config();   //carga las variables desde el .env
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
 
-const db = require('./src/config/db');     // conexión Sequelize
-//require('./src/models');                   // ejecuta cada model con sus relaciones tmb
+const db = require('./src/config/db');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./src/config/swagger');
+const routes = require('./src/routes');
 
-//temporales para testear usuario nomas
-require('./src/models/usuarioModel');
-const authRoutes = require('./src/routes/authRoutes'); // Rutas de login y registro
-
-
-const swaggerJsdoc = require('swagger-jsdoc'); //generador d documentacion swagger desde las anotaciones d las rutas
-const swaggerUi = require('swagger-ui-express'); //interfaz visual para mostrar la documentacion
-const swaggerSpec = require('./src/config/swagger'); //confi swagger q difinimos en esa ubi
-
-//const routes = require('./src/routes');    // index que agrupa todas las rutas
-
-const app = express();  //crea la instancia del sv express
-const PORT = process.env.PORT || 3000; //aclara el puerto en una var
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); //monta swagger en /api-docs
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-//temporales para testear usuario nomas
-app.use('/auth', authRoutes); 
+// Rutas
+app.use('/api', routes);
 
-//app.use('/api', routes); // todas las rutas quedan bajo /api/... (ej: /api/usuarios, /api/login)
-
-/*
+// Middleware global de errores
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
-  res.status(500).json({ error: 'Error interno del servidor' });
+  res.status(err.status || 500).json({ error: err.message || 'Error interno del servidor' });
 });
-*/
 
-// 🔹 Arranque del servidor
+// Arranque del servidor
 app.listen(PORT, async () => {
   try {
     await db.authenticate();
-    console.log('✅ Conexión a la base de datos establecida');
-    console.log(`🚀 API corriendo en http://localhost:${PORT}/api-docs`);
+    console.log('✅ Base de datos conectada correctamente');
+    console.log(`🌱 Servidor escuchando en: http://localhost:${PORT}`);
+    console.log(`📘 Swagger disponible en: http://localhost:${PORT}/api-docs`);
   } catch (error) {
-    console.error('❌ Error de conexión:', error.message);
+    console.error('❌ Error al conectar la base de datos:', error.message);
   }
 });

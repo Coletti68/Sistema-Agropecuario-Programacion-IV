@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const comprobanteController = require('../controllers/comprobanteController');
 const validate = require('../middlewares/validate');
-const { comprobanteSchema } = require('../schemas/comprobanteSchema');
+const { comprobanteSchema } = require('../validations/comprobanteEntregaValidation');
 
 /**
  * @swagger

@@ -11,7 +11,7 @@ const listarUsuarios = async (req,res,next) => {
 
 const registrarUsuario = async (req,res,next) => {
   try {
-    const nuevo = await usuarioService.registrarUsuario(req.validatedBody);
+    const nuevo = await usuarioService.crearUsuario(req.validatedBody);
     res.status(200).json(nuevo);
   } catch (err) {
     next(err);

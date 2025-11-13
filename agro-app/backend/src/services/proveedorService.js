@@ -10,7 +10,7 @@ async function listarProveedores() {
   }
 }
 
-async function crearProveedor(dto) {
+async function crearProveedor(data) {
   try {
     if (!data || typeof data !== 'object') {
       throw new Error('Datos de proveedor inválidos');

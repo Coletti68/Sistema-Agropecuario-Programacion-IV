@@ -39,7 +39,7 @@ router.get('/', cultivoController.listarCultivos);
  *       201:
  *         description: Cultivo creado exitosamente
  */
-router.post('/', validate(cultivoSchema), cultivoController.crearCultivo);
+router.post('/', validate(cultivoSchema, 'body'), cultivoController.crearCultivo);
 
 /**
  * @swagger
