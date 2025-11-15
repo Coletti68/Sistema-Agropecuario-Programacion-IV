@@ -1,0 +1,31 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #558B2F;
+  padding: 16px 32px;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.navbar h2 {
+  margin: 0;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar li a:hover {
+  text-decoration: underline;
+}

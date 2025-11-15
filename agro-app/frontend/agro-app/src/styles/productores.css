@@ -1,0 +1,29 @@
+.productores-container {
+  padding: 40px;
+  background-color: #F9FBE7;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.productores-container h1 {
+  margin-bottom: 24px;
+  color: #33691E;
+}
+
+.productores-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.productores-table th,
+.productores-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+.productores-table th {
+  background-color: #DCEDC8;
+  color: #558B2F;
+}

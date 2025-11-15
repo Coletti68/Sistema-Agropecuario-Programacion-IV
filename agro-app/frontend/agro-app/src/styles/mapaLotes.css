@@ -1,0 +1,10 @@
+.mapa-container {
+  padding: 40px;
+  background-color: #F1F8E9;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.mapa-container h1 {
+  margin-bottom: 24px;
+  color: #33691E;
+}

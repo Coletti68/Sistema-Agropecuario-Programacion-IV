@@ -1,0 +1,52 @@
+.solicitud-container {
+  padding: 40px;
+  background-color: #F1F8E9;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.insumos-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.insumos-list button {
+  background-color: #AED581;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.detalle-list {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.detalle-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.detalle-item input {
+  width: 60px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.enviar-btn {
+  margin-top: 24px;
+  background-color: #558B2F;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

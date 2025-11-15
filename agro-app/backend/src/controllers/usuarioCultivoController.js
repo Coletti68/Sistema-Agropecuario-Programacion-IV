@@ -1,58 +1,60 @@
 const usuarioCultivoService = require('../services/usuarioCultivoService');
 
-const crearAsignacion = async (req,res,next) => {
-    try {
-        const crear = await usuarioCultivoService.crearAsignacion(req.validatedBody);
-        res.status(200).json(crear);        
-    } catch (err) {
-        next(err);
-    }
+const crearAsignacion = async (req, res, next) => {
+  try {
+    const crear = await usuarioCultivoService.crearAsignacion(req.validatedBody);
+    res.status(200).json(crear);
+  } catch (err) {
+    next(err);
+  }
 };
 
-const listarAsignaciones = async (req,res,next) => {
-    try {
-        const listar = await usuarioCultivoService.listarAsignaciones();
-        res.status(200).json(listar);
-    } catch (err) {
-        next(err);
-    }
+const listarAsignaciones = async (req, res, next) => {
+  try {
+    const listar = await usuarioCultivoService.listarAsignaciones();
+    res.status(200).json(listar);
+  } catch (err) {
+    next(err);
+  }
 };
 
-const listarCultivosPorUsuario = async (req,res,next) => {
-    try {
-        const Cultivos = await usuarioCultivoService.listarCultivosPorUsuario(req.validated.params.usuarioId);
-        res.status(200).json(Cultivos);
-    } catch (err) {
-        next(err);
-    } 
+const listarCultivosPorUsuario = async (req, res, next) => {
+  try {
+    const Cultivos = await usuarioCultivoService.listarCultivosPorUsuario(req.validated.params.usuarioId);
+    res.status(200).json(Cultivos);
+  } catch (err) {
+    next(err);
+  }
 };
 
-const obtenerAsignacionPorId = async (req,res,next) => {
-    try {
-        const obtener = await usuarioCultivoService.obtenerAsignacionPorId(req.validated.params.id);
-        res.status(200).json(obtener);
-    } catch (err) {
-        next(err);
-    }
-    
+const obtenerAsignacionPorId = async (req, res, next) => {
+  try {
+    const obtener = await usuarioCultivoService.obtenerAsignacionPorId(req.validated.params.id);
+    res.status(200).json(obtener);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const actualizarAsignacion = async (req, res, next) => {
   try {
-    const actualizar = await usuarioCultivoService.actualizarAsignacion(req.validated.params.id, req.validatedBody);
+    const actualizar = await usuarioCultivoService.actualizarAsignacion(
+      req.validated.params.id,
+      req.validatedBody
+    );
     res.status(200).json(actualizar);
   } catch (err) {
     next(err);
   }
 };
 
-const eliminarAsignacion = async (req,res,next) => {
-    try {
-        const eliminar = await usuarioCultivoService.eliminarAsignacion(req.validated.params.id);
-        res.status(200).json(eliminar)
-    } catch (err) {
-        next(err);
-    }
+const eliminarAsignacion = async (req, res, next) => {
+  try {
+    const eliminar = await usuarioCultivoService.eliminarAsignacion(req.validated.params.id);
+    res.status(200).json(eliminar);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const buscarPorCultivo = async (req, res, next) => {
@@ -83,6 +85,35 @@ const listarConHistorial = async (req, res, next) => {
   }
 };
 
+// ===========================================================
+// NUEVAS FUNCIONES QUE FALTABAN
+// ===========================================================
+
+// PUT /mis-cultivos/:id
+const editarAsignacionDelUsuario = async (req, res, next) => {
+  try {
+    const editar = await usuarioCultivoService.editarAsignacionDelUsuario(
+      req.validated.params.id,
+      req.validatedBody
+    );
+    res.status(200).json(editar);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE /mis-cultivos/:id
+const desactivarAsignacionDelUsuario = async (req, res, next) => {
+  try {
+    const desactivar = await usuarioCultivoService.desactivarAsignacionDelUsuario(
+      req.validated.params.id
+    );
+    res.status(200).json(desactivar);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   crearAsignacion,
   listarAsignaciones,
@@ -92,5 +123,7 @@ module.exports = {
   eliminarAsignacion,
   buscarPorCultivo,
   buscarPorUbicacion,
-  listarConHistorial
-}
+  listarConHistorial,
+  editarAsignacionDelUsuario,
+  desactivarAsignacionDelUsuario
+};

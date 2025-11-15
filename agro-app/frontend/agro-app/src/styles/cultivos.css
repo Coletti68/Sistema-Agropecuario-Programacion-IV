@@ -1,0 +1,39 @@
+.cultivos-container {
+  padding: 40px;
+  background-color: #F9FBE7;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.cultivos-container h1 {
+  margin-bottom: 24px;
+  color: #33691E;
+}
+
+.cultivos-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.cultivos-table th,
+.cultivos-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+.cultivos-table th {
+  background-color: #DCEDC8;
+  color: #558B2F;
+}
+
+.cultivos-table button {
+  background-color: #8BC34A;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}

@@ -1,64 +1,81 @@
 const solicitudService = require('../services/solicitudService');
 
-const crearSolicitud = async (req,res,next) => {
+// Crear solicitud
+const crearSolicitud = async (req, res, next) => {
   try {
-    const nuevo = await solicitudService.crearSolicitud(req.parms.usuarioId);
-    res.status(200).json(nuevo);
+    const nuevo = await solicitudService.crearSolicitud(
+      req.validated.params.usuarioId
+    );
+    res.status(201).json(nuevo);
   } catch (err) {
     next(err);
   }
-  
 };
 
-const listarSolicitudes = async (req,res,next) => {
+// Listar todas las solicitudes
+const listarSolicitudes = async (req, res, next) => {
   try {
-    const listar = await solicitudService.listarSolicitudes();
-    res.status(200).json(listar);
+    const solicitudes = await solicitudService.listarSolicitudes();
+    res.status(200).json(solicitudes);
   } catch (err) {
     next(err);
   }
-
 };
 
-const listarSolicitudesPorUsuario = async (req,res,next) => {
+// Listar solicitudes por usuario
+const listarSolicitudesPorUsuario = async (req, res, next) => {
   try {
-    const listarSoliUsuario = await solicitudService.listarSolicitudesPorUsuario(req.validated.params.usuarioId);
-    res.status(200).json(listarSoliUsuario);
+    const solicitudes = await solicitudService.listarSolicitudesPorUsuario(
+      req.validated.params.usuarioId
+    );
+    res.status(200).json(solicitudes);
   } catch (err) {
     next(err);
   }
-  
 };
 
-const obtenerSolicitudesPorId = async (req,res,next) => {
+// Obtener solicitud por ID
+const obtenerSolicitudPorId = async (req, res, next) => {
   try {
-    const listarSoliId = await solicitudService.obtenerSolicitudPorId(req.validated.params.solicitudId);
-    res.status(200).json(listarSoliId);
+    const solicitud = await solicitudService.obtenerSolicitudPorId(
+      req.validated.params.solicitudId
+    );
+    res.status(200).json(solicitud);
   } catch (err) {
     next(err);
   }
-  
 };
 
+// Cancelar solicitud
 const cancelarSolicitud = async (req, res, next) => {
   try {
-    const resultado = await solicitudService.cancelarSolicitud(req.validated.params.id);
+    const resultado = await solicitudService.cancelarSolicitud(
+      req.validated.params.solicitudId
+    );
     res.status(200).json(resultado);
   } catch (err) {
     next(err);
   }
 };
 
+// Cambiar estado
 const cambiarEstadoSolicitud = async (req, res, next) => {
   try {
     const { estadoid, usuarioid } = req.validatedBody;
-    const resultado = await solicitudService.cambiarEstadoSolicitud(req.validated.params.id, estadoid, usuarioid);
+
+    const resultado = await solicitudService.cambiarEstadoSolicitud(
+      req.validated.params.solicitudId,
+      estadoid,
+      usuarioid
+    );
+
     res.status(200).json(resultado);
   } catch (err) {
     next(err);
   }
 };
 
+// Listar con detalles
 const listarSolicitudesConDetalles = async (req, res, next) => {
   try {
     const solicitudes = await solicitudService.listarSolicitudesConDetalles();
@@ -68,9 +85,12 @@ const listarSolicitudesConDetalles = async (req, res, next) => {
   }
 };
 
+// Listar por estado
 const listarSolicitudesPorEstado = async (req, res, next) => {
   try {
-    const solicitudes = await solicitudService.listarSolicitudesPorEstado(req.validated.params.estadoId);
+    const solicitudes = await solicitudService.listarSolicitudesPorEstado(
+      req.validated.params.estadoId
+    );
     res.status(200).json(solicitudes);
   } catch (err) {
     next(err);
@@ -81,10 +101,9 @@ module.exports = {
   crearSolicitud,
   listarSolicitudes,
   listarSolicitudesPorUsuario,
-  obtenerSolicitudesPorId,
+  obtenerSolicitudPorId,
   cancelarSolicitud,
   cambiarEstadoSolicitud,
   listarSolicitudesConDetalles,
   listarSolicitudesPorEstado
 };
-

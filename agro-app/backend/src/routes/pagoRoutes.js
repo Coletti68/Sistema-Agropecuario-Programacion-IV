@@ -4,6 +4,7 @@ const pagoController = require('../controllers/pagoController');
 const validate = require('../middlewares/validate');
 const { pagoSchema } = require('../validations/pagoValidation');
 
+
 /**
  * @swagger
  * tags:
@@ -50,6 +51,10 @@ router.post('/', validate(pagoSchema), pagoController.registrarPago);
  *       404:
  *         description: No se encontraron pagos para la solicitud indicada
  */
+router.post('/', validate(pagoSchema), pagoController.registrarPago);
+router.get('/', pagoController.listarPagos);
+router.get('/usuario/:usuarioId', pagoController.listarPagosPorUsuario);
 router.get('/solicitud/:solicitudId', pagoController.obtenerPagosPorSolicitud);
+router.put('/:pagoId/estado', validate(pagoSchema.updateEstado), pagoController.actualizarEstadoPago);
 
 module.exports = router;
