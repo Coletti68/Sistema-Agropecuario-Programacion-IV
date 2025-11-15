@@ -81,11 +81,28 @@ async function eliminarDetalle(detalleId) {
   }
 }
 
+async function editarDetalle(detalleId, data) {
+  try {
+    const detalle = await SolicitudDetalle.findByPk(detalleId);
+    if (!detalle) throw new Error('Detalle no encontrado');
+
+    await detalle.update({
+      cantidad: data.cantidad,
+      preciounitario: data.preciounitario
+    });
+
+    return detalle;
+  } catch (error) {
+    console.error('Error al editar detalle:', error.message);
+    throw new Error('No se pudo editar el detalle');
+  }
+}
 module.exports = {
   agregarDetalle,
   listarDetallesPorSolicitud,
   obtenerDetallePorId,
   actualizarCantidad,
   actualizarPrecio,
-  eliminarDetalle
+  eliminarDetalle,
+  editarDetalle
 };

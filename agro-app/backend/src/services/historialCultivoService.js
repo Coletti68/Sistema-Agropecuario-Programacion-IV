@@ -91,7 +91,48 @@ async function listarConDetalles(usuariocultivoId) {
     throw new Error('No se pudo listar historial con detalles');
   }
 }
+//  PUT /historial/:id
+async function editarRegistro(historialId, data) {
+  try {
+    const registro = await HistorialCultivo.findByPk(historialId);
+    if (!registro) throw new Error('Registro no encontrado');
 
+    await registro.update({
+      latitud: data.latitud,
+      longitud: data.longitud,
+      observaciones: data.observaciones
+    });
+
+    return registro;
+  } catch (error) {
+    console.error('Error al editar registro:', error.message);
+    throw new Error('No se pudo editar el registro');
+  }
+}
+
+//  POST /mis-cultivos/:id/historial
+async function agregarEntradaDesdeRuta(usuariocultivoId, data) {
+  try {
+    const cultivo = await UsuarioCultivo.findByPk(usuariocultivoId);
+    if (!cultivo || !cultivo.activo) throw new Error('Cultivo asignado no válido');
+
+    return await HistorialCultivo.create({
+      usuariocultivoid: usuariocultivoId,
+      usuarioid: cultivo.usuarioid,
+      latitud: data.latitud,
+      longitud: data.longitud,
+      observaciones: data.observaciones
+    });
+  } catch (error) {
+    console.error('Error al agregar entrada desde ruta:', error.message);
+    throw new Error('No se pudo registrar el historial');
+  }
+}
+
+//  GET /historial/asignacion/:usuarioCultivoId
+async function listarPorCultivoAsignado(usuariocultivoId) {
+  return listarPorAsignacion(usuariocultivoId); // alias directo
+}
 module.exports = {
   registrarCambio,
   listarHistorial,
@@ -99,5 +140,8 @@ module.exports = {
   eliminarRegistro,
   listarPorUsuario,
   listarPorAsignacion,
-  listarConDetalles
+  listarConDetalles,
+  editarRegistro,
+  agregarEntradaDesdeRuta,
+  listarPorCultivoAsignado
 };

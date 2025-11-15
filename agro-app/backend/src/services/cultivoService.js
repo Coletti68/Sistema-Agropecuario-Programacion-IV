@@ -1,5 +1,5 @@
 
-const { Cultivo } = require('../models/cultivoModel');
+const { Cultivo } = require('../models');
 
 async function listarCultivos() {
   try {
@@ -45,23 +45,25 @@ async function actualizarCultivo(id, data) {
   }
 }
 
-async function eliminarCultivo(id) {
+async function desactivarCultivo(id) {
   try {
     const cultivo = await Cultivo.findByPk(id);
     if (!cultivo) throw new Error('Cultivo no encontrado');
 
-    await cultivo.destroy();
-    return { mensaje: 'Cultivo eliminado exitosamente' };
-
+    await cultivo.update({ activo: false });
+    return { mensaje: 'Cultivo desactivado exitosamente' };
   } catch (error) {
-    console.error("Error al eliminar cultivo:", error.message);
-    throw new Error("No se pudo eliminar el cultivo");
+    console.error('Error al desactivar cultivo:', error.message);
+    throw new Error('No se pudo desactivar el cultivo');
   }
 }
+
+
 
 module.exports = {
   listarCultivos,
   crearCultivo,
   actualizarCultivo,
-  eliminarCultivo
+  desactivarCultivo
+
 };

@@ -138,6 +138,45 @@ async function listarConHistorial(usuarioId) {
 
   }
 }
+//  PUT /mis-cultivos/:id
+async function editarAsignacionDelUsuario(id, data) {
+  try {
+    const asignacion = await UsuarioCultivo.findByPk(id);
+    if (!asignacion || !asignacion.activo) throw new Error('Asignación no encontrada o inactiva');
+
+    await asignacion.update({
+      latitud: data.latitud,
+      longitud: data.longitud,
+      fecha_inicio: data.fecha_inicio
+    });
+
+    await HistorialCultivo.create({
+      usuarioid: asignacion.usuarioid,
+      usuariocultivoid: asignacion.usuariocultivoid,
+      latitud: data.latitud,
+      longitud: data.longitud
+    });
+
+    return asignacion;
+  } catch (error) {
+    console.error('Error al editar asignación del usuario:', error.message);
+    throw new Error('No se pudo editar la asignación');
+  }
+}
+
+//  DELETE /mis-cultivos/:id
+async function desactivarAsignacionDelUsuario(id) {
+  try {
+    const asignacion = await UsuarioCultivo.findByPk(id);
+    if (!asignacion || !asignacion.activo) throw new Error('Asignación no encontrada o ya desactivada');
+
+    await asignacion.update({ activo: false });
+    return { mensaje: 'Asignación desactivada exitosamente' };
+  } catch (error) {
+    console.error('Error al desactivar asignación:', error.message);
+    throw new Error('No se pudo desactivar la asignación');
+  }
+}
 
 module.exports = {
   crearAsignacion,
@@ -148,5 +187,8 @@ module.exports = {
   eliminarAsignacion,
   buscarPorCultivo,
   buscarPorUbicacion,
-  listarConHistorial
+  listarConHistorial,
+  editarAsignacionDelUsuario,
+  desactivarAsignacionDelUsuario
+
 };
