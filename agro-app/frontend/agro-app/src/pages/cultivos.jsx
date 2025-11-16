@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './Cultivos.css';
+import '../styles/cultivos.css';
 
 export default function Cultivos() {
   const [cultivos, setCultivos] = useState([]);

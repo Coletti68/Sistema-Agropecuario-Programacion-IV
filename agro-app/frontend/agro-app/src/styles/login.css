@@ -1,18 +1,24 @@
+/* Contenedor ocupa TODA la pantalla siempre */
 .login-container {
+  position: fixed;       
+  top: 0;
+  left: 0;
+  width: 100vw;         
+  height: 100vh;         
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   background: linear-gradient(to right, #4CAF50, #81C784);
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* Tarjeta del login */
 .login-form {
   background-color: white;
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  width: 100%;
+  width: 90%;
   max-width: 400px;
   text-align: center;
 }
@@ -22,6 +28,7 @@
   color: #333;
 }
 
+/* Inputs */
 .login-form input {
   width: 100%;
   padding: 12px;
@@ -31,6 +38,7 @@
   font-size: 16px;
 }
 
+/* Botón */
 .login-form button {
   width: 100%;
   padding: 12px;
@@ -45,4 +53,21 @@
 
 .login-form button:hover {
   background-color: #388E3C;
+}
+
+/* 🔥 RESPONSIVE REAL: en pantallas chicas se adapta perfecto */
+@media (max-width: 480px) {
+  .login-form {
+    padding: 25px;
+  }
+  .login-form input,
+  .login-form button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+/* Mensaje de error */
+.error-message {
+  color: red;
+  margin-bottom: 16px;
 }

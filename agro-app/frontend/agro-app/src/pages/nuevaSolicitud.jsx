@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './NuevaSolicitud.css';
+import '../styles/nuevaSolicitud.css';
 
 export default function NuevaSolicitud() {
   const [insumos, setInsumos] = useState([]);

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/register';
-import Dashboard from './pages/sashboard';
+import Dashboard from './pages/dashboard';
 import Productores from './pages/productores';
 import NuevaSolicitud from './pages/nuevaSolicitud';
 import Cultivos from './pages/cultivos';

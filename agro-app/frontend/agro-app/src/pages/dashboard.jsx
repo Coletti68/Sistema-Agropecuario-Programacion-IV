@@ -1,4 +1,4 @@
-import './Dashboard.css';
+import '../styles/dashboard.css';
 import { useEffect, useState } from 'react';
 
 export default function Dashboard() {

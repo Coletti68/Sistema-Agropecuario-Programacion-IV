@@ -1,4 +1,4 @@
-import './Button.css';
+import '../styles/button.css';
 
 export default function Button({ children, onClick }) {
   return <button className="btn-primary" onClick={onClick}>{children}</button>;

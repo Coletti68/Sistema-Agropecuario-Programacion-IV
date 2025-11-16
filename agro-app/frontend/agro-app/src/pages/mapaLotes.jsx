@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
-import './MapaLotes.css';
+import '../styles/mapaLotes.css';
 
 export default function MapaLotes() {
   const [cultivos, setCultivos] = useState([]);

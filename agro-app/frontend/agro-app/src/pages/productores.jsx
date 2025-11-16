@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './Productores.css';
+import '../styles/productores.css';
 
 export default function Productores() {
   const [productores, setProductores] = useState([]);
