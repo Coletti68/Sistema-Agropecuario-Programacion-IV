@@ -1,46 +1,104 @@
-import { useState } from 'react';
-import '../styles/login.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/login.css";
 
-export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function Login({ onLogin }) {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const res = await fetch('http://localhost:3000/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      window.location.href = '/dashboard';
+    setError("");
+
+    if (!email || !password) {
+      setError("Por favor completa todos los campos");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setError("Por favor ingresa un email válido");
+      return;
+    }
+
+    if (email === "productor@goya.com" && password === "demo123") {
+      onLogin(email, password);
+      alert("¡Bienvenido!");
     } else {
-      alert('Credenciales inválidas');
+      setError("Email o contraseña incorrectos");
     }
   };
 
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Acceso al sistema</h2>
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Ingresar</button>
-      </form>
+      <div className="login-bg">
+        <div className="bg-img"></div>
+      </div>
+
+      <div className="login-content">
+        <div className="login-header">
+          <div className="logo-circle">🌿</div>
+          <h1 className="title">Productores de Goya</h1>
+          <p className="subtitle">Portal de Productores Agropecuarios</p>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <h2>Iniciar Sesión</h2>
+            <p>Ingresa tus credenciales para acceder al sistema</p>
+          </div>
+
+          <div className="card-body">
+            <form onSubmit={handleSubmit} className="form">
+              {error && (
+                <div className="alert">
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  placeholder="tu@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Contraseña</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              <button type="submit" className="btn-login">
+                Iniciar Sesión
+              </button>
+
+              <p className="register-text">
+                ¿No tienes cuenta?{" "}
+                <button
+                  type="button"
+                  className="btn-link"
+                  onClick={() => navigate("/register")}
+                >
+                  Regístrate aquí
+                </button>
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <p className="footer">
+          © 2025 Entidad de Productores Agropecuarios de Goya
+        </p>
+      </div>
     </div>
   );
 }
