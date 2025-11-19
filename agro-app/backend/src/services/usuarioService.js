@@ -1,5 +1,5 @@
 const sequelize = require('../config/db');
-const Usuario = require('../models/usuarioModel')(sequelize);
+const Usuario = require('../models/usuarioModel')
 
 //  Buscar por email
 async function obtenerUsuarioPorEmail(email) {

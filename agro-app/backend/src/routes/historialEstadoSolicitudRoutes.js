@@ -13,7 +13,7 @@ const { cambioEstadoSchema } = require('../validations/historialEstadoSolicitudV
 
 /**
  * @swagger
- * /api/historial-estado:
+ * /historial-estado:
  *   post:
  *     summary: Registra un nuevo cambio de estado en una solicitud
  *     tags: [HistorialEstadoSolicitud]
@@ -35,7 +35,7 @@ router.post('/', validate(cambioEstadoSchema), historialController.registrarCamb
 
 /**
  * @swagger
- * /api/historial-estado:
+ * /historial-estado:
  *   get:
  *     summary: Lista todos los registros del historial de estados
  *     tags: [HistorialEstadoSolicitud]
@@ -47,7 +47,7 @@ router.get('/', historialController.listarHistorial);
 
 /**
  * @swagger
- * /api/historial-estado/{id}:
+ * /historial-estado/{id}:
  *   get:
  *     summary: Obtiene un registro de historial de estado por su ID
  *     tags: [HistorialEstadoSolicitud]
@@ -68,7 +68,7 @@ router.get('/:id', historialController.obtenerPorId);
 
 /**
  * @swagger
- * /api/historial-estado/solicitud/{solicitudId}:
+ * /historial-estado/solicitud/{solicitudId}:
  *   get:
  *     summary: Lista el historial de estados de una solicitud específica
  *     tags: [HistorialEstadoSolicitud]
@@ -89,7 +89,7 @@ router.get('/solicitud/:solicitudId', historialController.listarPorSolicitud);
 
 /**
  * @swagger
- * /api/historial-estado/usuario/{usuarioId}:
+ * /historial-estado/usuario/{usuarioId}:
  *   get:
  *     summary: Lista el historial de cambios realizados por un usuario específico
  *     tags: [HistorialEstadoSolicitud]
@@ -108,7 +108,7 @@ router.get('/usuario/:usuarioId', historialController.listarPorUsuario);
 
 /**
  * @swagger
- * /api/historial-estado/detalles/{solicitudId}:
+ * /historial-estado/detalles/{solicitudId}:
  *   get:
  *     summary: Lista el historial con detalles de solicitud, usuario y estado
  *     tags: [HistorialEstadoSolicitud]

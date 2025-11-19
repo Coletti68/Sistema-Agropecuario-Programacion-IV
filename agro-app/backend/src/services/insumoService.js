@@ -16,14 +16,15 @@ async function crearInsumo(data) {
       throw new Error('Datos de insumo inválidos');
     }
 
-    return await Insumo.create({
-      nombre: data.nombre,
-      descripcion: data.descripcion,
-      precio_unitario: data.precio_unitario,
-      stock_actual: data.stock_actual,
-      proveedorid: data.proveedorid,
-      activo: true
-    });
+    await Insumo.create({
+  nombre: data.nombre,
+  descripcion: data.descripcion,
+  precio: data.precio, // ✅ corregido
+  stock: data.stock,   // ✅ corregido
+  proveedorid: data.proveedorid,
+  stock_minimo: data.stock_minimo,
+  activo: true
+});
   } catch (error) {
     console.error('Error al crear insumo:', error.message);
     throw new Error('No se pudo registrar el insumo');

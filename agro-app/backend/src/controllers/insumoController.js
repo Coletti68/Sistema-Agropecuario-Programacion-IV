@@ -20,10 +20,14 @@ const crearInsumo = async (req, res, next) => {
 
 const actualizarInsumo = async (req, res, next) => {
   try {
-    const insumo = await insumoService.actualizarInsumo(
-      req.validated.params.id,     
-      req.validatedBody
-    );
+    const insumoId = req.validated?.params?.insumoId;
+const data = req.validatedBody;
+
+if (!insumoId || !data) {
+  return res.status(400).json({ error: 'Datos inválidos o ID faltante' });
+}
+
+const insumo = await insumoService.actualizarInsumo(insumoId, data);
     res.status(200).json(insumo);
   } catch (err) {
     next(err);

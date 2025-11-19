@@ -15,6 +15,7 @@ const crearCultivo = async (req, res, next) => {
   try {
     const cultivo = await cultivoService.crearCultivo(req.validatedBody);
     res.status(200).json(cultivo);
+    console.log('validatedBody:', req.validatedBody);
   } catch (err) {
     next(err);
   }
@@ -23,10 +24,14 @@ const crearCultivo = async (req, res, next) => {
 // Actualizar cultivo
 const actualizarCultivo = async (req, res, next) => {
   try {
-    const cultivo = await cultivoService.actualizarCultivo(
-      req.validated.params.id,
-      req.validatedBody
-    );
+    const cultivoId = req.validatedParams?.id;
+    const data = req.validatedBody;
+
+    if (!cultivoId || !data) {
+      return res.status(400).json({ error: 'ID o datos inválidos' });
+    }
+
+    const cultivo = await cultivoService.actualizarCultivo(cultivoId, data);
     res.status(200).json(cultivo);
   } catch (err) {
     next(err);
@@ -44,10 +49,19 @@ const desactivarCultivo = async (req, res, next) => {
     next(err);
   }
 };
-
+// Eliminar cultivo
+const eliminarCultivo = async (req, res, next) => {
+  try {
+    const resultado = await cultivoService.eliminarCultivo(req.validated.params.id);
+    res.status(204).json(resultado);
+  } catch (err) {
+    next(err);
+  }
+};
 module.exports = {
   listarCultivos,
   crearCultivo,
   actualizarCultivo,
-  desactivarCultivo
+  desactivarCultivo,
+  eliminarCultivo
 };

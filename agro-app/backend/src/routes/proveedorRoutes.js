@@ -14,7 +14,7 @@ const validate = require('../middlewares/validate');
 
 /**
  * @swagger
- * /api/proveedores:
+ * /proveedores:
  *   get:
  *     summary: Listar todos los proveedores
  *     tags: [Proveedores]

@@ -13,7 +13,7 @@ const { comprobanteSchema } = require('../validations/comprobanteEntregaValidati
 
 /**
  * @swagger
- * /api/comprobantes:
+ * /comprobantes:
  *   post:
  *     summary: Registrar un comprobante de entrega
  *     tags: [Comprobantes]
@@ -31,7 +31,7 @@ router.post('/', validate(comprobanteSchema), comprobanteController.registrarCom
 
 /**
  * @swagger
- * /api/comprobantes/solicitud/{solicitudId}:
+ * /comprobantes/solicitud/{solicitudId}:
  *   get:
  *     summary: Obtener comprobantes por solicitud
  *     tags: [Comprobantes]

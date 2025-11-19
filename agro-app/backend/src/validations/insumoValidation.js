@@ -1,11 +1,12 @@
 const Joi = require('joi');
 
 const insumoSchema = Joi.object({
-  nombre: Joi.string().trim().max(100).required(),
-  descripcion: Joi.string().trim().allow('', null).optional(),
-  precio_unitario: Joi.number().positive().required(),
-  stock_actual: Joi.number().integer().min(0).required(),
-  proveedorid: Joi.number().integer().required()
+  nombre: Joi.string().required(),
+  descripcion: Joi.string().allow(''),
+  precio: Joi.number().required(),        
+  proveedorid: Joi.number().integer().required(),
+  stock: Joi.number().integer().required(), 
+  stock_minimo: Joi.number().integer()
 });
 
 module.exports = { insumoSchema };

@@ -3,6 +3,7 @@ const router = express.Router();
 const insumoController = require('../controllers/insumoController');
 const validate = require('../middlewares/validate'); 
 const { insumoSchema } = require('../validations/insumoValidation');
+const { insumoIdParamSchema } = require('../validations/paramSchemas');
 
 /**
  * @swagger
@@ -42,7 +43,7 @@ const { insumoSchema } = require('../validations/insumoValidation');
 
 /**
  * @swagger
- * /api/insumos:
+ * /insumos:
  *   get:
  *     summary: Obtener todos los insumos
  *     tags: [Insumos]
@@ -56,7 +57,7 @@ router.get('/', insumoController.listarInsumos);
 
 /**
  * @swagger
- * /api/insumos:
+ * /insumos:
  *   post:
  *     summary: Crear un nuevo insumo
  *     tags: [Insumos]
@@ -78,7 +79,7 @@ router.post('/', validate(insumoSchema), insumoController.crearInsumo);
 
 /**
  * @swagger
- * /api/insumos/{insumoId}:
+ * /insumos/{insumoId}:
  *   put:
  *     summary: Actualizar un insumo existente
  *     tags: [Insumos]
@@ -105,6 +106,10 @@ router.post('/', validate(insumoSchema), insumoController.crearInsumo);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:insumoId', validate(insumoSchema), insumoController.actualizarInsumo);
+router.put(
+  '/:insumoId',
+  validate({ params: insumoIdParamSchema, body: insumoSchema }), // ✅ validación completa
+  insumoController.actualizarInsumo
+);
 
 module.exports = router;

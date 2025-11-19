@@ -141,6 +141,7 @@ module.exports = {
   renovarToken,
   cerrarSesion,
   generarToken,
-  verificarToken
+  verificarToken,
+  validarCredenciales
 
 };

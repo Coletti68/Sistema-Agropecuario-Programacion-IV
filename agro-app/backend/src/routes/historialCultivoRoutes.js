@@ -12,7 +12,7 @@ const { cambioCultivoSchema } = require('../validations/historialCultivoValidati
 
 /**
  * @swagger
- * /api/historial:
+ * /historial:
  *   post:
  *     summary: Registra un nuevo cambio en el historial
  *     tags: [HistorialCultivo]
@@ -30,7 +30,7 @@ router.post('/', validate(cambioCultivoSchema), historialCultivoController.regis
 
 /**
  * @swagger
- * /api/historial:
+ * /historial:
  *   get:
  *     summary: Lista todos los registros del historial
  *     tags: [HistorialCultivo]
@@ -42,7 +42,7 @@ router.get('/', historialCultivoController.listarHistorial);
 
 /**
  * @swagger
- * /api/historial/{id}:
+ * /historial/{id}:
  *   get:
  *     summary: Obtiene un registro de historial por ID
  *     tags: [HistorialCultivo]
@@ -63,7 +63,7 @@ router.get('/:id', historialCultivoController.obtenerPorId);
 
 /**
  * @swagger
- * /api/historial/{id}:
+ * /historial/{id}:
  *   delete:
  *     summary: Elimina un registro del historial
  *     tags: [HistorialCultivo]
@@ -82,7 +82,7 @@ router.delete('/:id', historialCultivoController.eliminarRegistro);
 
 /**
  * @swagger
- * /api/historial/usuario/{usuarioId}:
+ * /historial/usuario/{usuarioId}:
  *   get:
  *     summary: Lista el historial de un usuario específico
  *     tags: [HistorialCultivo]
@@ -101,7 +101,7 @@ router.get('/usuario/:usuarioId', historialCultivoController.listarPorUsuario);
 
 /**
  * @swagger
- * /api/historial/asignacion/{usuariocultivoId}:
+ * /historial/asignacion/{usuariocultivoId}:
  *   get:
  *     summary: Lista historial por asignación de cultivo
  *     tags: [HistorialCultivo]
@@ -120,7 +120,7 @@ router.get('/asignacion/:usuariocultivoId', historialCultivoController.listarPor
 
 /**
  * @swagger
- * /api/historial/detalles/{usuariocultivoId}:
+ * /historial/detalles/{usuariocultivoId}:
  *   get:
  *     summary: Lista historial con detalles completos de usuario y cultivo
  *     tags: [HistorialCultivo]
