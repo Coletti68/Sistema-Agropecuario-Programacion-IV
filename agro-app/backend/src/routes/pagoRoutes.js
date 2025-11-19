@@ -14,7 +14,7 @@ const { pagoSchema } = require('../validations/pagoValidation');
 
 /**
  * @swagger
- * /api/pagos:
+ * /pagos:
  *   post:
  *     summary: Registrar un nuevo pago
  *     tags: [Pagos]
@@ -34,7 +34,7 @@ router.post('/', validate(pagoSchema), pagoController.registrarPago);
 
 /**
  * @swagger
- * /api/pagos/solicitud/{solicitudId}:
+ * /pagos/solicitud/{solicitudId}:
  *   get:
  *     summary: Obtener pagos por solicitud
  *     tags: [Pagos]

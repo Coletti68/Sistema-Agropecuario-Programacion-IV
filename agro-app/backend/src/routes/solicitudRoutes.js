@@ -125,7 +125,7 @@ router.get(
 router.get(
   '/solicitudes/:solicitudId',
   validate({ params: solicitudIdParamSchema }),
-  solicitudController.obtenerSolicitudesPorId
+  solicitudController.obtenerSolicitudPorId
 );
 
 /**

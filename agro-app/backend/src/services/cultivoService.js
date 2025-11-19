@@ -58,12 +58,21 @@ async function desactivarCultivo(id) {
   }
 }
 
+const eliminarCultivo = async (id) => {
+  const cultivo = await Cultivo.findByPk(id);
+  if (!cultivo) throw new Error('Cultivo no encontrado');
+
+  await cultivo.destroy();
+  return { mensaje: 'Cultivo eliminado exitosamente' };
+};
+
 
 
 module.exports = {
   listarCultivos,
   crearCultivo,
   actualizarCultivo,
-  desactivarCultivo
+  desactivarCultivo,
+  eliminarCultivo
 
 };

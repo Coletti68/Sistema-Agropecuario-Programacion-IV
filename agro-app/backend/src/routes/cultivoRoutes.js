@@ -3,6 +3,7 @@ const router = express.Router();
 const cultivoController = require('../controllers/cultivoController');
 const validate = require('../middlewares/validate');
 const { cultivoSchema } = require('../validations/cultivoValidation');
+const Joi = require('joi');
 
 /**
  * @swagger
@@ -13,7 +14,7 @@ const { cultivoSchema } = require('../validations/cultivoValidation');
 
 /**
  * @swagger
- * /api/cultivos:
+ * /cultivos:
  *   get:
  *     summary: Listar todos los cultivos
  *     tags: [Cultivos]
@@ -25,7 +26,7 @@ router.get('/', cultivoController.listarCultivos);
 
 /**
  * @swagger
- * /api/cultivos:
+ * /cultivos:
  *   post:
  *     summary: Crear un nuevo cultivo
  *     tags: [Cultivos]
@@ -39,11 +40,11 @@ router.get('/', cultivoController.listarCultivos);
  *       201:
  *         description: Cultivo creado exitosamente
  */
-router.post('/', validate(cultivoSchema, 'body'), cultivoController.crearCultivo);
+router.post('/', validate({ body: cultivoSchema }), cultivoController.crearCultivo);
 
 /**
  * @swagger
- * /api/cultivos/{id}:
+ * /cultivos/{id}:
  *   put:
  *     summary: Actualizar un cultivo
  *     tags: [Cultivos]
@@ -64,11 +65,17 @@ router.post('/', validate(cultivoSchema, 'body'), cultivoController.crearCultivo
  *       200:
  *         description: Cultivo actualizado exitosamente
  */
-router.put('/:id', validate(cultivoSchema), cultivoController.actualizarCultivo);
+const { cultivoIdParamSchema } = require('../validations/paramSchemas');
 
+router.put(
+  '/:id',
+  validate({ params: Joi.object({ id: Joi.number().integer().positive().required() }) }),
+  validate({ body: cultivoSchema }),
+  cultivoController.actualizarCultivo
+);
 /**
  * @swagger
- * /api/cultivos/{id}:
+ * /cultivos/{id}:
  *   delete:
  *     summary: Eliminar un cultivo
  *     tags: [Cultivos]

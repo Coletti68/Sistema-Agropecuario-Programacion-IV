@@ -81,11 +81,3 @@ module.exports = {
   listarPorUsuario,
   listarConDetalles
 };
-try {
-  const historial = await historialCultivoService.listarConDetalles(
-    req.validated.params.usuariocultivoId
-  );
-  res.status(200).json(historial);
-} catch (err) {
-  next(err);
-}

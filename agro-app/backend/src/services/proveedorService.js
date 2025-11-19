@@ -1,5 +1,5 @@
 
-const { Proveedor } = require('../models/proveedorModel');
+const Proveedor = require('../models/proveedorModel');
 
 async function listarProveedores() {
   try {
