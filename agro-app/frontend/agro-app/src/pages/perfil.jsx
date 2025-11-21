@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import '../styles/perfil.css';
 
 export default function Perfil() {
@@ -6,14 +7,38 @@ export default function Perfil() {
   const [editando, setEditando] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setPerfil({
+        nombre: '',
+        email: '',
+        telefono: '',
+        dni: '',
+        direccion: ''
+      });
+      return;
+    }
+
     fetch('http://localhost:3000/api/mi-perfil', {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Error al cargar perfil');
+        return res.json();
+      })
       .then(data => setPerfil(data))
-      .catch(err => console.error('Error al cargar perfil', err));
+      .catch(err => {
+        console.error('Error al cargar perfil', err);
+        setPerfil({
+          nombre: '',
+          email: '',
+          telefono: '',
+          dni: '',
+          direccion: ''
+        });
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -30,15 +55,33 @@ export default function Perfil() {
       body: JSON.stringify(perfil),
     });
     const data = await res.json();
+
     if (data.success) {
-      alert('Perfil actualizado');
+      await Swal.fire({
+        title: '¡Perfil actualizado!',
+        text: 'Tus datos han sido guardados correctamente.',
+        icon: 'success',
+        confirmButtonColor: '#2e7d32',
+        timer: 2000
+      });
       setEditando(false);
     } else {
-      alert('Error al guardar');
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudieron guardar los cambios.',
+        icon: 'error',
+        confirmButtonColor: '#d33'
+      });
     }
   };
 
-  if (!perfil) return <p>Cargando...</p>;
+  if (!perfil) {
+    return (
+      <div className="perfil-container" style={{ justifyContent: 'center' }}>
+        <p>Cargando información...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="perfil-container">

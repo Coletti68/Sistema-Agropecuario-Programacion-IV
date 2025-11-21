@@ -1,13 +1,16 @@
 import { useState } from "react";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import "../styles/register.css";
 
-export default function Register({ onRegister }) {
+export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
     telefono: "",
+    dni: "",
+    direccion: "",
     ubicacion: "",
     password: "",
     confirmPassword: "",
@@ -15,14 +18,17 @@ export default function Register({ onRegister }) {
 
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+    // Validaciones básicas
     if (
       !formData.nombre ||
       !formData.email ||
       !formData.telefono ||
+      !formData.dni ||
+      !formData.direccion ||
       !formData.ubicacion ||
       !formData.password ||
       !formData.confirmPassword
@@ -47,13 +53,39 @@ export default function Register({ onRegister }) {
     }
 
     const { confirmPassword, ...userData } = formData;
-    onRegister(userData);
-    alert("¡Cuenta creada exitosamente! Ya puedes iniciar sesión");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || "Error al registrar usuario");
+        return;
+      }
+
+      const data = await response.json();
+
+      await Swal.fire({
+        title: '¡Cuenta creada!',
+        text: 'Tu registro ha sido exitoso. Ahora puedes iniciar sesión.',
+        icon: 'success',
+        confirmButtonText: 'Ir al Login',
+        confirmButtonColor: '#2e7d32'
+      });
+
+      console.log("Usuario creado:", data);
+      navigate("/");
+    } catch (err) {
+      setError("Error de conexión con el servidor");
+    }
   };
 
   return (
     <div className="page">
-
       <div className="backgroundImage"></div>
 
       <div className="container">
@@ -80,7 +112,6 @@ export default function Register({ onRegister }) {
             {error && <div className="error">{error}</div>}
 
             <div className="grid">
-
               <div className="field">
                 <label>Nombre Completo *</label>
                 <input
@@ -113,6 +144,30 @@ export default function Register({ onRegister }) {
                   value={formData.telefono}
                   onChange={(e) =>
                     setFormData({ ...formData, telefono: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="field">
+                <label>DNI *</label>
+                <input
+                  type="text"
+                  placeholder="12345678"
+                  value={formData.dni}
+                  onChange={(e) =>
+                    setFormData({ ...formData, dni: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="field">
+                <label>Dirección *</label>
+                <input
+                  type="text"
+                  placeholder="Av. Libertad 1234"
+                  value={formData.direccion}
+                  onChange={(e) =>
+                    setFormData({ ...formData, direccion: e.target.value })
                   }
                 />
               </div>

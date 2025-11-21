@@ -1,14 +1,15 @@
 import React, { useState } from "react";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 
-export default function Login({ onLogin }) {
+export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -22,11 +23,30 @@ export default function Login({ onLogin }) {
       return;
     }
 
-    if (email === "productor@goya.com" && password === "demo123") {
-      onLogin(email, password);
-      alert("¡Bienvenido!");
-    } else {
-      setError("Email o contraseña incorrectos");
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password: password.trim() }),
+      });
+
+      const data = await response.json();
+
+      localStorage.setItem("token", data.token);
+
+      await Swal.fire({
+        title: '¡Bienvenido!',
+        text: 'Has iniciado sesión correctamente',
+        icon: 'success',
+        confirmButtonText: 'Continuar',
+        confirmButtonColor: '#2e7d32',
+        timer: 2000,
+        timerProgressBar: true
+      });
+
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Error de conexión con el servidor");
     }
   };
 
