@@ -3,16 +3,17 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
 
-// Token
+// 🔑 Generar token
 function generarToken(usuario) {
   const payload = {
-    id_usuario: usuario.id_usuario,
+    usuarioid: usuario.usuarioid,
     email: usuario.email,
-    id_rol: usuario.id_rol
+    rolid: usuario.rolid
   };
   return jwt.sign(payload, jwtSecret, { expiresIn: '2h' });
 }
 
+// 🔑 Verificar token
 function verificarToken(token) {
   try {
     return jwt.verify(token, jwtSecret);
@@ -21,14 +22,15 @@ function verificarToken(token) {
   }
 }
 
-//  Registro de usuario
+// 📝 Registro de usuario (productor)
 async function crearUsuario({ nombre, email, telefono, dni, direccion, password }) {
-  const rolid = 1; // 🔒 fijo: productor
+  const rolid = 1; // fijo: productor
 
   if (!nombre || !email || !password) {
     throw new Error('Faltan campos obligatorios');
   }
 
+  // Validar duplicados
   const existeEmail = await usuarioService.obtenerUsuarioPorEmail(email);
   if (existeEmail) throw new Error('El email ya está registrado');
 
@@ -37,8 +39,10 @@ async function crearUsuario({ nombre, email, telefono, dni, direccion, password 
     if (existeDni) throw new Error('El DNI ya está registrado');
   }
 
+  // Encriptar contraseña
   const passwordhash = await bcrypt.hash(password, 10);
 
+  // Crear usuario en la base
   const nuevoUsuario = await usuarioService.crearUsuario({
     rolid,
     nombre,
@@ -52,58 +56,44 @@ async function crearUsuario({ nombre, email, telefono, dni, direccion, password 
 
   return nuevoUsuario;
 }
-//registrar productor
-async function registrarProductor(data) {
-  const campos = ['nombre', 'email', 'telefono', 'dni', 'direccion', 'password'];
-  for (const campo of campos) {
-    if (!data[campo]) throw new Error(`El campo '${campo}' es obligatorio`);
-  }
 
-  const existeEmail = await Usuario.findOne({ where: { email: data.email } });
-  if (existeEmail) throw new Error('El email ya está registrado');
+// 🔐 Login
+// async function loginUsuario(email, password) {
+//   const usuario = await usuarioService.obtenerUsuarioPorEmail(email);
+//   if (!usuario) throw new Error('Credenciales inválidas');
 
-  const existeDni = await Usuario.findOne({ where: { dni: data.dni } });
-  if (existeDni) throw new Error('El DNI ya está registrado');
+//   const valido = await bcrypt.compare(password, usuario.passwordhash);
+//   if (!valido) throw new Error('Credenciales inválidas');
 
-  const passwordhash = await bcrypt.hash(data.password, 10);
-
-  const productor = await Usuario.create({
-    rolid: 2, // productor
-    nombre: data.nombre,
-    email: data.email,
-    telefono: data.telefono,
-    dni: data.dni,
-    direccion: data.direccion,
-    passwordhash,
-    activo: true
-  });
-
-  const token = generarToken(productor);
-  return { productor, token };
-}
-
-
-//  Login
+//   const token = generarToken(usuario);
+//   return { usuario, token };
+// }
 async function loginUsuario(email, password) {
   const usuario = await usuarioService.obtenerUsuarioPorEmail(email);
+
+  // 👀 Log para ver qué trae la DB
+  console.log("Login - usuario encontrado:", usuario ? usuario.toJSON() : null);
+
   if (!usuario) throw new Error('Credenciales inválidas');
 
+  // 👀 Log para ver la contraseña que llega y el hash guardado
+  console.log("Login - password ingresado:", password);
+  console.log("Login - hash en DB:", usuario.passwordhash);
+
   const valido = await bcrypt.compare(password, usuario.passwordhash);
+
+  // 👀 Log para ver si la comparación fue true/false
+  console.log("Login - resultado bcrypt.compare:", valido);
+
   if (!valido) throw new Error('Credenciales inválidas');
 
   const token = generarToken(usuario);
   return { usuario, token };
 }
 
-//  Login
+// 🔐 Validar credenciales (para authController)
 async function validarCredenciales(email, password) {
-  if (!email || typeof email !== 'string' || email.trim() === '') {
-    throw new Error('El email es obligatorio y debe ser un texto no vacío');
-  }
-
-  if (!password || typeof password !== 'string' || password.trim() === '') {
-    throw new Error('La contraseña es obligatoria y debe ser un texto no vacío');
-  }
+  if (!email || !password) throw new Error('Email y contraseña son obligatorios');
 
   const usuario = await usuarioService.obtenerUsuarioPorEmail(email);
   if (!usuario) return null;
@@ -112,36 +102,10 @@ async function validarCredenciales(email, password) {
   return valido ? usuario : null;
 }
 
-// 👤 Me
-async function obtenerUsuarioAutenticado(usuarioid) {
-  const usuario = await Usuario.findByPk(usuarioid, {
-    attributes: ['usuarioid', 'nombre', 'email', 'rolid']
-  });
-  if (!usuario) throw new Error('Usuario no encontrado');
-  return usuario;
-}
-//  Refresh
-function renovarToken(usuario) {
-  const token = generarToken(usuario);
-  return { token };
-}
-
-//  Logout
-function cerrarSesion() {
-  // Si no usás blacklist, esto es simbólico
-  return { mensaje: 'Sesión cerrada exitosamente' };
-}
-
-
 module.exports = {
   crearUsuario,
-  registrarProductor,
   loginUsuario,
-  obtenerUsuarioAutenticado,
-  renovarToken,
-  cerrarSesion,
+  validarCredenciales,
   generarToken,
-  verificarToken,
-  validarCredenciales
-
+  verificarToken
 };

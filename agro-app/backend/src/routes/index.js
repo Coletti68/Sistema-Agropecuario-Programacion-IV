@@ -27,4 +27,5 @@ router.use('/solicitudes', solicitudRoutes);
 router.use('/solicitud-detalles', solicitudDetalleRoutes);
 router.use('/usuarios', usuarioRoutes);
 
+
 module.exports = router;

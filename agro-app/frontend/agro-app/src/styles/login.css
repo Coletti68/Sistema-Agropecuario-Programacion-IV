@@ -1,7 +1,7 @@
 /* =============== CONTENEDOR GENERAL =============== */
 
 .login-container {
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   max-width: 100%;
   display: flex;
@@ -14,7 +14,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  overflow: auto;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -40,29 +40,36 @@
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   margin: 0;
   flex-shrink: 0;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 8px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 /* =============== HEADER =============== */
 
 .login-header {
   text-align: center;
+  flex-shrink: 0;
 }
 
 .logo-circle {
-  margin: 0 auto 16px auto;
-  padding: 16px;
-  font-size: 40px;
+  margin: 0 auto 12px auto;
+  padding: 12px;
+  font-size: 36px;
   background: linear-gradient(to bottom right, #15803d, #059669);
   border-radius: 50%;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .logo-icon {
@@ -72,15 +79,17 @@
 }
 
 .title {
-  font-size: 28px;
+  font-size: 24px;
   color: #14532d;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .subtitle {
   color: #6b7280;
-  font-size: 14px;
+  font-size: 13px;
+  flex-shrink: 0;
 }
 
 /* =============== CARD =============== */
@@ -89,26 +98,28 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(6px);
   border-radius: 12px;
-  padding: 28px;
+  padding: 24px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
   width: 100%;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .card-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .card-header h2 {
   color: #1f2937;
-  font-size: 22px;
-  margin-bottom: 6px;
+  font-size: 20px;
+  margin-bottom: 4px;
   font-weight: 600;
 }
 
 .card-header p {
   color: #6b7280;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* =============== FORMULARIO =============== */
@@ -116,7 +127,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .alert {
@@ -162,10 +173,10 @@
 
 input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 14px;
   box-sizing: border-box;
 }
 
@@ -177,15 +188,15 @@ input:focus {
 /* Botón login */
 .btn-login {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background: linear-gradient(to right, #15803d, #059669);
   color: white;
   border: none;
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .btn-login:hover {
@@ -195,8 +206,9 @@ input:focus {
 /* Registro */
 .register-text {
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   color: #6b7280;
+  margin-top: 4px;
 }
 
 .btn-link {
@@ -234,7 +246,9 @@ input:focus {
 .footer {
   text-align: center;
   color: #6b7280;
-  font-size: 14px;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 /* =============== RESPONSIVE =============== */
@@ -243,19 +257,83 @@ input:focus {
   .login-content {
     min-width: unset;
     max-width: 100%;
+    gap: 12px;
   }
   
   .title {
-    font-size: 28px;
+    font-size: 22px;
   }
 
   .logo-circle {
-    width: 80px;
-    height: 80px;
-    font-size: 48px;
+    width: 56px;
+    height: 56px;
+    font-size: 32px;
+    padding: 10px;
   }
   
   .card {
-    padding: 24px;
+    padding: 20px;
+  }
+  
+  .card-header h2 {
+    font-size: 18px;
+  }
+  
+  .footer {
+    font-size: 11px;
+  }
+}
+
+/* Asegurar que no haya scroll en pantallas pequeñas */
+@media (max-height: 700px) {
+  .login-content {
+    gap: 10px;
+  }
+  
+  .logo-circle {
+    width: 56px;
+    height: 56px;
+    font-size: 32px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .title {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+  
+  .subtitle {
+    font-size: 12px;
+  }
+  
+  .card {
+    padding: 18px;
+  }
+  
+  .card-header {
+    margin-bottom: 12px;
+  }
+  
+  .card-header h2 {
+    font-size: 18px;
+  }
+  
+  .form {
+    gap: 10px;
+  }
+  
+  input {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  .btn-login {
+    padding: 9px;
+    font-size: 14px;
+  }
+  
+  .footer {
+    font-size: 11px;
   }
 }

@@ -24,7 +24,12 @@ export default function MapaLotes() {
   return (
     <div className="mapa-container">
       <h1>Mapa de lotes</h1>
-      <MapContainer center={[-29.145, -59.265]} zoom={10} scrollWheelZoom={true} style={{ height: '500px', width: '100%' }}>
+      <MapContainer 
+        center={[-29.145, -59.265]} 
+        zoom={10} 
+        scrollWheelZoom={true} 
+        className="mapa-leaflet"
+      >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {cultivos.map(c => (
           <Marker key={c.usuariocultivoid} position={[c.latitud, c.longitud]} icon={icono}>

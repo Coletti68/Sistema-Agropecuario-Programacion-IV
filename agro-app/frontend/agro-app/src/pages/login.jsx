@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 
-export default function Login({ onLogin }) {
+export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -22,11 +22,25 @@ export default function Login({ onLogin }) {
       return;
     }
 
-    if (email === "productor@goya.com" && password === "demo123") {
-      onLogin(email, password);
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password: password.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Error al iniciar sesión");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
       alert("¡Bienvenido!");
-    } else {
-      setError("Email o contraseña incorrectos");
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Error de conexión con el servidor");
     }
   };
 

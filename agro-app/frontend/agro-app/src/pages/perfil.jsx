@@ -6,14 +6,38 @@ export default function Perfil() {
   const [editando, setEditando] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setPerfil({
+        nombre: '',
+        email: '',
+        telefono: '',
+        dni: '',
+        direccion: ''
+      });
+      return;
+    }
+
     fetch('http://localhost:3000/api/mi-perfil', {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Error al cargar perfil');
+        return res.json();
+      })
       .then(data => setPerfil(data))
-      .catch(err => console.error('Error al cargar perfil', err));
+      .catch(err => {
+        console.error('Error al cargar perfil', err);
+        setPerfil({
+          nombre: '',
+          email: '',
+          telefono: '',
+          dni: '',
+          direccion: ''
+        });
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -38,7 +62,13 @@ export default function Perfil() {
     }
   };
 
-  if (!perfil) return <p>Cargando...</p>;
+  if (!perfil) {
+    return (
+      <div className="perfil-container" style={{ justifyContent: 'center' }}>
+        <p>Cargando información...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="perfil-container">
