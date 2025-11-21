@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import '../styles/nuevaSolicitud.css';
 
 export default function NuevaSolicitud() {
@@ -33,11 +34,22 @@ export default function NuevaSolicitud() {
       body: JSON.stringify({ usuarioid, detalle }),
     });
     const data = await res.json();
+
     if (data.solicitudid) {
-      alert('Solicitud enviada');
+      await Swal.fire({
+        title: '¡Solicitud enviada!',
+        text: 'Tu solicitud de insumos ha sido registrada.',
+        icon: 'success',
+        confirmButtonColor: '#2e7d32'
+      });
       setDetalle([]);
     } else {
-      alert('Error al enviar');
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al enviar la solicitud.',
+        icon: 'error',
+        confirmButtonColor: '#d33'
+      });
     }
   };
 

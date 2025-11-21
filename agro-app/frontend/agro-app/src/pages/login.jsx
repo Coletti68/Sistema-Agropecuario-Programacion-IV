@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 
@@ -31,13 +32,18 @@ export default function Login() {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        setError(data.error || "Error al iniciar sesión");
-        return;
-      }
-
       localStorage.setItem("token", data.token);
-      alert("¡Bienvenido!");
+
+      await Swal.fire({
+        title: '¡Bienvenido!',
+        text: 'Has iniciado sesión correctamente',
+        icon: 'success',
+        confirmButtonText: 'Continuar',
+        confirmButtonColor: '#2e7d32',
+        timer: 2000,
+        timerProgressBar: true
+      });
+
       navigate("/dashboard");
     } catch (err) {
       setError("Error de conexión con el servidor");

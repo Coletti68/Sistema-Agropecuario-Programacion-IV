@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import "../styles/register.css";
 
@@ -67,9 +68,17 @@ export default function Register() {
       }
 
       const data = await response.json();
-      alert("¡Cuenta creada exitosamente!");
+
+      await Swal.fire({
+        title: '¡Cuenta creada!',
+        text: 'Tu registro ha sido exitoso. Ahora puedes iniciar sesión.',
+        icon: 'success',
+        confirmButtonText: 'Ir al Login',
+        confirmButtonColor: '#2e7d32'
+      });
+
       console.log("Usuario creado:", data);
-      navigate("/"); // redirige al login
+      navigate("/");
     } catch (err) {
       setError("Error de conexión con el servidor");
     }

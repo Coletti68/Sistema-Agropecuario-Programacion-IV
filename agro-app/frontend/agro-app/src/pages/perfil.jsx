@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import '../styles/perfil.css';
 
 export default function Perfil() {
@@ -54,11 +55,23 @@ export default function Perfil() {
       body: JSON.stringify(perfil),
     });
     const data = await res.json();
+
     if (data.success) {
-      alert('Perfil actualizado');
+      await Swal.fire({
+        title: '¡Perfil actualizado!',
+        text: 'Tus datos han sido guardados correctamente.',
+        icon: 'success',
+        confirmButtonColor: '#2e7d32',
+        timer: 2000
+      });
       setEditando(false);
     } else {
-      alert('Error al guardar');
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudieron guardar los cambios.',
+        icon: 'error',
+        confirmButtonColor: '#d33'
+      });
     }
   };
 
