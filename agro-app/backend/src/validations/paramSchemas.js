@@ -7,8 +7,9 @@ const idParamSchema = Joi.object({
 
 // Específicos para cada entidad
 const usuarioIdParamSchema = Joi.object({
-  usuarioId: Joi.number().integer().positive().required()
+  id: Joi.number().integer().positive().required()
 });
+
 
 const cultivoIdParamSchema = Joi.object({
   cultivoId: Joi.number().integer().positive().required()

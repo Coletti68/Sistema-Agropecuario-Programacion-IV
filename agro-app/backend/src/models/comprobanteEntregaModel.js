@@ -1,3 +1,4 @@
+// src/models/comprobanteEntregaModel.js
 const { DataTypes } = require('sequelize');
 const db = require('../config/db');
 
@@ -33,5 +34,6 @@ const ComprobanteEntrega = db.define('ComprobanteEntrega', {
   tableName: 'comprobanteentrega',
   timestamps: false
 });
+
 
 module.exports = ComprobanteEntrega;

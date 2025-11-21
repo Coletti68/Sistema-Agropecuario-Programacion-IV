@@ -23,20 +23,19 @@ async function obtenerUsuarioPorDni(dni) {
 
 //  Crear usuario (sin DTO)
 async function crearUsuario(data) {
-  const camposObligatorios = ['rolid', 'nombre', 'email', 'telefono', 'dni', 'direccion', 'passwordhash'];
-  for (const campo of camposObligatorios) {
-    if (!data[campo] || typeof data[campo] !== 'string' && typeof data[campo] !== 'number') {
-      throw new Error(`El campo '${campo}' es obligatorio`);
-    }
-}
+  console.log("DATOS RECIBIDOS EN createUsuario:", data);
 
   try {
     return await Usuario.create(data);
   } catch (error) {
+    console.error("DETALLE ERROR SEQUELIZE:", error);
     console.error("Error al crear usuario:", error.message);
     throw new Error("No se pudo crear el usuario");
   }
 }
+
+
+
 
 //  Listar todos
 async function listarUsuarios() {

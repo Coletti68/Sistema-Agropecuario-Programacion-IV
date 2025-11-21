@@ -14,13 +14,14 @@ const registrarComprobante = async (req, res, next) => {
 const obtenerComprobantesPorSolicitud = async (req, res, next) => {
   try {
     const comprobantes = await comprobanteService.obtenerComprobantesPorSolicitud(
-      req.validated.params.solicitudId
+      req.params.solicitudId
     );
     res.status(200).json(comprobantes);
   } catch (err) {
     next(err);
   }
 };
+
 
 // Listar todos los comprobantes (admin)
 const listarComprobantes = async (req, res, next) => {

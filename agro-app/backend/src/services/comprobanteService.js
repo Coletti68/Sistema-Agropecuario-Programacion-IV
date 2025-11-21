@@ -1,5 +1,5 @@
 // src/services/comprobanteService.js
-const { ComprobanteEntrega } = require('../models/comprobanteEntregaModel');
+const ComprobanteEntrega = require('../models/comprobanteEntregaModel');
 
 async function registrarComprobante(data) {
   try {
@@ -8,18 +8,20 @@ async function registrarComprobante(data) {
     }
 
     return await ComprobanteEntrega.create({
-      solicitudid: data.solicitudid,
-      fecha_entrega: data.fecha_entrega,
-      entregado_por: data.entregado_por,
-      recibido_por: data.recibido_por,
-      observaciones: data.observaciones
-    });
+  solicitudid: data.solicitudid,
+  fechaentrega: data.fecha_entrega,
+  entregadopor: data.entregado_por,
+  recibidopor: data.recibido_por,
+  total: data.total ?? null
+});
+
 
   } catch (error) {
     console.error("Error al registrar comprobante:", error.message);
     throw new Error("No se pudo registrar el comprobante");
   }
 }
+
 
 async function obtenerComprobantesPorSolicitud(solicitudid) {
   try {

@@ -1,6 +1,5 @@
 const pagoService = require('../services/pagoService');
 
-// Registrar Pago
 const registrarPago = async (req, res, next) => {
   try {
     const pago = await pagoService.registrarPago(req.validatedBody);
@@ -10,47 +9,42 @@ const registrarPago = async (req, res, next) => {
   }
 };
 
-// Listar todos los pagos (admin)
 const listarPagos = async (req, res, next) => {
   try {
     const pagos = await pagoService.listarPagos();
-    res.status(200).json(pagos);
+    res.json(pagos);
   } catch (err) {
     next(err);
   }
 };
 
-// Listar pagos propios (productor)
 const listarPagosPorUsuario = async (req, res, next) => {
   try {
-    const usuarioId = req.validated.params.usuarioId;
+    const { usuarioId } = req.validatedParams;
     const pagos = await pagoService.listarPagosPorUsuario(usuarioId);
-    res.status(200).json(pagos);
+    res.json(pagos);
   } catch (err) {
     next(err);
   }
 };
 
-// Actualizar estado de pago (admin)
-const actualizarEstadoPago = async (req, res, next) => {
-  try {
-    const pagoId = req.validated.params.pagoId;
-    const { confirmado } = req.validatedBody;
-
-    const resultado = await pagoService.actualizarEstadoPago(pagoId, confirmado);
-    res.status(200).json(resultado);
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Obtener pagos por solicitud
 const obtenerPagosPorSolicitud = async (req, res, next) => {
   try {
-    const solicitudId = req.validated.params.solicitudId;
-
+    const { solicitudId } = req.validatedParams;
     const pagos = await pagoService.obtenerPagosPorSolicitud(solicitudId);
-    res.status(200).json(pagos);
+    res.json(pagos);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const actualizarEstadoPago = async (req, res, next) => {
+  try {
+    const { pagoId } = req.validatedParams;
+    const { estado_pago } = req.validatedBody;
+
+    const result = await pagoService.actualizarEstadoPago(pagoId, estado_pago);
+    res.json(result);
   } catch (err) {
     next(err);
   }
@@ -60,6 +54,6 @@ module.exports = {
   registrarPago,
   listarPagos,
   listarPagosPorUsuario,
-  actualizarEstadoPago,
-  obtenerPagosPorSolicitud
+  obtenerPagosPorSolicitud,
+  actualizarEstadoPago
 };

@@ -20,12 +20,13 @@ const registrarUsuario = async (req,res,next) => {
 
 const obtenerUsuarioPorId = async (req, res, next) => {
   try {
-    const usuario = await usuarioService.obtenerUsuarioPorId(req.validated.params.id);
+    const usuario = await usuarioService.obtenerUsuarioPorId(req.validatedParams.id);
     res.status(200).json(usuario);
   } catch (err) {
     next(err);
   }
 };
+
 
 module.exports = {
   listarUsuarios,

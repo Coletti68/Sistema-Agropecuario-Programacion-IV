@@ -2,10 +2,32 @@ const Joi = require('joi');
 
 const pagoSchema = Joi.object({
   solicitudid: Joi.number().integer().required(),
-  metodo: Joi.string().valid('efectivo', 'transferencia', 'tarjeta').required(),
+  usuarioid: Joi.number().integer().required(),
   monto: Joi.number().positive().required(),
-  fecha_pago: Joi.date().iso().required(),
-  confirmado: Joi.boolean().required()
+  metodo_pago: Joi.string().valid('efectivo', 'transferencia', 'tarjeta').required(),
+  observaciones: Joi.string().allow('', null)
 });
 
-module.exports = { pagoSchema };
+const pagoParamsSolicitud = Joi.object({
+  solicitudId: Joi.number().integer().required()
+});
+
+const pagoParamsUsuario = Joi.object({
+  usuarioId: Joi.number().integer().required()
+});
+
+const pagoParamsPagoId = Joi.object({
+  pagoId: Joi.number().integer().required()
+});
+
+const pagoEstadoBody = Joi.object({
+  estado_pago: Joi.string().valid('pendiente', 'confirmado', 'rechazado').required()
+});
+
+module.exports = {
+  pagoSchema,
+  pagoParamsSolicitud,
+  pagoParamsUsuario,
+  pagoParamsPagoId,
+  pagoEstadoBody
+};

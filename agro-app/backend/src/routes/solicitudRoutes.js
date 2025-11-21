@@ -20,7 +20,7 @@ const { cambiarEstadoSchema } = require('../validations/solicitudValidation');
  *       200:
  *         description: Lista completa de solicitudes
  */
-router.get('/solicitudes', solicitudController.listarSolicitudes);
+router.get('/', solicitudController.listarSolicitudes);
 
 /**
  * @swagger
@@ -32,7 +32,7 @@ router.get('/solicitudes', solicitudController.listarSolicitudes);
  *       200:
  *         description: Lista de solicitudes con detalles
  */
-router.get('/solicitudes/detalles', solicitudController.listarSolicitudesConDetalles);
+router.get('/detalles', solicitudController.listarSolicitudesConDetalles);
 
 /**
  * @swagger
@@ -52,7 +52,7 @@ router.get('/solicitudes/detalles', solicitudController.listarSolicitudesConDeta
  *         description: Lista de solicitudes filtradas por estado
  */
 router.get(
-  '/solicitudes/estado/:estadoId',
+  '/estado/:estadoId',
   validate({ params: estadoIdParamSchema }),
   solicitudController.listarSolicitudesPorEstado
 );
@@ -75,7 +75,7 @@ router.get(
  *         description: Solicitud creada exitosamente
  */
 router.post(
-  '/solicitudes/:usuarioId',
+  '/:usuarioId',
   validate({ params: usuarioIdParamSchema }),
   solicitudController.crearSolicitud
 );
@@ -98,7 +98,7 @@ router.post(
  *         description: Lista de solicitudes del usuario
  */
 router.get(
-  '/solicitudes/usuario/:usuarioId',
+  '/usuario/:usuarioId',
   validate({ params: usuarioIdParamSchema }),
   solicitudController.listarSolicitudesPorUsuario
 );
@@ -123,7 +123,7 @@ router.get(
  *         description: Solicitud no encontrada
  */
 router.get(
-  '/solicitudes/:solicitudId',
+  '/:solicitudId',
   validate({ params: solicitudIdParamSchema }),
   solicitudController.obtenerSolicitudPorId
 );
@@ -146,7 +146,7 @@ router.get(
  *         description: Solicitud cancelada exitosamente
  */
 router.put(
-  '/solicitudes/:id/cancelar',
+  '/:id/cancelar',
   validate({ params: idParamSchema }),
   solicitudController.cancelarSolicitud
 );
@@ -175,7 +175,7 @@ router.put(
  *         description: Estado actualizado exitosamente
  */
 router.put(
-  '/solicitudes/:id/estado',
+  '/:id/estado',
   validate({ params: idParamSchema, body: cambiarEstadoSchema }),
   solicitudController.cambiarEstadoSolicitud
 );

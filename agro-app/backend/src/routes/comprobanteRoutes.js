@@ -3,6 +3,7 @@ const router = express.Router();
 const comprobanteController = require('../controllers/comprobanteController');
 const validate = require('../middlewares/validate');
 const { comprobanteSchema } = require('../validations/comprobanteEntregaValidation');
+const { solicitudIdParamSchema } = require('../validations/paramSchemas');
 
 /**
  * @swagger
@@ -27,7 +28,7 @@ const { comprobanteSchema } = require('../validations/comprobanteEntregaValidati
  *       201:
  *         description: Comprobante registrado exitosamente
  */
-router.post('/', validate(comprobanteSchema), comprobanteController.registrarComprobante);
+router.post('/', validate({body: comprobanteSchema}), comprobanteController.registrarComprobante);
 
 /**
  * @swagger
@@ -45,6 +46,6 @@ router.post('/', validate(comprobanteSchema), comprobanteController.registrarCom
  *       200:
  *         description: Lista de comprobantes
  */
-router.get('/solicitud/:solicitudId', comprobanteController.obtenerComprobantesPorSolicitud);
+router.get('/solicitud/:solicitudId', validate ({params: solicitudIdParamSchema}),comprobanteController.obtenerComprobantesPorSolicitud);
 
 module.exports = router;

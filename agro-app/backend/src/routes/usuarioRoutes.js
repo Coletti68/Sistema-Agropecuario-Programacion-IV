@@ -4,6 +4,7 @@ const router = express.Router();
 
 const usuarioController = require('../controllers/usuarioController');
 const { usuarioSchema } = require('../validations/usuarioValidation');
+const {usuarioIdParamSchema} = require('../validations/paramSchemas');
 const validate = require('../middlewares/validate');
 
 /**
@@ -42,14 +43,46 @@ router.get('/', usuarioController.listarUsuarios);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Usuario'
+ *             type: object
+ *             properties:
+ *               rolid:
+ *                 type: integer
+ *                 example: 1
+ *               nombre:
+ *                 type: string
+ *                 example: Juan Pérez
+ *               email:
+ *                 type: string
+ *                 example: juan@example.com
+ *               telefono:
+ *                 type: string
+ *                 example: "3512345678"
+ *               dni:
+ *                 type: string
+ *                 example: "12345678"
+ *               direccion:
+ *                 type: string
+ *                 example: "Calle Falsa 123"
+ *               passwordhash:
+ *                 type: string
+ *                 example: "hashed-password"
+ *             required:
+ *               - rolid
+ *               - nombre
+ *               - email
+ *               - passwordhash
  *     responses:
  *       201:
- *         description: Usuario creado exitosamente
+ *         description: Usuario registrado exitosamente
  *       400:
  *         description: Datos inválidos
  */
-router.post('/', validate(usuarioSchema), usuarioController.registrarUsuario);
+router.post(
+  '/',
+  validate({ body: usuarioSchema }),
+  usuarioController.registrarUsuario
+);
+
 
 /**
  * @swagger
@@ -74,6 +107,17 @@ router.post('/', validate(usuarioSchema), usuarioController.registrarUsuario);
  *       404:
  *         description: Usuario no encontrado
  */
-router.get('/:id', usuarioController.obtenerUsuarioPorId);
+
+console.log('SCHEMA:', usuarioIdParamSchema);
+console.log('CONTROLLER:', usuarioController.obtenerUsuario);
+
+router.get(
+  '/:id',
+  validate({ params: usuarioIdParamSchema }),
+  usuarioController.obtenerUsuarioPorId
+);
+
+
+
 
 module.exports = router;
