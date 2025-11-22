@@ -1,13 +1,47 @@
 const express = require('express');
 const router = express.Router();
-const historialCultivoController = require('../controllers/historialCultivoController');
+
 const validate = require('../middlewares/validate');
+
+// ← Este SÍ está en historialCultivoValidation
 const { cambioCultivoSchema } = require('../validations/historialCultivoValidation');
+
+// ← Estos SÍ están en paramSchemas
+const {
+  usuarioIdParamSchema,
+  usuariocultivoIdParamSchema,
+  idParamSchema
+} = require('../validations/paramSchemas');
+
+const historialCultivoController = require('../controllers/historialCultivoController');
+
 /**
  * @swagger
  * tags:
  *   name: HistorialCultivo
  *   description: Gestión del historial de cambios de cultivos
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     HistorialCultivoInput:
+ *       type: object
+ *       required:
+ *         - usuariocultivoid
+ *         - usuarioid
+ *         - latitud
+ *         - longitud
+ *       properties:
+ *         usuariocultivoid:
+ *           type: integer
+ *         usuarioid:
+ *           type: integer
+ *         latitud:
+ *           type: number
+ *         longitud:
+ *           type: number
  */
 
 /**
@@ -21,12 +55,16 @@ const { cambioCultivoSchema } = require('../validations/historialCultivoValidati
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/HistorialCultivo'
+ *             $ref: '#/components/schemas/HistorialCultivoInput'
  *     responses:
  *       201:
  *         description: Cambio registrado exitosamente
  */
-router.post('/', validate(cambioCultivoSchema), historialCultivoController.registrarCambio);
+router.post(
+  '/',
+  validate({ body: cambioCultivoSchema }),
+  historialCultivoController.registrarCambio
+);
 
 /**
  * @swagger
@@ -36,7 +74,7 @@ router.post('/', validate(cambioCultivoSchema), historialCultivoController.regis
  *     tags: [HistorialCultivo]
  *     responses:
  *       200:
- *         description: Lista de historial obtenida exitosamente
+ *         description: Lista obtenida exitosamente
  */
 router.get('/', historialCultivoController.listarHistorial);
 
@@ -44,13 +82,12 @@ router.get('/', historialCultivoController.listarHistorial);
  * @swagger
  * /historial/{id}:
  *   get:
- *     summary: Obtiene un registro de historial por ID
+ *     summary: Obtiene un registro del historial por ID
  *     tags: [HistorialCultivo]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID del registro del historial
  *         schema:
  *           type: integer
  *     responses:
@@ -59,7 +96,11 @@ router.get('/', historialCultivoController.listarHistorial);
  *       404:
  *         description: Registro no encontrado
  */
-router.get('/:id', historialCultivoController.obtenerPorId);
+router.get(
+  '/:id',
+  validate({ params: idParamSchema }),
+  historialCultivoController.obtenerPorId
+);
 
 /**
  * @swagger
@@ -71,70 +112,82 @@ router.get('/:id', historialCultivoController.obtenerPorId);
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID del registro a eliminar
  *         schema:
  *           type: integer
  *     responses:
  *       200:
  *         description: Registro eliminado exitosamente
  */
-router.delete('/:id', historialCultivoController.eliminarRegistro);
+router.delete(
+  '/:id',
+  validate({ params: idParamSchema }),
+  historialCultivoController.eliminarRegistro
+);
 
 /**
  * @swagger
  * /historial/usuario/{usuarioId}:
  *   get:
- *     summary: Lista el historial de un usuario específico
+ *     summary: Lista el historial perteneciente a un usuario
  *     tags: [HistorialCultivo]
  *     parameters:
  *       - in: path
  *         name: usuarioId
  *         required: true
- *         description: ID del usuario
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Historial encontrado
+ *         description: Historial encontrado correctamente
  */
-router.get('/usuario/:usuarioId', historialCultivoController.listarPorUsuario);
+router.get(
+  '/usuario/:usuarioId',
+  validate({ params: usuarioIdParamSchema}),
+  historialCultivoController.listarPorUsuario
+);
 
 /**
  * @swagger
  * /historial/asignacion/{usuariocultivoId}:
  *   get:
- *     summary: Lista historial por asignación de cultivo
+ *     summary: Lista el historial de una asignación usuario–cultivo
  *     tags: [HistorialCultivo]
  *     parameters:
  *       - in: path
  *         name: usuariocultivoId
  *         required: true
- *         description: ID de la asignación usuario-cultivo
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Historial obtenido correctamente
+ *         description: Historial encontrado correctamente
  */
-router.get('/asignacion/:usuariocultivoId', historialCultivoController.listarPorAsignacion);
+router.get(
+  '/asignacion/:usuariocultivoId',
+  validate({ params: usuariocultivoIdParamSchema }),
+  historialCultivoController.listarPorAsignacion
+);
 
 /**
  * @swagger
  * /historial/detalles/{usuariocultivoId}:
  *   get:
- *     summary: Lista historial con detalles completos de usuario y cultivo
+ *     summary: Lista historial con detalles completos (usuario + cultivo)
  *     tags: [HistorialCultivo]
  *     parameters:
  *       - in: path
  *         name: usuariocultivoId
  *         required: true
- *         description: ID de la asignación usuario-cultivo
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Detalles del historial obtenidos correctamente
+ *         description: Detalles completos del historial
  */
-router.get('/detalles/:usuariocultivoId', historialCultivoController.listarConDetalles);
+router.get(
+  '/detalles/:usuariocultivoId',
+  validate({ params: usuariocultivoIdParamSchema}),
+  historialCultivoController.listarConDetalles
+);
 
 module.exports = router;

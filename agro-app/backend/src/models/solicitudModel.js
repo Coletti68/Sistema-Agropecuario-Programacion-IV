@@ -15,6 +15,10 @@ const Solicitud = db.define('Solicitud', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
   },
+  estadosolicitudid: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1 // estado inicial
+  },
   activo: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
@@ -23,5 +27,6 @@ const Solicitud = db.define('Solicitud', {
   tableName: 'solicitud',
   timestamps: false
 });
+
 
 module.exports = Solicitud;

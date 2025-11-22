@@ -1,6 +1,8 @@
-const { SolicitudDetalle } = require('../models/solicitudDetalleModel');
-const { Insumo } = require('../models/insumoModel');
-const { Solicitud } = require('../models/solicitudModel');
+const SolicitudDetalle = require('../models/solicitudDetalleModel');
+const Solicitud = require('../models/solicitudModel');
+const Insumo = require('../models/insumoModel');
+
+
 
 async function agregarDetalle(solicitudId, insumoId, cantidad, precioUnitario) {
   try {

@@ -34,9 +34,12 @@ const pagoIdParamSchema = Joi.object({
 const insumoIdParamSchema = Joi.object({
   insumoId: Joi.number().integer().positive().required()
 });
+const estadoIdParamSchema = Joi.object({
+  estadoId: Joi.number().integer().required()
+});
 
 const historialIdParamSchema = Joi.object({
-  historialId: Joi.number().integer().positive().required()
+  id: Joi.number().integer().positive().required()
 });
 
 const usuariocultivoIdParamSchema = Joi.object({
@@ -53,5 +56,6 @@ module.exports = {
   pagoIdParamSchema,
   insumoIdParamSchema,
   historialIdParamSchema,
-  usuariocultivoIdParamSchema
+  usuariocultivoIdParamSchema,
+  estadoIdParamSchema
 };

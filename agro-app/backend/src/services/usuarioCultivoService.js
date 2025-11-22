@@ -1,14 +1,14 @@
-const { UsuarioCultivo } = require('../models/usuarioCultivoModel');
-const { Usuario } = require('../models/usuarioModel');
-const { Cultivo } = require('../models/cultivoModel');
-const { HistorialCultivo } = require('../models/historialCultivoModel');
+const UsuarioCultivo = require('../models/usuarioCultivoModel');
+const Usuario = require('../models/usuarioModel');
+const Cultivo = require('../models/cultivoModel');
+const HistorialCultivo = require('../models/historialCultivoModel');
 
+// -----------------------------
+// Crear asignación
+// -----------------------------
 async function crearAsignacion(data) {
   try {
-    if (!data || typeof data !== 'object') {
-      throw new Error('Datos de asignación inválidos');
-    }
-
+    if (!data || typeof data !== 'object') throw new Error('Datos de asignación inválidos');
     return await UsuarioCultivo.create(data);
   } catch (error) {
     console.error('Error al crear asignación:', error.message);
@@ -16,12 +16,15 @@ async function crearAsignacion(data) {
   }
 }
 
+// -----------------------------
+// Listar todas las asignaciones
+// -----------------------------
 async function listarAsignaciones() {
   try {
-    return await usuariocultivo.findAll({
+    return await UsuarioCultivo.findAll({
       include: [
-        { model: usuario, attributes: ['nombre', 'email'] },
-        { model: cultivo, attributes: ['nombre'] }
+        { model: Usuario, attributes: ['nombre', 'email'] },
+        { model: Cultivo, attributes: ['nombre'] }
       ]
     });
   } catch (error) {
@@ -30,32 +33,56 @@ async function listarAsignaciones() {
   }
 }
 
+// -----------------------------
+// Listar cultivos por usuario
+// -----------------------------
 async function listarCultivosPorUsuario(usuarioId) {
   try {
     if (!usuarioId) throw new Error('usuarioId es obligatorio');
-
-    return await usuariocultivo.findAll({
+    return await UsuarioCultivo.findAll({
       where: { usuarioid: usuarioId },
-      include: [{ model: cultivo, attributes: ['nombre', 'descripcion'] }]
+      include: [{ model: Cultivo, attributes: ['nombre', 'descripcion'] }]
     });
   } catch (error) {
     console.error('Error al listar cultivos por usuario:', error.message);
     throw new Error('No se pudo listar cultivos por usuario');
-
   }
 }
 
+// -----------------------------
+// NUEVO: buscar por usuario (para el controller)
+// -----------------------------
+async function buscarPorUsuario(usuarioId) {
+  return listarCultivosPorUsuario(usuarioId);
+}
+
+// -----------------------------
+// NUEVO: buscar por cultivo
+// -----------------------------
+async function buscarPorCultivo(cultivoId) {
+  try {
+    return await UsuarioCultivo.findAll({
+      where: { cultivoid: cultivoId },
+      include: [{ model: Usuario, attributes: ['nombre', 'email'] }]
+    });
+  } catch (error) {
+    console.error('Error al buscar por cultivo:', error.message);
+    throw new Error('No se pudo buscar por cultivo');
+  }
+}
+
+// -----------------------------
+// Obtener asignación por ID
+// -----------------------------
 async function obtenerAsignacionPorId(id) {
   try {
     if (!id) throw new Error('ID de asignación inválido');
-
     const asignacion = await UsuarioCultivo.findByPk(id, {
       include: [
         { model: Usuario, attributes: ['nombre'] },
         { model: Cultivo, attributes: ['nombre'] }
       ]
     });
-
     if (!asignacion) throw new Error('Asignación no encontrada');
     return asignacion;
   } catch (error) {
@@ -64,117 +91,80 @@ async function obtenerAsignacionPorId(id) {
   }
 }
 
-
+// -----------------------------
+// Actualizar asignación
+// -----------------------------
 async function actualizarAsignacion(id, data) {
   try {
     if (!id || !data) throw new Error('ID y datos requeridos para actualizar');
-
-    const [actualizados] = await usuariocultivo.update(data, { where: { usuariocultivoid: id } });
+    const [actualizados] = await UsuarioCultivo.update(data, { where: { usuariocultivoid: id } });
     if (actualizados === 0) throw new Error('Asignación no encontrada o sin cambios');
     return { mensaje: 'Asignación actualizada exitosamente' };
   } catch (error) {
-    console.error('Error al actualizar asignacion:',error.message);
-    throw new Error('Error al actualizar asignación');
+    console.error('Error al actualizar asignación:', error.message);
+    throw new Error('No se pudo actualizar la asignación');
   }
 }
 
+// -----------------------------
+// NUEVO: editar asignación como tu controller lo espera
+// -----------------------------
+async function editarAsignacionDelUsuario(usuariocultivoId, data) {
+  return actualizarAsignacion(usuariocultivoId, data);
+}
+
+// -----------------------------
+// Eliminar asignación
+// -----------------------------
 async function eliminarAsignacion(id) {
   try {
     if (!id) throw new Error('ID de asignación inválido');
-
-    const eliminados = await usuariocultivo.destroy({ where: { usuariocultivoid: id } });
+    const eliminados = await UsuarioCultivo.destroy({ where: { usuariocultivoid: id } });
     if (eliminados === 0) throw new Error('Asignación no encontrada');
     return { mensaje: 'Asignación eliminada exitosamente' };
   } catch (error) {
     console.error('Error al eliminar asignación:', error.message);
-    throw new Error('Error al eliminar asignación');
+    throw new Error('No se pudo eliminar la asignación');
   }
 }
 
-async function buscarPorCultivo(cultivoId) {
-  try {
-    if (!cultivoId) throw new Error('cultivoId es obligatorio');
-
-    return await usuariocultivo.findAll({
-      where: { cultivoid: cultivoId },
-      include: [{ model: usuario, attributes: ['nombre', 'email'] }]
-    });
-  } catch (error) {
-    console.error('Error al buscar asignaciones por cultivo:', error.message);
-
-    throw new Error('No se pudo buscar asignaciones por cultivo');
-  }
-}
-
-async function buscarPorUbicacion(latitud, longitud) {
-  try {
-    if (latitud == null || longitud == null){
-      throw new Error('Latitud y longitud son obligatorios ');
-
-    }
-    return await usuariocultivo.findAll({
-      where: { latitud, longitud }
-    });
-  } catch (error) {
-    console.error('Errorr al buscar por ubicacion',error.message);
-    throw new Error('No se pudo por ubicación');
-  }
-}
-
+// -----------------------------
+// Listar con historial
+// -----------------------------
 async function listarConHistorial(usuarioId) {
   try {
-    if(!usuarioId) throw new Error("UsuarioId es obligatorio");
-
-    return await usuariocultivo.findAll({
+    if (!usuarioId) throw new Error('usuarioId es obligatorio');
+    return await UsuarioCultivo.findAll({
       where: { usuarioid: usuarioId },
       include: [
-        { model: cultivo, attributes: ['nombre'] },
-        { model: historialcultivo }
+        { model: Cultivo, attributes: ['nombre'] },
+        { model: HistorialCultivo }
       ]
     });
   } catch (error) {
     console.error('Error al listar asignaciones con historial:', error.message);
     throw new Error('No se pudo listar asignaciones con historial');
-
-  }
-}
-//  PUT /mis-cultivos/:id
-async function editarAsignacionDelUsuario(id, data) {
-  try {
-    const asignacion = await UsuarioCultivo.findByPk(id);
-    if (!asignacion || !asignacion.activo) throw new Error('Asignación no encontrada o inactiva');
-
-    await asignacion.update({
-      latitud: data.latitud,
-      longitud: data.longitud,
-      fecha_inicio: data.fecha_inicio
-    });
-
-    await HistorialCultivo.create({
-      usuarioid: asignacion.usuarioid,
-      usuariocultivoid: asignacion.usuariocultivoid,
-      latitud: data.latitud,
-      longitud: data.longitud
-    });
-
-    return asignacion;
-  } catch (error) {
-    console.error('Error al editar asignación del usuario:', error.message);
-    throw new Error('No se pudo editar la asignación');
   }
 }
 
-//  DELETE /mis-cultivos/:id
-async function desactivarAsignacionDelUsuario(id) {
-  try {
-    const asignacion = await UsuarioCultivo.findByPk(id);
-    if (!asignacion || !asignacion.activo) throw new Error('Asignación no encontrada o ya desactivada');
+// -----------------------------
+// NUEVO: para controller obtenerHistorialUsuario
+// -----------------------------
+async function obtenerHistorialUsuario(usuarioId) {
+  return listarConHistorial(usuarioId);
+}
 
-    await asignacion.update({ activo: false });
-    return { mensaje: 'Asignación desactivada exitosamente' };
+// -----------------------------
+// NUEVO: buscar por ubicación (dummy, si no tienes lat/lng)
+// -----------------------------
+async function buscarPorUbicacion(latitud, longitud) {
+  try {
+    return await UsuarioCultivo.findAll({
+      where: { latitud, longitud }
+    });
   } catch (error) {
-    console.error('Error al desactivar asignación:', error.message);
-    throw new Error('No se pudo desactivar la asignación');
+    console.error('Error al buscar por ubicación:', error.message);
+    throw new Error('No se pudo buscar por ubicación');
   }
 }
 
@@ -182,13 +172,13 @@ module.exports = {
   crearAsignacion,
   listarAsignaciones,
   listarCultivosPorUsuario,
+  buscarPorUsuario,
+  buscarPorCultivo,
   obtenerAsignacionPorId,
   actualizarAsignacion,
-  eliminarAsignacion,
-  buscarPorCultivo,
-  buscarPorUbicacion,
-  listarConHistorial,
   editarAsignacionDelUsuario,
-  desactivarAsignacionDelUsuario
-
+  eliminarAsignacion,
+  listarConHistorial,
+  obtenerHistorialUsuario,
+  buscarPorUbicacion
 };

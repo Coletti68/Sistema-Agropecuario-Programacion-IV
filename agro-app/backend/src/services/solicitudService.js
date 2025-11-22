@@ -1,7 +1,11 @@
-const { Solicitud } = require('../models/solicitudModel');
-const { Usuario } = require('../models/usuarioModel');
-const { EstadoSolicitud } = require('../models/estadoSolicitudModel');
-const { HistorialEstadoSolicitud } = require('../models/historialEstadoSolicitudModel');
+const {
+  Solicitud,
+  Usuario,
+  EstadoSolicitud,
+  HistorialEstadoSolicitud,
+  SolicitudDetalle,
+  Insumo
+} = require('../models'); // Importar desde index.js con relaciones definidas
 
 async function crearSolicitud(usuarioId) {
   try {
@@ -29,7 +33,6 @@ async function listarSolicitudes() {
 
 async function listarSolicitudesPorUsuario(usuarioId) {
   try {
-  
     return await Solicitud.findAll({
       where: { usuarioid: usuarioId },
       include: [{ model: EstadoSolicitud, attributes: ['nombre'] }]
@@ -42,11 +45,15 @@ async function listarSolicitudesPorUsuario(usuarioId) {
 
 async function obtenerSolicitudPorId(solicitudId) {
   try {
-    
     const solicitud = await Solicitud.findByPk(solicitudId, {
       include: [
         { model: Usuario, attributes: ['nombre'] },
-        { model: EstadoSolicitud, attributes: ['nombre'] }
+        { model: EstadoSolicitud, attributes: ['nombre'] },
+        {
+          model: SolicitudDetalle,
+          as: 'SolicitudDetalles', // Coincide con alias en asociación
+          include: [{ model: Insumo, attributes: ['nombre', 'precio'] }]
+        }
       ]
     });
     if (!solicitud) throw new Error('Solicitud no encontrada');
@@ -59,8 +66,10 @@ async function obtenerSolicitudPorId(solicitudId) {
 
 async function cancelarSolicitud(solicitudId) {
   try {
-    
-    const [actualizados] = await Solicitud.update({ activo: false }, { where: { solicitudid: solicitudId } });
+    const [actualizados] = await Solicitud.update(
+      { activo: false },
+      { where: { solicitudid: solicitudId } }
+    );
     if (actualizados === 0) throw new Error('Solicitud no encontrada o ya inactiva');
     return { mensaje: 'Solicitud cancelada exitosamente' };
   } catch (error) {
@@ -71,7 +80,6 @@ async function cancelarSolicitud(solicitudId) {
 
 async function cambiarEstadoSolicitud(solicitudId, estadoId, usuarioId) {
   try {
-   
     await Solicitud.update({ estadosolicitudid: estadoId }, { where: { solicitudid: solicitudId } });
     await HistorialEstadoSolicitud.create({
       solicitudid: solicitudId,
@@ -90,7 +98,12 @@ async function listarSolicitudesConDetalles() {
     return await Solicitud.findAll({
       include: [
         { model: Usuario, attributes: ['nombre', 'email'] },
-        { model: EstadoSolicitud, attributes: ['nombre'] }
+        { model: EstadoSolicitud, attributes: ['nombre'] },
+        {
+          model: SolicitudDetalle,
+          as: 'SolicitudDetalles', // Coincide con alias en asociación
+          include: [{ model: Insumo, attributes: ['nombre', 'precio'] }]
+        }
       ]
     });
   } catch (error) {

@@ -1,7 +1,7 @@
-const { HistorialCultivo } = require('../models/historialCultivoModel');
-const { Usuario } = require('../models/usuarioModel');
-const { UsuarioCultivo } = require('../models/usuarioCultivoModel');
-const { Cultivo } = require('../models/cultivoModel');
+const HistorialCultivo = require('../models/historialCultivoModel'); // sin {}
+const  Usuario  = require('../models/usuarioModel');
+const  UsuarioCultivo  = require('../models/usuarioCultivoModel');
+const Cultivo  = require('../models/cultivoModel');
 
 async function registrarCambio(data) {
   try {

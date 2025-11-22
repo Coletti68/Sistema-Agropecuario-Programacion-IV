@@ -3,17 +3,20 @@ const solicitudDetalleService = require('../services/solicitudDetalleService');
 const agregarDetalle = async (req, res, next) => {
   try {
     const { insumoid, cantidad, preciounitario } = req.validatedBody;
+
     const detalle = await solicitudDetalleService.agregarDetalle(
-      req.validated.params.solicitudId,
+      req.validatedParams.solicitudId,
       insumoid,
       cantidad,
       preciounitario
     );
+
     res.status(201).json(detalle);
   } catch (err) {
     next(err);
   }
 };
+
 
 const listarDetallesPorSolicitud = async (req, res, next) => {
   try {

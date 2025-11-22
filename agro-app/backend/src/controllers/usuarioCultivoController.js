@@ -1,129 +1,167 @@
 const usuarioCultivoService = require('../services/usuarioCultivoService');
 
-const crearAsignacion = async (req, res, next) => {
+// ======================================================
+// Crear asignación
+// ======================================================
+async function crearAsignacion(req, res, next) {
   try {
-    const crear = await usuarioCultivoService.crearAsignacion(req.validatedBody);
-    res.status(200).json(crear);
-  } catch (err) {
-    next(err);
+    const data = req.validatedBody;
+    const asignacion = await usuarioCultivoService.crearAsignacion(data);
+    res.status(201).json(asignacion);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-const listarAsignaciones = async (req, res, next) => {
+// ======================================================
+// Listar todas las asignaciones
+// ======================================================
+async function listarAsignaciones(req, res, next) {
   try {
-    const listar = await usuarioCultivoService.listarAsignaciones();
-    res.status(200).json(listar);
-  } catch (err) {
-    next(err);
+    const asignaciones = await usuarioCultivoService.listarAsignaciones();
+    res.json(asignaciones);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-const listarCultivosPorUsuario = async (req, res, next) => {
+// ======================================================
+// Obtener asignación por ID
+// ======================================================
+async function obtenerAsignacionPorId(req, res, next) {
   try {
-    const Cultivos = await usuarioCultivoService.listarCultivosPorUsuario(req.validated.params.usuarioId);
-    res.status(200).json(Cultivos);
-  } catch (err) {
-    next(err);
+    const id = req.validatedParams.usuariocultivoId;
+    const asignacion = await usuarioCultivoService.obtenerAsignacionPorId(id);
+    res.json(asignacion);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-const obtenerAsignacionPorId = async (req, res, next) => {
+// ======================================================
+// Listar cultivos por usuario
+// ======================================================
+async function listarCultivosPorUsuario(req, res, next) {
   try {
-    const obtener = await usuarioCultivoService.obtenerAsignacionPorId(req.validated.params.id);
-    res.status(200).json(obtener);
-  } catch (err) {
-    next(err);
+    const id = req.validatedParams.id;
+    const cultivos = await usuarioCultivoService.buscarPorUsuario(id);
+    res.json(cultivos);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-const actualizarAsignacion = async (req, res, next) => {
+// ======================================================
+// Buscar asignaciones por cultivo
+// ======================================================
+async function buscarPorCultivo(req, res, next) {
   try {
-    const actualizar = await usuarioCultivoService.actualizarAsignacion(
-      req.validated.params.id,
-      req.validatedBody
-    );
-    res.status(200).json(actualizar);
-  } catch (err) {
-    next(err);
+    const cultivoId = req.validatedParams.cultivoId;
+    const asignaciones = await usuarioCultivoService.buscarPorCultivo(cultivoId);
+    res.json(asignaciones);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-const eliminarAsignacion = async (req, res, next) => {
+// ======================================================
+// Buscar por ubicación
+// ======================================================
+async function buscarPorUbicacion(req, res, next) {
   try {
-    const eliminar = await usuarioCultivoService.eliminarAsignacion(req.validated.params.id);
-    res.status(200).json(eliminar);
-  } catch (err) {
-    next(err);
+    const { latitud, longitud } = req.query; // VALIDATED POR TU MIDDLEWARE
+    const resultados = await usuarioCultivoService.buscarPorUbicacion(latitud, longitud);
+    res.json(resultados);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-const buscarPorCultivo = async (req, res, next) => {
+// ======================================================
+// Actualizar asignación
+// ======================================================
+async function actualizarAsignacion(req, res, next) {
   try {
-    const buscarCultivo = await usuarioCultivoService.buscarPorCultivo(req.validated.params.cultivoId);
-    res.status(200).json(buscarCultivo);
-  } catch (err) {
-    next(err);
-  }
-};
+    const id = req.validatedParams.usuariocultivoId;
+    const data = req.validatedBody;
 
-const buscarPorUbicacion = async (req, res, next) => {
+    const result = await usuarioCultivoService.actualizarAsignacion(id, data);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ======================================================
+// Editar asignación del usuario (/mis-cultivos/:id)
+// ======================================================
+async function editarAsignacionDelUsuario(req, res, next) {
   try {
-    const { latitud, longitud } = req.query;
-    const buscarUbicacion = await usuarioCultivoService.buscarPorUbicacion(latitud, longitud);
-    res.status(200).json(buscarUbicacion);
-  } catch (err) {
-    next(err);
-  }
-};
+    const id = req.validatedParams.usuariocultivoId;
+    const data = req.validatedBody;
 
-const listarConHistorial = async (req, res, next) => {
+    const result = await usuarioCultivoService.editarAsignacionDelUsuario(id, data);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ======================================================
+// Eliminar asignación
+// ======================================================
+async function eliminarAsignacion(req, res, next) {
   try {
-    const listarHistorial = await usuarioCultivoService.listarConHistorial(req.validated.params.usuarioId);
-    res.status(200).json(listarHistorial);
-  } catch (err) {
-    next(err);
+    const id = req.validatedParams.usuariocultivoId;
+
+    const result = await usuarioCultivoService.eliminarAsignacion(id);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-// ===========================================================
-// NUEVAS FUNCIONES QUE FALTABAN
-// ===========================================================
-
-// PUT /mis-cultivos/:id
-const editarAsignacionDelUsuario = async (req, res, next) => {
+// ======================================================
+// Desactivar asignación (mis-cultivos)
+// ======================================================
+async function desactivarAsignacionDelUsuario(req, res, next) {
   try {
-    const editar = await usuarioCultivoService.editarAsignacionDelUsuario(
-      req.validated.params.id,
-      req.validatedBody
-    );
-    res.status(200).json(editar);
-  } catch (err) {
-    next(err);
-  }
-};
+    const id = req.validatedParams.usuariocultivoId;
 
-// DELETE /mis-cultivos/:id
-const desactivarAsignacionDelUsuario = async (req, res, next) => {
-  try {
-    const desactivar = await usuarioCultivoService.desactivarAsignacionDelUsuario(
-      req.validated.params.id
-    );
-    res.status(200).json(desactivar);
-  } catch (err) {
-    next(err);
+    const result = await usuarioCultivoService.desactivarAsignacionDelUsuario(id);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
   }
-};
+}
+
+// ======================================================
+// Obtener historial
+// ======================================================
+async function listarConHistorial(req, res, next) {
+  try {
+    const id = req.validatedParams.id;
+    const historial = await usuarioCultivoService.obtenerHistorialUsuario(id);
+    res.json(historial);
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   crearAsignacion,
   listarAsignaciones,
-  listarCultivosPorUsuario,
   obtenerAsignacionPorId,
-  actualizarAsignacion,
-  eliminarAsignacion,
+  listarCultivosPorUsuario,
   buscarPorCultivo,
   buscarPorUbicacion,
-  listarConHistorial,
+  actualizarAsignacion,
   editarAsignacionDelUsuario,
-  desactivarAsignacionDelUsuario
+  eliminarAsignacion,
+  desactivarAsignacionDelUsuario,
+  listarConHistorial,
 };

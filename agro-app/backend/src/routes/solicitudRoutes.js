@@ -59,13 +59,13 @@ router.get(
 
 /**
  * @swagger
- * /solicitudes/{usuarioId}:
+ * /solicitudes/{id}:
  *   post:
  *     summary: Crear una nueva solicitud para un usuario
  *     tags: [Solicitudes]
  *     parameters:
  *       - in: path
- *         name: usuarioId
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
@@ -74,11 +74,8 @@ router.get(
  *       201:
  *         description: Solicitud creada exitosamente
  */
-router.post(
-  '/:usuarioId',
-  validate({ params: usuarioIdParamSchema }),
-  solicitudController.crearSolicitud
-);
+router.post('/:id', validate({ params: usuarioIdParamSchema }), solicitudController.crearSolicitud);
+
 
 /**
  * @swagger
@@ -97,11 +94,8 @@ router.post(
  *       200:
  *         description: Lista de solicitudes del usuario
  */
-router.get(
-  '/usuario/:usuarioId',
-  validate({ params: usuarioIdParamSchema }),
-  solicitudController.listarSolicitudesPorUsuario
-);
+router.get('/usuario/:id', validate({ params: usuarioIdParamSchema }), solicitudController.listarSolicitudesPorUsuario);
+
 
 /**
  * @swagger
@@ -122,11 +116,7 @@ router.get(
  *       404:
  *         description: Solicitud no encontrada
  */
-router.get(
-  '/:solicitudId',
-  validate({ params: solicitudIdParamSchema }),
-  solicitudController.obtenerSolicitudPorId
-);
+router.get('/:id', validate({ params: idParamSchema }), solicitudController.obtenerSolicitudPorId);
 
 /**
  * @swagger
@@ -145,11 +135,8 @@ router.get(
  *       200:
  *         description: Solicitud cancelada exitosamente
  */
-router.put(
-  '/:id/cancelar',
-  validate({ params: idParamSchema }),
-  solicitudController.cancelarSolicitud
-);
+router.put('/:id/cancelar', validate({ params: idParamSchema }), solicitudController.cancelarSolicitud);
+
 
 /**
  * @swagger
@@ -174,10 +161,6 @@ router.put(
  *       200:
  *         description: Estado actualizado exitosamente
  */
-router.put(
-  '/:id/estado',
-  validate({ params: idParamSchema, body: cambiarEstadoSchema }),
-  solicitudController.cambiarEstadoSolicitud
-);
+router.put('/:id/estado', validate({ params: idParamSchema, body: cambiarEstadoSchema }), solicitudController.cambiarEstadoSolicitud);
 
 module.exports = router;

@@ -12,19 +12,21 @@ const pagoRoutes = require('./pagoRoutes');
 const proveedorRoutes = require('./proveedorRoutes');
 const solicitudRoutes = require('./solicitudRoutes');
 const solicitudDetalleRoutes = require('./solicitudDetalleRoutes');
+const usuariocultivoRoutes = require('./usuarioCultivoRoutes');
 const usuarioRoutes = require('./usuarioRoutes');
 
 // Asociar cada módulo con su prefijo
 router.use('/auth', authRoutes);
 router.use('/comprobantes', comprobanteRoutes);
 router.use('/cultivos', cultivoRoutes);
-router.use('/historial-cultivos', historialCultivoRoutes);
-router.use('/historial-estados', historialEstadoSolicitudRoutes);
+router.use('/historial', historialCultivoRoutes);
+router.use('/historial-estado', historialEstadoSolicitudRoutes);
 router.use('/insumos', insumoRoutes);
 router.use('/pagos', pagoRoutes);
 router.use('/proveedores', proveedorRoutes);
 router.use('/solicitudes', solicitudRoutes);
-router.use('/solicitud-detalles', solicitudDetalleRoutes);
+router.use('/', solicitudDetalleRoutes);
+router.use('/usuariocultivo',usuariocultivoRoutes);
 router.use('/usuarios', usuarioRoutes);
 
 

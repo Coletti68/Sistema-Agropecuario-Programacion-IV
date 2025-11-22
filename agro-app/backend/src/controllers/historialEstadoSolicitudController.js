@@ -1,23 +1,17 @@
 const historialService = require('../services/historialEstadoSolicitudService');
 
-//historial-estado
+// Registrar un cambio de estado
 const registrarCambioEstado = async (req, res, next) => {
   try {
     const { solicitudid, estadosolicitudid, usuarioid } = req.validatedBody;
-
-    const resultado = await historialService.registrarCambioEstado(
-      solicitudid,
-      estadosolicitudid,
-      usuarioid
-    );
-
+    const resultado = await historialService.registrarCambioEstado(solicitudid, estadosolicitudid, usuarioid);
     res.status(201).json(resultado);
   } catch (err) {
     next(err);
   }
 };
 
-//historial-estado
+// Listar todos los registros
 const listarHistorial = async (req, res, next) => {
   try {
     const historial = await historialService.listarHistorial();
@@ -27,46 +21,45 @@ const listarHistorial = async (req, res, next) => {
   }
 };
 
-// historial-estado/:id
+// Obtener por ID
 const obtenerPorId = async (req, res, next) => {
   try {
-    const registro = await historialService.obtenerPorId(req.validated.params.id);
+    const { id } = req.validated.params; 
+    const registro = await historialService.obtenerPorId(id);
     res.status(200).json(registro);
   } catch (err) {
     next(err);
   }
 };
 
-// historial-estado/solicitud/:solicitudId
+
+// Listar por solicitud
 const listarPorSolicitud = async (req, res, next) => {
   try {
-    const historial = await historialService.listarPorSolicitud(
-      req.validated.params.solicitudId
-    );
+    const { solicitudId } = req.validatedParams;
+    const historial = await historialService.listarPorSolicitud(solicitudId);
     res.status(200).json(historial);
   } catch (err) {
     next(err);
   }
 };
 
-//historial-estado/usuario/:usuarioId
+// Listar por usuario
 const listarPorUsuario = async (req, res, next) => {
   try {
-    const historial = await historialService.listarPorUsuario(
-      req.validated.params.usuarioId
-    );
+    const { usuarioId } = req.validatedParams;
+    const historial = await historialService.listarPorUsuario(usuarioId);
     res.status(200).json(historial);
   } catch (err) {
     next(err);
   }
 };
 
-//historial-estado/detalles/:solicitudId
+// Listar con detalles
 const listarConDetalles = async (req, res, next) => {
   try {
-    const historial = await historialService.listarConDetalles(
-      req.validated.params.solicitudId
-    );
+    const { solicitudId } = req.validatedParams;
+    const historial = await historialService.listarConDetalles(solicitudId);
     res.status(200).json(historial);
   } catch (err) {
     next(err);

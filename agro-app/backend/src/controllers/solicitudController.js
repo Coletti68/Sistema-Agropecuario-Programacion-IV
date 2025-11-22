@@ -3,9 +3,8 @@ const solicitudService = require('../services/solicitudService');
 // Crear solicitud
 const crearSolicitud = async (req, res, next) => {
   try {
-    const nuevo = await solicitudService.crearSolicitud(
-      req.validated.params.usuarioId
-    );
+    const { id: usuarioId } = req.validatedParams;
+    const nuevo = await solicitudService.crearSolicitud(usuarioId);
     res.status(201).json(nuevo);
   } catch (err) {
     next(err);
@@ -25,9 +24,8 @@ const listarSolicitudes = async (req, res, next) => {
 // Listar solicitudes por usuario
 const listarSolicitudesPorUsuario = async (req, res, next) => {
   try {
-    const solicitudes = await solicitudService.listarSolicitudesPorUsuario(
-      req.validated.params.usuarioId
-    );
+    const { id: usuarioId } = req.validatedParams;
+    const solicitudes = await solicitudService.listarSolicitudesPorUsuario(usuarioId);
     res.status(200).json(solicitudes);
   } catch (err) {
     next(err);
@@ -37,9 +35,8 @@ const listarSolicitudesPorUsuario = async (req, res, next) => {
 // Obtener solicitud por ID
 const obtenerSolicitudPorId = async (req, res, next) => {
   try {
-    const solicitud = await solicitudService.obtenerSolicitudPorId(
-      req.validated.params.solicitudId
-    );
+    const { id: solicitudId } = req.validatedParams;
+    const solicitud = await solicitudService.obtenerSolicitudPorId(solicitudId);
     res.status(200).json(solicitud);
   } catch (err) {
     next(err);
@@ -49,9 +46,8 @@ const obtenerSolicitudPorId = async (req, res, next) => {
 // Cancelar solicitud
 const cancelarSolicitud = async (req, res, next) => {
   try {
-    const resultado = await solicitudService.cancelarSolicitud(
-      req.validated.params.solicitudId
-    );
+    const { id } = req.validatedParams;
+    const resultado = await solicitudService.cancelarSolicitud(id);
     res.status(200).json(resultado);
   } catch (err) {
     next(err);
@@ -61,14 +57,9 @@ const cancelarSolicitud = async (req, res, next) => {
 // Cambiar estado
 const cambiarEstadoSolicitud = async (req, res, next) => {
   try {
+    const { id: solicitudId } = req.validatedParams;
     const { estadoid, usuarioid } = req.validatedBody;
-
-    const resultado = await solicitudService.cambiarEstadoSolicitud(
-      req.validated.params.solicitudId,
-      estadoid,
-      usuarioid
-    );
-
+    const resultado = await solicitudService.cambiarEstadoSolicitud(solicitudId, estadoid, usuarioid);
     res.status(200).json(resultado);
   } catch (err) {
     next(err);
@@ -88,9 +79,8 @@ const listarSolicitudesConDetalles = async (req, res, next) => {
 // Listar por estado
 const listarSolicitudesPorEstado = async (req, res, next) => {
   try {
-    const solicitudes = await solicitudService.listarSolicitudesPorEstado(
-      req.validated.params.estadoId
-    );
+    const { estadoId } = req.validatedParams;
+    const solicitudes = await solicitudService.listarSolicitudesPorEstado(estadoId);
     res.status(200).json(solicitudes);
   } catch (err) {
     next(err);

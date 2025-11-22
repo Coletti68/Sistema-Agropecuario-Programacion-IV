@@ -3,6 +3,7 @@ const router = express.Router();
 const historialController = require('../controllers/historialEstadoSolicitudController');
 const validate = require('../middlewares/validate');
 const { cambioEstadoSchema } = require('../validations/historialEstadoSolicitudValidation');
+const { historialIdParamSchema, solicitudIdParamSchema, usuarioIdParamSchema } = require('../validations/paramSchemas');
 
 /**
  * @swagger
@@ -22,16 +23,55 @@ const { cambioEstadoSchema } = require('../validations/historialEstadoSolicitudV
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/HistorialEstadoSolicitud'
+ *             type: object
+ *             properties:
+ *               solicitudid:
+ *                 type: integer
+ *                 description: ID de la solicitud
+ *                 example: 1
+ *               estadosolicitudid:
+ *                 type: integer
+ *                 description: ID del estado al que se desea cambiar
+ *                 example: 2
+ *               usuarioid:
+ *                 type: integer
+ *                 description: ID del usuario que realiza el cambio
+ *                 example: 1
+ *             required:
+ *               - solicitudid
+ *               - estadosolicitudid
+ *               - usuarioid
  *     responses:
  *       201:
  *         description: Cambio de estado registrado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 historialid:
+ *                   type: integer
+ *                   example: 10
+ *                 solicitudid:
+ *                   type: integer
+ *                   example: 1
+ *                 estadosolicitudid:
+ *                   type: integer
+ *                   example: 2
+ *                 usuarioid:
+ *                   type: integer
+ *                   example: 1
+ *                 fecha:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2025-11-21T17:30:00.000Z"
  *       400:
  *         description: Datos inválidos
  *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor
  */
-router.post('/', validate(cambioEstadoSchema), historialController.registrarCambioEstado);
+
+router.post('/', validate({ body: cambioEstadoSchema }), historialController.registrarCambioEstado);
 
 /**
  * @swagger
@@ -64,7 +104,11 @@ router.get('/', historialController.listarHistorial);
  *       404:
  *         description: Registro no encontrado
  */
-router.get('/:id', historialController.obtenerPorId);
+router.get(
+  '/:id',
+  validate({ params: historialIdParamSchema }),
+  historialController.obtenerPorId
+);
 
 /**
  * @swagger
@@ -85,7 +129,7 @@ router.get('/:id', historialController.obtenerPorId);
  *       404:
  *         description: No se encontraron registros
  */
-router.get('/solicitud/:solicitudId', historialController.listarPorSolicitud);
+router.get('/solicitud/:solicitudId', validate({ params: solicitudIdParamSchema }), historialController.listarPorSolicitud);
 
 /**
  * @swagger
@@ -95,7 +139,7 @@ router.get('/solicitud/:solicitudId', historialController.listarPorSolicitud);
  *     tags: [HistorialEstadoSolicitud]
  *     parameters:
  *       - in: path
- *         name: usuarioId
+ *         name:id
  *         required: true
  *         description: ID del usuario
  *         schema:
@@ -104,7 +148,7 @@ router.get('/solicitud/:solicitudId', historialController.listarPorSolicitud);
  *       200:
  *         description: Historial obtenido exitosamente
  */
-router.get('/usuario/:usuarioId', historialController.listarPorUsuario);
+router.get('/usuario/:id', validate({ params: usuarioIdParamSchema }), historialController.listarPorUsuario);
 
 /**
  * @swagger
@@ -123,6 +167,6 @@ router.get('/usuario/:usuarioId', historialController.listarPorUsuario);
  *       200:
  *         description: Historial con detalles obtenido exitosamente
  */
-router.get('/detalles/:solicitudId', historialController.listarConDetalles);
+router.get('/detalles/:solicitudId', validate({ params: solicitudIdParamSchema }), historialController.listarConDetalles);
 
 module.exports = router;

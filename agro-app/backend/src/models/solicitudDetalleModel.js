@@ -1,27 +1,49 @@
 const { DataTypes } = require('sequelize');
 const db = require('../config/db');
+const Insumo = require('./insumoModel');
+const Solicitud = require('./solicitudModel');
 
-const Solicitud = db.define('Solicitud', {
-  solicitudid: {
+const SolicitudDetalle = db.define('SolicitudDetalle', {
+  solicituddetalleid: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  usuarioid: {
+  solicitudid: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'solicitud',
+      key: 'solicitudid'
+    }
+  },
+  insumoid: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'insumo',
+      key: 'insumoid'
+    }
+  },
+  cantidad: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  fechasolicitud: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
+  preciounitario: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
   },
   activo: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   }
 }, {
-  tableName: 'solicitud',
+  tableName: 'solicituddetalle',
   timestamps: false
 });
 
-module.exports = Solicitud;
+// RELACIONES
+SolicitudDetalle.belongsTo(Solicitud, { foreignKey: 'solicitudid' });
+SolicitudDetalle.belongsTo(Insumo, { foreignKey: 'insumoid' });
+
+module.exports = SolicitudDetalle;
