@@ -1,4 +1,4 @@
-const { sequelize } = require('../models'); // Asegúrate de importar sequelize
+const { db: sequelize } = require('../models'); // Asegúrate de importar sequelize
 const {
   Solicitud,
   Usuario,
