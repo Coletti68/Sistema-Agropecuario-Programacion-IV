@@ -174,11 +174,24 @@ export default function Dashboard({ solicitudes = [] }) {
                   </p>
                 </div>
               </div>
-              <div className="flex-1 md:flex-[3] relative min-h-[300px] md:min-h-full">
-                <img
-                  src="/about_us_agriculture_landscape.png"
-                  alt="Agricultura Sostenible"
-                  className="absolute inset-0 w-full h-full object-cover"
+              <div className="about-us-image-container">
+                <video
+                  className="about-us-image"
+                  id='front-video'
+                  src="/about_us_agriculture_landscape_front_animation.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+                <video
+                  className="about-us-image"
+                  id='back-video'
+                  src="/about_us_agriculture_landscape_back_animation.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/10 to-transparent pointer-events-none" />
               </div>
