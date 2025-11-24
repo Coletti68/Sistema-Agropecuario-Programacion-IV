@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
+
 
 const db = require('./src/config/db');
 const swaggerUi = require('swagger-ui-express');
@@ -16,13 +17,15 @@ app.use(express.json());
 // Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Rutas
+// Rutas principales
 app.use('/api', routes);
 
 // Middleware global de errores
 app.use((err, req, res, next) => {
-  console.error('Error:', err.message);
-  res.status(err.status || 500).json({ error: err.message || 'Error interno del servidor' });
+  console.error('❌ Error:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Error interno del servidor',
+  });
 });
 
 // Arranque del servidor
