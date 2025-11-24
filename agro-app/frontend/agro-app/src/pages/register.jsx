@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as api from "../services/api";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import "../styles/register.css";
@@ -55,19 +56,7 @@ export default function Register() {
     const { confirmPassword, ...userData } = formData;
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.error || "Error al registrar usuario");
-        return;
-      }
-
-      const data = await response.json();
+      const data = await api.register({ ...userData, rolid: 1 });
 
       await Swal.fire({
         title: '¡Cuenta creada!',
@@ -80,7 +69,8 @@ export default function Register() {
       console.log("Usuario creado:", data);
       navigate("/");
     } catch (err) {
-      setError("Error de conexión con el servidor");
+      console.error("Registration error:", err);
+      setError(err.message || "Error de conexión con el servidor");
     }
   };
 

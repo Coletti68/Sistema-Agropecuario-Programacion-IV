@@ -102,10 +102,16 @@ async function validarCredenciales(email, password) {
   return valido ? usuario : null;
 }
 
+async function obtenerUsuarioPorId(id) {
+  return await usuarioService.obtenerUsuarioPorId(id);
+
+}
+
 module.exports = {
   crearUsuario,
   loginUsuario,
   validarCredenciales,
   generarToken,
-  verificarToken
+  verificarToken,
+  obtenerUsuarioPorId
 };

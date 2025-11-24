@@ -1,3 +1,4 @@
+const { sequelize } = require('../models'); // Asegúrate de importar sequelize
 const {
   Solicitud,
   Usuario,
@@ -5,41 +6,41 @@ const {
   HistorialEstadoSolicitud,
   SolicitudDetalle,
   Insumo
-} = require('../models'); // Importar desde index.js con relaciones definidas
+} = require('../models');
 
-async function crearSolicitud(usuarioId) {
+async function crearSolicitud(usuarioId, detalle) {
   try {
     if (!usuarioId) throw new Error('usuarioId es obligatorio');
-    return await Solicitud.create({ usuarioid: usuarioId });
+    if (!detalle || !Array.isArray(detalle) || detalle.length === 0) {
+      throw new Error('El detalle es obligatorio');
+    }
+
+    return await sequelize.transaction(async (t) => {
+      // Crear la solicitud
+      const solicitud = await Solicitud.create(
+        { usuarioid: usuarioId },
+        { transaction: t }
+      );
+
+      // Insertar cada detalle
+      for (const item of detalle) {
+        await SolicitudDetalle.create(
+          {
+            solicitudid: solicitud.solicitudid,
+            insumoid: item.insumoid,
+            cantidad: item.cantidad,
+            preciounitario: item.preciounitario
+          },
+          { transaction: t }
+        );
+      }
+
+      return solicitud;
+    });
+
   } catch (error) {
     console.error('Error al crear solicitud:', error.message);
     throw new Error('No se pudo crear la solicitud');
-  }
-}
-
-async function listarSolicitudes() {
-  try {
-    return await Solicitud.findAll({
-      include: [
-        { model: Usuario, attributes: ['nombre', 'email'] },
-        { model: EstadoSolicitud, attributes: ['nombre'] }
-      ]
-    });
-  } catch (error) {
-    console.error('Error al listar solicitudes:', error.message);
-    throw new Error('No se pudo obtener la lista de solicitudes');
-  }
-}
-
-async function listarSolicitudesPorUsuario(usuarioId) {
-  try {
-    return await Solicitud.findAll({
-      where: { usuarioid: usuarioId },
-      include: [{ model: EstadoSolicitud, attributes: ['nombre'] }]
-    });
-  } catch (error) {
-    console.error('Error al listar solicitudes por usuario:', error.message);
-    throw new Error('No se pudo listar solicitudes por usuario');
   }
 }
 
@@ -51,7 +52,7 @@ async function obtenerSolicitudPorId(solicitudId) {
         { model: EstadoSolicitud, attributes: ['nombre'] },
         {
           model: SolicitudDetalle,
-          as: 'SolicitudDetalles', // Coincide con alias en asociación
+          as: 'SolicitudDetalles',
           include: [{ model: Insumo, attributes: ['nombre', 'precio'] }]
         }
       ]
@@ -80,7 +81,10 @@ async function cancelarSolicitud(solicitudId) {
 
 async function cambiarEstadoSolicitud(solicitudId, estadoId, usuarioId) {
   try {
-    await Solicitud.update({ estadosolicitudid: estadoId }, { where: { solicitudid: solicitudId } });
+    await Solicitud.update(
+      { estadosolicitudid: estadoId },
+      { where: { solicitudid: solicitudId } }
+    );
     await HistorialEstadoSolicitud.create({
       solicitudid: solicitudId,
       estadosolicitudid: estadoId,
@@ -101,7 +105,7 @@ async function listarSolicitudesConDetalles() {
         { model: EstadoSolicitud, attributes: ['nombre'] },
         {
           model: SolicitudDetalle,
-          as: 'SolicitudDetalles', // Coincide con alias en asociación
+          as: 'SolicitudDetalles',
           include: [{ model: Insumo, attributes: ['nombre', 'precio'] }]
         }
       ]
@@ -121,6 +125,25 @@ async function listarSolicitudesPorEstado(estadoId) {
   } catch (error) {
     console.error('Error al listar solicitudes por estado:', error.message);
     throw new Error('No se pudo listar solicitudes por estado');
+  }
+}
+
+// Funciones que faltaban en tus exports
+async function listarSolicitudes() {
+  try {
+    return await Solicitud.findAll();
+  } catch (error) {
+    console.error('Error al listar solicitudes:', error.message);
+    throw new Error('No se pudieron listar las solicitudes');
+  }
+}
+
+async function listarSolicitudesPorUsuario(usuarioId) {
+  try {
+    return await Solicitud.findAll({ where: { usuarioid: usuarioId } });
+  } catch (error) {
+    console.error('Error al listar solicitudes por usuario:', error.message);
+    throw new Error('No se pudieron listar las solicitudes del usuario');
   }
 }
 

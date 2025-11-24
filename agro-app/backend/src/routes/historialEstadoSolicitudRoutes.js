@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const historialController = require('../controllers/historialEstadoSolicitudController');
+const historialController = require('../controllers/historialEstadoSolicitudController.js');
 const validate = require('../middlewares/validate');
 const { cambioEstadoSchema } = require('../validations/historialEstadoSolicitudValidation');
 const { historialIdParamSchema, solicitudIdParamSchema, usuarioIdParamSchema } = require('../validations/paramSchemas');
@@ -44,33 +44,11 @@ const { historialIdParamSchema, solicitudIdParamSchema, usuarioIdParamSchema } =
  *     responses:
  *       201:
  *         description: Cambio de estado registrado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 historialid:
- *                   type: integer
- *                   example: 10
- *                 solicitudid:
- *                   type: integer
- *                   example: 1
- *                 estadosolicitudid:
- *                   type: integer
- *                   example: 2
- *                 usuarioid:
- *                   type: integer
- *                   example: 1
- *                 fecha:
- *                   type: string
- *                   format: date-time
- *                   example: "2025-11-21T17:30:00.000Z"
  *       400:
  *         description: Datos inválidos
  *       500:
  *         description: Error interno del servidor
  */
-
 router.post('/', validate({ body: cambioEstadoSchema }), historialController.registrarCambioEstado);
 
 /**
@@ -104,11 +82,7 @@ router.get('/', historialController.listarHistorial);
  *       404:
  *         description: Registro no encontrado
  */
-router.get(
-  '/:id',
-  validate({ params: historialIdParamSchema }),
-  historialController.obtenerPorId
-);
+router.get('/:id', validate({ params: historialIdParamSchema }), historialController.obtenerPorId);
 
 /**
  * @swagger
@@ -133,13 +107,13 @@ router.get('/solicitud/:solicitudId', validate({ params: solicitudIdParamSchema 
 
 /**
  * @swagger
- * /historial-estado/usuario/{usuarioId}:
+ * /historial-estado/usuario/{id}:
  *   get:
  *     summary: Lista el historial de cambios realizados por un usuario específico
  *     tags: [HistorialEstadoSolicitud]
  *     parameters:
  *       - in: path
- *         name:id
+ *         name: id
  *         required: true
  *         description: ID del usuario
  *         schema:

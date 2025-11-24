@@ -25,9 +25,11 @@ router.use('/insumos', insumoRoutes);
 router.use('/pagos', pagoRoutes);
 router.use('/proveedores', proveedorRoutes);
 router.use('/solicitudes', solicitudRoutes);
-router.use('/', solicitudDetalleRoutes);
+router.use('/solicitud-detalle', solicitudDetalleRoutes);
 router.use('/usuariocultivo',usuariocultivoRoutes);
 router.use('/usuarios', usuarioRoutes);
+
+
 
 
 module.exports = router;

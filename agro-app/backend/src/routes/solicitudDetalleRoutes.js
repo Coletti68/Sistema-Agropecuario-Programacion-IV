@@ -23,29 +23,24 @@ const { detalleSchema } = require('../validations/solicitudDetalleValidation');
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Detalle'
+ *             type: object
+ *             properties:
+ *               insumoid:
+ *                 type: integer
+ *                 example: 1
+ *               cantidad:
+ *                 type: number
+ *                 example: 5
+ *               preciounitario:
+ *                 type: number
+ *                 example: 150.75
+ *             required:
+ *               - insumoid
+ *               - cantidad
+ *               - preciounitario
  *     responses:
  *       201:
  *         description: Detalle agregado exitosamente
- * components:
-  schemas:
-    Detalle:
-      type: object
-      properties:
-        insumoid:
-          type: integer
-          example: 1
-        cantidad:
-          type: number
-          example: 5
-        preciounitario:
-          type: number
-          example: 150.75
-      required:
-        - insumoid
-        - cantidad
-        - preciounitario
-
  */
 router.post(
   '/solicitudes/:solicitudId/detalles',

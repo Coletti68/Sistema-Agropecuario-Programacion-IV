@@ -1,4 +1,5 @@
 const authService = require('../services/authService');
+const Usuario = require('../models/usuarioModel');
 
 async function login(req, res) {
   try {
@@ -9,7 +10,18 @@ async function login(req, res) {
     if (!usuario) return res.status(401).json({ error: 'Credenciales inválidas' });
 
     const token = authService.generarToken(usuario);
-    return res.json({ token });
+    return res.json({
+  token,
+  usuario: {
+    usuarioid: usuario.usuarioid,
+    nombre: usuario.nombre,
+    email: usuario.email,
+    telefono: usuario.telefono,
+    direccion: usuario.direccion,
+    rol: usuario.rol
+  }
+});
+
   } catch (error) {
     console.error('Error en login:', error);
     return res.status(500).json({ error: 'Error interno' });
@@ -25,7 +37,47 @@ async function register(req, res) {
   }
 }
 
+async function perfil(req, res) {
+  try {
+    const usuario = await authService.obtenerUsuarioPorId(req.user.usuarioid);
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const { passwordhash, ...data } = usuario.toJSON();
+
+    res.json(data);
+  } catch (error) {
+    console.error("Error al obtener perfil:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+}
+
+async function actualizarPerfil(req, res) {
+  try {
+    const userId = req.user.usuarioid;
+    const { nombre, telefono, direccion } = req.body;
+
+    const user = await Usuario.findByPk(userId);
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    user.nombre = nombre ?? user.nombre;
+    user.telefono = telefono ?? user.telefono;
+    user.direccion = direccion ?? user.direccion;
+
+    await user.save();
+
+    res.json({ message: 'Perfil actualizado', user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error al actualizar perfil' });
+  }
+}
+
 module.exports = {
   login,
-  register
+  register,
+  perfil,
+  actualizarPerfil
 };

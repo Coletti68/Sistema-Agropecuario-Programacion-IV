@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -82,5 +83,9 @@ router.post('/login', authController.login);
  *         description: Error interno del servidor
  */
 router.post('/register', authController.register);
+
+router.get('/mi-perfil', authMiddleware, authController.perfil);
+router.put('/mi-perfil', authMiddleware, authController.actualizarPerfil);
+
 
 module.exports = router;
