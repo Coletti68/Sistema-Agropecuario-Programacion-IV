@@ -74,7 +74,8 @@ router.get(
  *       201:
  *         description: Solicitud creada exitosamente
  */
-router.post('/:id', validate({ params: usuarioIdParamSchema }), solicitudController.crearSolicitud);
+router.post('/', solicitudController.crearSolicitud);
+
 
 
 /**

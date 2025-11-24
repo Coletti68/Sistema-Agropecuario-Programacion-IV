@@ -21,10 +21,6 @@ const Insumo = db.define('Insumo', {
   proveedorid: {
     type: DataTypes.INTEGER
   },
-  estado: {
-    type: DataTypes.INTEGER,
-    defaultValue: 1
-  },
   stock: {
     type: DataTypes.INTEGER
   },
@@ -32,10 +28,9 @@ const Insumo = db.define('Insumo', {
     type: DataTypes.INTEGER
   },
   activo: {
-  type: DataTypes.BOOLEAN,
-  defaultValue: true
-}
-
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  }
 }, {
   tableName: 'insumo',
   timestamps: false

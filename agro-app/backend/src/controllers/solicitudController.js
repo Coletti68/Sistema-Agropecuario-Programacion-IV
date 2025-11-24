@@ -3,7 +3,7 @@ const solicitudService = require('../services/solicitudService');
 // Crear solicitud
 const crearSolicitud = async (req, res, next) => {
   try {
-    const usuarioId = req.body.usuarioId; // <- viene del body
+    const usuarioId = req.params.id; // <- viene del params !!
     const { detalle } = req.body;
 
     if (!usuarioId) {
@@ -16,12 +16,12 @@ const crearSolicitud = async (req, res, next) => {
 
     const nuevaSolicitud = await solicitudService.crearSolicitud(usuarioId, detalle);
     res.status(201).json(nuevaSolicitud);
-
   } catch (err) {
     console.error('Error en crearSolicitud:', err);
     res.status(500).json({ error: 'Error al crear solicitud', detalle: err.message });
   }
 };
+
 
 // Listar todas las solicitudes
 const listarSolicitudes = async (req, res, next) => {
