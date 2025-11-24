@@ -17,15 +17,19 @@ export const crearCultivo = async (data) => {
 // =========================
 
 export const getInsumos = async (token) => {
+  console.log("Fetching insumos from:", `${API_URL}/insumos`);
   const res = await fetch(`${API_URL}/insumos`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
   if (!res.ok) {
+    console.error("Error fetching insumos:", res.status, res.statusText);
     throw new Error('Error al cargar insumos');
   }
-  return res.json();
+  const data = await res.json();
+  console.log("Insumos response data:", data);
+  return data;
 };
 
 export const crearSolicitud = async (token, data) => {
@@ -39,15 +43,13 @@ export const crearSolicitud = async (token, data) => {
   });
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ message: "Error al crear solicitud" }));
-    console.error("Error creating request:", errorData);
-    throw new Error(errorData.message || errorData.error || "Error al crear solicitud");
+    const errorData = await res.json().catch(() => ({ message: "Error al crear solicitud (sin JSON)" }));
+    console.error("Error creating request. Status:", res.status, "Data:", errorData);
+    throw new Error(errorData.message || errorData.error || `Error ${res.status}: No se pudo crear la solicitud`);
   }
 
   return res.json();
 };
-
-
 
 // =========================
 //      PERFIL
@@ -61,7 +63,7 @@ export const getPerfil = async (token) => {
   });
   if (!res.ok) {
     const error = await res.json().catch(() => ({ message: 'Error al cargar perfil' }));
-    throw new Error(error.message || 'Error al cargar perfil');
+    throw new Error(error.message);
   }
   return res.json();
 };
@@ -78,16 +80,16 @@ export const updatePerfil = async (token, data) => {
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ message: 'Error al actualizar perfil' }));
-    throw new Error(error.message || 'Error al actualizar perfil');
+    throw new Error(error.message);
   }
 
   return res.json();
 };
 
-
 // =========================
 //      LOGIN
 // =========================
+
 export const login = async (credentials) => {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
@@ -97,7 +99,7 @@ export const login = async (credentials) => {
 
   if (!res.ok) {
     const errorData = await res.json();
-    throw new Error(errorData.error || errorData.message || 'Error en el inicio de sesión');
+    throw new Error(errorData.error || errorData.message);
   }
 
   return res.json();
@@ -106,6 +108,7 @@ export const login = async (credentials) => {
 // =========================
 //      REGISTER
 // =========================
+
 export const register = async (userData) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
@@ -115,12 +118,11 @@ export const register = async (userData) => {
 
   if (!res.ok) {
     const contentType = res.headers.get("content-type");
-    if (contentType && contentType.indexOf("application/json") !== -1) {
+    if (contentType?.includes("application/json")) {
       const errorData = await res.json();
-      throw new Error(errorData.error || errorData.message || "Error en el registro");
+      throw new Error(errorData.error || errorData.message);
     } else {
-      const errorText = await res.text();
-      throw new Error(errorText || "Error en el registro (500)");
+      throw new Error(await res.text());
     }
   }
 

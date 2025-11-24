@@ -1,9 +1,8 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getInsumos, crearSolicitud } from '../services/api';
-import '../styles/nuevasolicitud.css';
+import '../styles/nuevaSolicitud.css';
 
 export default function NuevaSolicitud() {
   const [insumos, setInsumos] = useState([]);
@@ -23,11 +22,25 @@ export default function NuevaSolicitud() {
         navigate('/login');
         return;
       }
+
+      console.log("Iniciando carga de insumos...");
       const data = await getInsumos(token);
-      setInsumos(data);
+      console.log("Data received in component:", data);
+
+      if (Array.isArray(data)) {
+        setInsumos(data);
+      } else if (data && Array.isArray(data.data)) {
+        setInsumos(data.data);
+      } else if (data && Array.isArray(data.insumos)) {
+        setInsumos(data.insumos);
+      } else {
+        console.error("Formato de insumos inesperado:", data);
+        setInsumos([]);
+        Swal.fire('Error', 'El formato de los datos recibidos no es válido', 'error');
+      }
     } catch (error) {
-      console.error(error);
-      Swal.fire('Error', 'No se pudieron cargar los insumos', 'error');
+      console.error("Error en cargarInsumos:", error);
+      Swal.fire('Error', 'No se pudieron cargar los insumos. Revisa la consola.', 'error');
     } finally {
       setLoading(false);
     }
@@ -49,34 +62,39 @@ export default function NuevaSolicitud() {
   };
 
   const actualizarCantidad = (insumoid, delta) => {
-    const nuevoCarrito = carrito.map(item => {
-      if (item.insumoid === insumoid) {
-        const nuevaCantidad = Math.max(0, item.cantidad + delta);
-        return { ...item, cantidad: nuevaCantidad };
-      }
-      return item;
-    }).filter(item => item.cantidad > 0);
+    const nuevoCarrito = carrito
+      .map(item => {
+        if (item.insumoid === insumoid) {
+          const nuevaCantidad = Math.max(0, item.cantidad + delta);
+          return { ...item, cantidad: nuevaCantidad };
+        }
+        return item;
+      })
+      .filter(item => item.cantidad > 0);
 
     setCarrito(nuevoCarrito);
   };
 
   const calcularTotal = () => {
-    return carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+    return carrito.reduce((total, item) => total + item.precio * item.cantidad, 0);
   };
 
   const enviarSolicitud = async () => {
-    if (carrito.length === 0) return;
+    if (carrito.length === 0) {
+      Swal.fire('Atención', 'El carrito está vacío', 'warning');
+      return;
+    }
 
     try {
       const token = localStorage.getItem('token');
-      const usuario = JSON.parse(localStorage.getItem("usuario"));
-      console.log("Usuario en localStorage:", usuario); // Debugging log
+      const usuarioStr = localStorage.getItem("usuario");
 
-
-      if (!usuario) {
+      if (!usuarioStr) {
         Swal.fire("Error", "No se encontró el usuario en la sesión", "error");
         return;
       }
+
+      const usuario = JSON.parse(usuarioStr);
 
       const detalle = carrito.map(item => ({
         insumoid: item.insumoid,
@@ -84,18 +102,25 @@ export default function NuevaSolicitud() {
         preciounitario: item.precio
       }));
 
-      // Intentar obtener el ID con diferentes nombres de propiedad comunes
-      const usuarioId = usuario.id || usuario.usuarioId || usuario.usuario_id || usuario.usuarioid;
+      const usuarioId =
+        usuario.id ||
+        usuario.usuarioId ||
+        usuario.usuario_id ||
+        usuario.usuarioid;
 
       if (!usuarioId) {
-        console.error("No se encontró el ID del usuario en el objeto:", usuario);
-        Swal.fire("Error", "No se pudo identificar al usuario. Por favor, inicia sesión nuevamente.", "error");
+        Swal.fire("Error", "No se pudo identificar al usuario. Por favor inicie sesión nuevamente.", "error");
         return;
       }
 
-      const data = await crearSolicitud(token, usuarioId, { detalle });
+      const payload = {
+        usuarioid: usuarioId,
+        detalle
+      };
 
-      if (data) {
+      const response = await crearSolicitud(token, payload);
+
+      if (response) {
         await Swal.fire({
           title: '¡Solicitud Enviada!',
           text: 'Tu pedido ha sido registrado exitosamente.',
@@ -106,16 +131,14 @@ export default function NuevaSolicitud() {
         setCarrito([]);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error al enviar solicitud:", error);
       Swal.fire({
         title: 'Error',
-        text: error.message || 'Hubo un problema al procesar tu solicitud.',
-        icon: 'error',
-        confirmButtonColor: '#d33'
+        text: error.message || 'Hubo un problema al procesar la solicitud.',
+        icon: 'error'
       });
     }
   };
-
 
   const insumosFiltrados = insumos.filter(insumo =>
     insumo.nombre.toLowerCase().includes(searchTerm.toLowerCase())
@@ -123,119 +146,101 @@ export default function NuevaSolicitud() {
 
   if (loading) {
     return (
-      <div className="solicitud-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div className="loading-spinner">Cargando catálogo...</div>
+      <div className="ns-loading-container">
+        <div className="ns-spinner"></div>
+        <p>Cargando catálogo...</p>
       </div>
     );
   }
 
   return (
-    <div className="solicitud-container">
-      {/* Catálogo de Productos */}
-      <div className="catalog-section">
-        <div className="catalog-header">
-          <div>
-            <h1>Catálogo de Insumos</h1>
-            <p>Selecciona los productos que necesitas para tu producción</p>
-          </div>
-          <div className="search-container" style={{ marginTop: '1rem' }}>
+    <div className="ns-page-container">
+      <header className="ns-header">
+        <h1>Nueva Solicitud de Insumos</h1>
+        <p>Selecciona los productos necesarios para tu producción</p>
+      </header>
+
+      <div className="ns-content-grid">
+        {/* Columna de Insumos */}
+        <div className="ns-catalog-section">
+          <div className="ns-search-bar">
             <input
               type="text"
-              placeholder="Buscar insumo..."
+              placeholder="🔍 Buscar insumos..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-              style={{
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                width: '100%',
-                maxWidth: '400px',
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'border-color 0.2s',
-              }}
             />
           </div>
-        </div>
 
-        <div className="insumos-grid">
-          {insumosFiltrados.map(insumo => (
-            <div key={insumo.insumoid} className="insumo-card">
-              <div className="card-header">
-                <div>
-                  <h3 className="insumo-name">{insumo.nombre}</h3>
-                  <span className={`stock - badge ${insumo.stock < 10 ? 'low' : ''} `}>
-                    {insumo.stock} disponibles
-                  </span>
-                </div>
-                <span className="insumo-price">${insumo.precio}</span>
-              </div>
-
-              <p className="insumo-desc">{insumo.descripcion || 'Sin descripción disponible'}</p>
-
-              <button
-                className="add-btn"
-                onClick={() => agregarAlCarrito(insumo)}
-                disabled={insumo.stock === 0}
-              >
-                {insumo.stock === 0 ? 'Sin Stock' : 'Agregar al Pedido'}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Carrito Lateral */}
-      <div className="cart-sidebar">
-        <div className="cart-header">
-          <h2>Tu Pedido</h2>
-          <span className="cart-count">{carrito.length} items</span>
-        </div>
-
-        <div className="cart-items">
-          {carrito.length === 0 ? (
-            <p className="empty-cart">Tu carrito está vacío</p>
-          ) : (
-            carrito.map(item => (
-              <div key={item.insumoid} className="cart-item">
-                <div className="item-info">
-                  <span className="item-name">{item.nombre}</span>
-                  <span className="item-price">${item.precio} x {item.cantidad}</span>
-                </div>
-                <div className="item-controls">
+          <div className="ns-products-grid">
+            {insumosFiltrados.length > 0 ? (
+              insumosFiltrados.map((insumo) => (
+                <div key={insumo.insumoid || insumo.id} className="ns-product-card">
+                  <div className="ns-card-header">
+                    <h3>{insumo.nombre}</h3>
+                    <span className="ns-price-tag">${insumo.precio}</span>
+                  </div>
+                  <p className="ns-description">{insumo.descripcion}</p>
                   <button
-                    className="qty-btn"
-                    onClick={() => actualizarCantidad(item.insumoid, -1)}
+                    onClick={() => agregarAlCarrito(insumo)}
+                    className="ns-add-btn"
                   >
-                    -
-                  </button>
-                  <span className="item-qty">{item.cantidad}</span>
-                  <button
-                    className="qty-btn"
-                    onClick={() => actualizarCantidad(item.insumoid, 1)}
-                  >
-                    +
+                    Agregar al Carrito
                   </button>
                 </div>
+              ))
+            ) : (
+              <div className="ns-empty-state">
+                <p>No se encontraron insumos.</p>
               </div>
-            ))
-          )}
-        </div>
-
-        <div className="cart-summary">
-          <div className="total-row">
-            <span className="total-label">Total Estimado</span>
-            <span className="total-amount">${calcularTotal().toFixed(2)}</span>
+            )}
           </div>
+        </div>
 
-          <button
-            className="checkout-btn"
-            onClick={enviarSolicitud}
-            disabled={carrito.length === 0}
-          >
-            Confirmar Solicitud
-          </button>
+        {/* Columna del Carrito */}
+        <div className="ns-cart-section">
+          <div className="ns-cart-container">
+            <div className="ns-cart-header">
+              <h2>Tu Pedido</h2>
+              <span className="ns-item-count">{carrito.length} items</span>
+            </div>
+
+            {carrito.length === 0 ? (
+              <div className="ns-cart-empty">
+                <p>El carrito está vacío</p>
+                <small>Agrega productos del catálogo</small>
+              </div>
+            ) : (
+              <>
+                <div className="ns-cart-items">
+                  {carrito.map((item) => (
+                    <div key={item.insumoid} className="ns-cart-item">
+                      <div className="ns-item-info">
+                        <h4>{item.nombre}</h4>
+                        <span className="ns-item-price">${item.precio} x {item.cantidad}</span>
+                      </div>
+                      <div className="ns-item-controls">
+                        <button onClick={() => actualizarCantidad(item.insumoid, -1)}>-</button>
+                        <span>{item.cantidad}</span>
+                        <button onClick={() => actualizarCantidad(item.insumoid, 1)}>+</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="ns-cart-footer">
+                  <div className="ns-total-row">
+                    <span>Total Estimado</span>
+                    <span className="ns-total-amount">${calcularTotal().toFixed(2)}</span>
+                  </div>
+
+                  <button onClick={enviarSolicitud} className="ns-checkout-btn">
+                    Confirmar Solicitud
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
