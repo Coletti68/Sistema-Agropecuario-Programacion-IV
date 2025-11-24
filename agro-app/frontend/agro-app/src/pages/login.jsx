@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as api from "../services/api";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
@@ -24,15 +25,11 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), password: password.trim() }),
-      });
-
-      const data = await response.json();
+      const data = await api.login({ email, password });
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
 
       await Swal.fire({
         title: '¡Bienvenido!',
@@ -46,7 +43,7 @@ export default function Login() {
 
       navigate("/dashboard");
     } catch (err) {
-      setError("Error de conexión con el servidor");
+      setError(err.message || "Error de conexión con el servidor");
     }
   };
 
