@@ -4,6 +4,7 @@ const cultivoController = require('../controllers/cultivoController');
 const validate = require('../middlewares/validate');
 const { cultivoSchema } = require('../validations/cultivoValidation');
 const Joi = require('joi');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -22,7 +23,7 @@ const Joi = require('joi');
  *       200:
  *         description: Lista de cultivos obtenida exitosamente
  */
-router.get('/', cultivoController.listarCultivos);
+router.get('/', authMiddleware,cultivoController.listarCultivos);
 
 /**
  * @swagger
@@ -40,7 +41,7 @@ router.get('/', cultivoController.listarCultivos);
  *       201:
  *         description: Cultivo creado exitosamente
  */
-router.post('/', validate({ body: cultivoSchema }), cultivoController.crearCultivo);
+router.post('/',authMiddleware, validate({ body: cultivoSchema }), cultivoController.crearCultivo);
 
 /**
  * @swagger

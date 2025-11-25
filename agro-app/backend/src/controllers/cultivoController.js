@@ -3,12 +3,16 @@ const cultivoService = require('../services/cultivoService');
 // Listar cultivos
 const listarCultivos = async (req, res, next) => {
   try {
-    const cultivos = await cultivoService.listarCultivos();
+    console.log("Usuario autenticado:", req.user); // debug
+    const usuarioId = req.user.usuarioid;
+    const cultivos = await cultivoService.listarCultivosPorUsuario(usuarioId);
     res.status(200).json(cultivos);
   } catch (err) {
+    console.error("Error al listar cultivos:", err);
     next(err);
   }
 };
+
 
 // Crear cultivo
 const crearCultivo = async (req, res, next) => {

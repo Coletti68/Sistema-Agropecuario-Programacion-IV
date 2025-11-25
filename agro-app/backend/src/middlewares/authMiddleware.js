@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  
+
   if (!authHeader) {
     return res.status(401).json({ error: 'Token no proporcionado' });
   }
@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { usuarioid, rol, ... }
+    req.user = decoded; // Esto agrega usuarioid, rolid, email, etc.
     next();
   } catch (err) {
     return res.status(401).json({ error: 'Token inválido' });
