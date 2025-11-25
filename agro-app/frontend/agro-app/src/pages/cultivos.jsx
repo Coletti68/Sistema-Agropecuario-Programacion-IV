@@ -3,17 +3,36 @@ import '../styles/cultivos.css';
 
 export default function Cultivos() {
   const [cultivos, setCultivos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/mis-cultivos', {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
+    fetch('http://localhost:3000/api/cultivos', {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
     })
-      .then(res => res.json())
-      .then(data => setCultivos(data))
-      .catch(err => console.error('Error al cargar cultivos', err));
+      .then(async res => {
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`Error ${res.status}: ${errText}`);
+        }
+        return res.json();
+      })
+      .then(data => setCultivos(Array.isArray(data) ? data : []))
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <p>Cargando cultivos...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="cultivos-container">
@@ -31,14 +50,16 @@ export default function Cultivos() {
         <tbody>
           {cultivos.map(c => (
             <tr key={c.usuariocultivoid}>
-              <td>{c.nombre}</td>
-              <td>{c.fechasiembra}</td>
-              <td>{c.latitud}</td>
-              <td>{c.longitud}</td>
+              <td>{c.Cultivo?.nombre || '—'}</td>
+              <td>{c.fechasiembra || '—'}</td>
+              <td>{c.latitud || '—'}</td>
+              <td>{c.longitud || '—'}</td>
               <td>
-                <button onClick={() => window.location.href = `/cultivo/${c.usuariocultivoid}/historial`}>
-                  Ver historial
-                </button>
+                {c.HistorialCultivos?.length
+                  ? <ul>{c.HistorialCultivos.map(h => (
+                      <li key={h.historialid}>{new Date(h.fecha).toLocaleDateString()}: {h.observaciones}</li>
+                    ))}</ul>
+                  : <span>No hay historial</span>}
               </td>
             </tr>
           ))}

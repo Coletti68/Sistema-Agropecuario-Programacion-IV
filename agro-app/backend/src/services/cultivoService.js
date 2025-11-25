@@ -1,14 +1,24 @@
 
-const { Cultivo } = require('../models');
+const { Cultivo, UsuarioCultivo, HistorialCultivo } = require('../models');
 
-async function listarCultivos() {
+async function listarCultivosPorUsuario(usuarioid) {
   try {
-    return await Cultivo.findAll();
+    if (!usuarioid) throw new Error('Usuario no identificado'); // corregido
+
+    return await UsuarioCultivo.findAll({
+      where: { usuarioid }, // usar el parámetro correctamente
+      include: [
+        { model: Cultivo },
+        { model: HistorialCultivo }
+      ]
+    });
   } catch (error) {
     console.error("Error al listar cultivos:", error.message);
     throw new Error("No se pudo obtener la lista de cultivos");
   }
 }
+
+
 
 async function crearCultivo(data) {
   try {
@@ -69,7 +79,7 @@ const eliminarCultivo = async (id) => {
 
 
 module.exports = {
-  listarCultivos,
+  listarCultivosPorUsuario,
   crearCultivo,
   actualizarCultivo,
   desactivarCultivo,
