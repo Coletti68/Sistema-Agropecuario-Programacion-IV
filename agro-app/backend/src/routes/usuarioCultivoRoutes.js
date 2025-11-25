@@ -4,6 +4,7 @@ const usuarioCultivoController = require('../controllers/usuarioCultivoControlle
 const validate = require('../middlewares/validate');
 const { usuarioCultivoSchema } = require('../validations/usuarioCultivoValidation');
 const { usuariocultivoIdParamSchema, usuarioIdParamSchema, cultivoIdParamSchema } = require('../validations/paramSchemas');
+const authMiddleware = require('../middlewares/authMiddleware')
 
 /**
  * @swagger
@@ -189,6 +190,8 @@ router.get('/cultivo/:cultivoId', validate({ params: cultivoIdParamSchema }), us
  */
 router.get('/ubicacion', usuarioCultivoController.buscarPorUbicacion);
 
+
+router.post('/cultivo-completo', authMiddleware, usuarioCultivoController.crearCultivoCompleto);
 /**
  * @swagger
  * /usuariocultivo/historial/{id}:

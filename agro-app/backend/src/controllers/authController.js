@@ -6,27 +6,24 @@ async function login(req, res) {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Faltan datos' });
 
-    const usuario = await authService.validarCredenciales(email.trim(), password.trim());
-    if (!usuario) return res.status(401).json({ error: 'Credenciales inválidas' });
+    const { usuario, token } = await authService.loginUsuario(email, password);
 
-    const token = authService.generarToken(usuario);
     return res.json({
-  token,
-  usuario: {
-    usuarioid: usuario.usuarioid,
-    nombre: usuario.nombre,
-    email: usuario.email,
-    telefono: usuario.telefono,
-    direccion: usuario.direccion,
-    rol: usuario.rol
-  }
-});
-
+      token,
+      usuario: {
+        usuarioid: usuario.usuarioid,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        telefono: usuario.telefono,
+        direccion: usuario.direccion,
+        rol: usuario.rolid
+      }
+    });
   } catch (error) {
-    console.error('Error en login:', error);
-    return res.status(500).json({ error: 'Error interno' });
+    return res.status(401).json({ error: error.message });
   }
 }
+
 
 async function register(req, res) {
   try {

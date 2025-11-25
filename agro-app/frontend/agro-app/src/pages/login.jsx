@@ -29,6 +29,8 @@ export default function Login() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
+      localStorage.setItem("usuarioid", data.usuario.usuarioid);
+
 
 
       await Swal.fire({

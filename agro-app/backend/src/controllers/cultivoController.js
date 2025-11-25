@@ -3,23 +3,31 @@ const cultivoService = require('../services/cultivoService');
 // Listar cultivos
 const listarCultivos = async (req, res, next) => {
   try {
-    const cultivos = await cultivoService.listarCultivos();
+    console.log("Usuario autenticado:", req.user); // debug
+    const usuarioId = req.user.usuarioid;
+    const cultivos = await cultivoService.listarCultivosPorUsuario(usuarioId);
     res.status(200).json(cultivos);
+  } catch (err) {
+    console.error("Error al listar cultivos:", err);
+    next(err);
+  }
+};
+
+
+// Crear cultivo
+const crearCultivo = async (req, res, next) => {
+  try {
+    const usuarioId = req.user.usuarioid; // viene del middleware de auth
+    const cultivo = await cultivoService.crearCultivo(req.validatedBody, usuarioId);
+    res.status(201).json(cultivo);
+    console.log("POST /usuariocultivo ejecutado");
+
   } catch (err) {
     next(err);
   }
 };
 
-// Crear cultivo
-const crearCultivo = async (req, res, next) => {
-  try {
-    const cultivo = await cultivoService.crearCultivo(req.validatedBody);
-    res.status(200).json(cultivo);
-    console.log('validatedBody:', req.validatedBody);
-  } catch (err) {
-    next(err);
-  }
-};
+
 
 // Actualizar cultivo
 const actualizarCultivo = async (req, res, next) => {

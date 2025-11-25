@@ -13,6 +13,16 @@ function generarToken(usuario) {
   return jwt.sign(payload, jwtSecret, { expiresIn: '2h' });
 }
 
+async function loginUsuario(email, password) {
+  const usuario = await usuarioService.obtenerUsuarioPorEmail(email);
+  if (!usuario) throw new Error('Credenciales inválidas');
+
+  const valido = await bcrypt.compare(password, usuario.passwordhash);
+  if (!valido) throw new Error('Credenciales inválidas');
+
+  const token = generarToken(usuario);
+  return { usuario, token };
+}
 // 🔑 Verificar token
 function verificarToken(token) {
   try {
