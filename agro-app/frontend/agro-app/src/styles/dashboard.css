@@ -271,3 +271,20 @@
   background-color: #ef4444 !important;
   color: white;
 }
+
+.about-us-image-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  overflow: hidden;
+  transition: all 1s ease;
+}
+
+.about-us-image {
+  position: relative;
+  height: auto;
+  width: 100%;
+}

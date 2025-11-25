@@ -3,13 +3,14 @@ const solicitudService = require('../services/solicitudService');
 // Crear solicitud
 const crearSolicitud = async (req, res, next) => {
   try {
-    const usuarioId = req.params.id; // <- viene del params !!
+    const usuarioId = req.body.usuarioid; // <- viene del params !!
     const { detalle } = req.body;
 
     if (!usuarioId) {
       return res.status(400).json({ error: "El usuarioId es obligatorio" });
     }
-
+    console.log(detalle)
+    console.log(req.body);
     if (!detalle || !Array.isArray(detalle) || detalle.length === 0) {
       return res.status(400).json({ error: "El detalle de la solicitud está vacío o mal formado" });
     }
