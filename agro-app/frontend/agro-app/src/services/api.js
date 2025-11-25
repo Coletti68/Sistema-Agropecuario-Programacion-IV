@@ -51,6 +51,21 @@ export const crearSolicitud = async (token, data) => {
   return res.json();
 };
 
+export const getSolicitudes = async (token) => {
+  const res = await fetch(`${API_URL}/solicitudes`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({ message: "Error al obtener solicitudes" }));
+    throw new Error(errorData.message || `Error ${res.status}: No se pudo obtener las solicitudes`);
+  }
+
+  return res.json();
+};
+
 // =========================
 //      PERFIL
 // =========================

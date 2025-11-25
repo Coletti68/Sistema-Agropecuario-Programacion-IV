@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/dashboard.css';
@@ -13,10 +12,47 @@ import {
   ShoppingCart,
   Info
 } from 'lucide-react';
+import { getSolicitudes } from '../services/api';
+import Carousel from "../components/carousel";
 
-export default function Dashboard({ solicitudes = [] }) {
+export default function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [solicitudes, setSolicitudes] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const carouselItems = [
+    {
+      image: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1740&auto=format&fit=crop",
+      text: "Innovación tecnológica al servicio del campo argentino"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1932&auto=format&fit=crop",
+      text: "Conectando productores con los mejores insumos del mercado"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=1740&auto=format&fit=crop",
+      text: "Eficiencia y sustentabilidad en cada cosecha"
+    }
+  ];
+
+  useEffect(() => {
+    const fetchSolicitudes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const data = await getSolicitudes(token);
+        setSolicitudes(data);
+      } catch (error) {
+        console.error("Error al cargar estadísticas:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSolicitudes();
+  }, []);
 
   useEffect(() => {
     if (location.hash === '#nosotros') {
@@ -73,7 +109,7 @@ export default function Dashboard({ solicitudes = [] }) {
                 onClick={() => navigate('/productores')}
                 className="hero-button-secondary"
               >
-                Ver Catálogo
+                Ver Mis Cultivos
               </Button>
             </div>
           </div>
@@ -119,8 +155,11 @@ export default function Dashboard({ solicitudes = [] }) {
         </Card>
       </div>
 
-      {/* ACCIÓN RÁPIDA */}
-      <Card className="accion-rapida-card">
+      {/* CARRUSEL DE IMÁGENES */}
+      <Carousel items={carouselItems} />
+
+      {/* ACCIÓN RÁPIDA (Comentada según estado anterior) */}
+      {/* <Card className="accion-rapida-card">
         <CardContent className="pt-6">
           <div className="accion-rapida-flex">
             <div>
@@ -139,7 +178,7 @@ export default function Dashboard({ solicitudes = [] }) {
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* SECCIÓN SOBRE NOSOTROS */}
       <div id="nosotros" className="about-us-section" style={{ marginTop: '4rem', marginBottom: '2rem' }}>
@@ -149,28 +188,28 @@ export default function Dashboard({ solicitudes = [] }) {
               <div className="flex-1 md:flex-[2] p-8 md:p-12 flex flex-col justify-center bg-gradient-to-br from-white to-emerald-50/50">
                 <div className="flex items-center gap-3 mb-6">
                   <Info className="text-emerald-600" size={32} />
-                  <h2 className="text-3xl font-bold text-emerald-900">Sobre Nosotros</h2>
+                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-900 to-green-600 drop-shadow-sm">Sobre Nosotros</h2>
                 </div>
-                <p className="text-lg text-emerald-800 leading-relaxed mb-6">
-                  En <strong>AgroSistema</strong>, nos dedicamos a potenciar la producción agrícola mediante tecnología de vanguardia.
-                  Nuestra misión es simplificar la gestión de cultivos y conectar a los productores con los mejores insumos del mercado.
+                <p className="text-xl text-emerald-900/90 leading-loose mb-8 font-light">
+                  En <strong className="font-bold text-emerald-800">AgroSistema</strong>, lideramos la transformación digital del campo argentino. Fusionamos la tradición agrícola con tecnología de vanguardia para maximizar el potencial de cada hectárea.
+                  Nuestra plataforma integral no solo simplifica la gestión de tus cultivos, sino que crea un puente directo con los insumos de mayor calidad del mercado, garantizando excelencia en cada etapa de tu ciclo productivo.
                 </p>
-                <p className="text-emerald-700 font-medium mb-8">
-                  Comprometidos con el desarrollo sostenible y la eficiencia del campo argentino.
+                <p className="text-lg text-emerald-700 font-medium mb-10 border-l-4 border-emerald-500 pl-4 italic">
+                  "Impulsamos el futuro del agro con un compromiso inquebrantable hacia la innovación, la sostenibilidad y la eficiencia operativa."
                 </p>
 
-                <div className="space-y-4 text-emerald-800 bg-white p-6 rounded-xl border border-emerald-100 shadow-sm">
-                  <p className="flex items-center gap-3">
-                    <span className="font-semibold min-w-[80px] text-emerald-700">Dirección:</span>
-                    <span>Av. Sarmiento 450, Goya-Corrientes, Argentina</span>
+                <div className="space-y-5 text-emerald-800 bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-emerald-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <p className="flex items-center gap-4">
+                    <span className="font-bold min-w-[90px] text-emerald-700 uppercase tracking-wide text-sm">Dirección:</span>
+                    <span className="font-medium">Av. Sarmiento 450, Goya-Corrientes, Argentina</span>
                   </p>
-                  <p className="flex items-center gap-3">
-                    <span className="font-semibold min-w-[80px] text-emerald-700">Teléfono:</span>
-                    <span>+54 9 379 400-4972</span>
+                  <p className="flex items-center gap-4">
+                    <span className="font-bold min-w-[90px] text-emerald-700 uppercase tracking-wide text-sm">Teléfono:</span>
+                    <span className="font-medium">+54 9 379 400-4972</span>
                   </p>
-                  <p className="flex items-center gap-3">
-                    <span className="font-semibold min-w-[80px] text-emerald-700">Email:</span>
-                    <span>agrosistema@gmail.com</span>
+                  <p className="flex items-center gap-4">
+                    <span className="font-bold min-w-[90px] text-emerald-700 uppercase tracking-wide text-sm">Email:</span>
+                    <span className="font-medium">agrosistema@gmail.com</span>
                   </p>
                 </div>
               </div>
