@@ -3,12 +3,36 @@ const API_URL = 'http://localhost:3000/api';
 // =========================
 //      CULTIVOS
 // =========================
-export const crearCultivo = async (data) => {
+export const crearCultivo = async (token, data) => {
   const res = await fetch(`${API_URL}/cultivos`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(data),
   });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({ message: "Error al crear cultivo" }));
+    throw new Error(errorData.message || errorData.error || `Error ${res.status}`);
+  }
+
+  return res.json();
+};
+
+export const getCultivos = async (token) => {
+  const res = await fetch(`${API_URL}/cultivos`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Error ${res.status}: ${errText}`);
+  }
   return res.json();
 };
 

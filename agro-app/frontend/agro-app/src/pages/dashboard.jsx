@@ -106,7 +106,7 @@ export default function Dashboard() {
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => navigate('/productores')}
+                onClick={() => navigate('/cultivos')}
                 className="hero-button-secondary"
               >
                 Ver Mis Cultivos
