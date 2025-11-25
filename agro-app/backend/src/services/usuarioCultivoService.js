@@ -9,12 +9,73 @@ const HistorialCultivo = require('../models/historialCultivoModel');
 async function crearAsignacion(data) {
   try {
     if (!data || typeof data !== 'object') throw new Error('Datos de asignación inválidos');
-    return await UsuarioCultivo.create(data);
+
+    // 1. Crear asignación con lat/long/fecha
+    const nuevaAsignacion = await UsuarioCultivo.create({
+  usuarioid: data.usuarioid,
+  cultivoid: data.cultivoid,
+  latitud: data.latitud !== '' ? parseFloat(data.latitud) : null,
+  longitud: data.longitud !== '' ? parseFloat(data.longitud) : null,
+  fechasiembra: data.fechasiembra ? new Date(data.fechasiembra) : null
+});
+
+
+
+
+
+    // 2. Crear historial inicial si hay observaciones
+    if (data.observaciones && typeof data.observaciones === 'string') {
+      await HistorialCultivo.create({
+        usuariocultivoid: nuevaAsignacion.usuariocultivoid,
+        fecha: new Date(),
+        observaciones: data.observaciones
+      });
+    }
+
+    // 3. Devolver la asignación con historial incluido
+    return await UsuarioCultivo.findByPk(nuevaAsignacion.usuariocultivoid, {
+      include: [
+        { model: HistorialCultivo }
+      ]
+    });
   } catch (error) {
     console.error('Error al crear asignación:', error.message);
     throw new Error('No se pudo crear la asignación');
   }
 }
+
+
+async function crearCultivoConAsignacion(data) {
+  const cultivo = await Cultivo.create({
+    nombre: data.nombre,
+    descripcion: data.descripcion
+  });
+
+  const asignacion = await UsuarioCultivo.create({
+    usuarioid: data.usuarioid,
+    cultivoid: cultivo.cultivoid,
+    latitud: data.latitud !== '' ? parseFloat(data.latitud) : null,
+    longitud: data.longitud !== '' ? parseFloat(data.longitud) : null,
+    fechasiembra: data.fechasiembra ? new Date(data.fechasiembra) : null
+  });
+
+  if (data.observaciones) {
+    await HistorialCultivo.create({
+      usuariocultivoid: asignacion.usuariocultivoid,
+      usuarioid: data.usuarioid,
+      latitud: asignacion.latitud,
+      longitud: asignacion.longitud,
+      fecha: new Date(),
+      observaciones: data.observaciones
+    });
+  }
+
+  return asignacion;
+}
+
+module.exports = {
+  crearCultivoConAsignacion
+};
 
 // -----------------------------
 // Listar todas las asignaciones

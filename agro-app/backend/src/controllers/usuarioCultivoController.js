@@ -12,7 +12,15 @@ async function crearAsignacion(req, res, next) {
     next(error);
   }
 }
-
+async function crearCultivoCompleto(req, res) {
+  try {
+    const data = req.body;
+    const asignacion = await usuarioCultivoService.crearCultivoConAsignacion(data);
+    res.status(201).json(asignacion);
+  } catch (err) {
+    console.error('❌ Error en /cultivo-completo:', err);
+    res.status(500).json({ error: 'No se pudo crear el cultivo completo' });
+  }}
 // ======================================================
 // Listar todas las asignaciones
 // ======================================================
@@ -164,4 +172,5 @@ module.exports = {
   eliminarAsignacion,
   desactivarAsignacionDelUsuario,
   listarConHistorial,
+  crearCultivoCompleto
 };

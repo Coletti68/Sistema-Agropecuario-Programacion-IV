@@ -30,10 +30,17 @@ export const getCultivos = async (token) => {
   });
 
   if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Error ${res.status}: ${errText}`);
+    const errorText = await res.text();
+    throw new Error(`Error ${res.status}: ${errorText}`);
   }
-  return res.json();
+
+  const data = await res.json();
+
+  // Asegurarnos de devolver siempre un array de cultivos
+  if (Array.isArray(data)) return data;
+  if (data.cultivos && Array.isArray(data.cultivos)) return data.cultivos;
+
+  return []; // fallback si no hay nada
 };
 
 // =========================

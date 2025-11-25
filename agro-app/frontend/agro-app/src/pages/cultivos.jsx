@@ -17,8 +17,10 @@ export default function Cultivos() {
     observaciones: ''
   });
 
+  // 🚀 Función para cargar cultivos desde la API
   const fetchCultivos = async () => {
     const token = localStorage.getItem('token');
+    
     if (!token) {
       window.location.href = '/login';
       return;
@@ -26,10 +28,28 @@ export default function Cultivos() {
 
     try {
       const data = await getCultivos(token);
-      console.log('Cultivos fetched:', data);
-      setCultivos(Array.isArray(data) ? data : []);
+      console.log('🚀 Data cruda de la API:', data);
+
+      const lista = (Array.isArray(data) ? data : data.cultivos || []).map(c => ({
+  id: c.usuariocultivoid || c.id || Math.random(),
+  nombre: c.Cultivo?.nombre || c.nombre || '—',
+  descripcion: c.Cultivo?.descripcion || c.descripcion || '',
+  latitud: c.latitud !== null ? c.latitud : '—',
+longitud: c.longitud !== null ? c.longitud : '—',
+fechasiembra: c.fechasiembra && !isNaN(new Date(c.fechasiembra)) 
+  ? new Date(c.fechasiembra).toLocaleDateString('es-AR') 
+  : '—',
+
+
+  historial: Array.isArray(c.HistorialCultivos) ? c.HistorialCultivos : []
+}));
+
+console.log('Cultivos procesados:', lista);
+
+      setCultivos(lista);
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setError(err.message || 'Error al cargar cultivos');
     } finally {
       setLoading(false);
     }
@@ -44,45 +64,72 @@ export default function Cultivos() {
     setNuevoCultivo(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-    if (!token) return;
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  const token = localStorage.getItem('token');
+  if (!token) return;
 
-    try {
-      await crearCultivo(token, nuevoCultivo);
+  try {
+    // 1️⃣ Crear el cultivo
+    const cultivoCreado = await crearCultivo(token, {
+      nombre: nuevoCultivo.nombre,
+      descripcion: nuevoCultivo.descripcion
+    });
 
-      // Refresh list immediately
-      await fetchCultivos();
+    // 2️⃣ Crear la asignación en UsuarioCultivo
+    const usuarioId = localStorage.getItem('usuarioid');
+    const asignacion = {
+      usuarioid: usuarioId ? parseInt(usuarioId) : null,
+      cultivoid: cultivoCreado.cultivoid || cultivoCreado.id,
+      latitud: nuevoCultivo.latitud !== '' ? parseFloat(nuevoCultivo.latitud) : null,
+      longitud: nuevoCultivo.longitud !== '' ? parseFloat(nuevoCultivo.longitud) : null,
+      fechasiembra: nuevoCultivo.fechasiembra 
+        ? new Date(nuevoCultivo.fechasiembra).toISOString().split('T')[0] 
+        : null,
+      observaciones: nuevoCultivo.observaciones || null
+    };
 
-      // Reset form
-      setNuevoCultivo({
-        nombre: '',
-        descripcion: '',
-        latitud: '',
-        longitud: '',
-        fechasiembra: '',
-        observaciones: ''
-      });
+    console.log('Asignación enviada:', asignacion);
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Cultivo Agregado!',
-        text: 'El cultivo y su historial inicial se han guardado correctamente.',
-        confirmButtonColor: '#4CAF50',
-        timer: 3000
-      });
-    } catch (err) {
-      console.error(err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo agregar el cultivo: ' + err.message,
-        confirmButtonColor: '#d33'
-      });
-    }
-  };
+    await fetch('http://localhost:3000/api/usuariocultivo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(asignacion)
+    });
 
+    // 3️⃣ Resetear formulario
+    setNuevoCultivo({
+      nombre: '',
+      descripcion: '',
+      latitud: '',
+      longitud: '',
+      fechasiembra: '',
+      observaciones: ''
+    });
+
+    // 4️⃣ Refrescar lista
+    await fetchCultivos();
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Cultivo Agregado!',
+      text: 'El cultivo y su historial inicial se han guardado correctamente.',
+      confirmButtonColor: '#4CAF50',
+      timer: 2500
+    });
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo agregar el cultivo: ' + (err.message || 'Error desconocido'),
+      confirmButtonColor: '#d33'
+    });
+  }
+};
   if (loading) return <p>Cargando cultivos...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -153,7 +200,7 @@ export default function Cultivos() {
               onChange={handleInputChange}
               rows="2"
               placeholder="Detalles adicionales del cultivo..."
-            ></textarea>
+            />
           </div>
 
           <div className="form-group full-width">
@@ -165,7 +212,7 @@ export default function Cultivos() {
               onChange={handleInputChange}
               rows="2"
               placeholder="Estado inicial del cultivo, condiciones, etc..."
-            ></textarea>
+            />
           </div>
 
           <div className="form-actions">
@@ -174,8 +221,7 @@ export default function Cultivos() {
         </form>
       </div>
 
-      <br />
-      <h1>Lista de cultivos</h1>
+      <h2>Lista de cultivos</h2>
       <table className="cultivos-table">
         <thead>
           <tr>
@@ -194,18 +240,21 @@ export default function Cultivos() {
               </td>
             </tr>
           ) : (
-            cultivos.map((c, index) => (
-              <tr key={c.usuariocultivoid || c.id || index}>
-                <td>{c.Cultivo?.nombre || c.cultivo?.nombre || c.nombre || '—'}</td>
-                <td>{c.fechasiembra ? new Date(c.fechasiembra).toLocaleDateString() : '—'}</td>
-                <td>{c.latitud || '—'}</td>
-                <td>{c.longitud || '—'}</td>
+            cultivos.map(c => (
+              <tr key={c.id}>
+                <td>{c.nombre}</td>
+                <td>{c.fechasiembra}</td>
+                <td>{c.latitud}</td>
+                <td>{c.longitud}</td>
                 <td>
-                  {c.HistorialCultivos?.length
-                    ? <ul>{c.HistorialCultivos.map(h => (
-                      <li key={h.historialid}>{new Date(h.fecha).toLocaleDateString()}: {h.observaciones}</li>
-                    ))}</ul>
-                    : <span>No hay historial</span>}
+                  {c.historial.length
+                    ? <ul>{c.historial.map(h => (
+                        <li key={h.historialid || Math.random()}>
+                          {h.fecha ? new Date(h.fecha).toLocaleDateString() : ''}: {h.observaciones}
+                        </li>
+                      ))}</ul>
+                    : <span>No hay historial</span>
+                  }
                 </td>
               </tr>
             ))

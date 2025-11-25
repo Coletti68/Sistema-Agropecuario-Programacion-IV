@@ -17,13 +17,17 @@ const listarCultivos = async (req, res, next) => {
 // Crear cultivo
 const crearCultivo = async (req, res, next) => {
   try {
-    const cultivo = await cultivoService.crearCultivo(req.validatedBody);
-    res.status(200).json(cultivo);
-    console.log('validatedBody:', req.validatedBody);
+    const usuarioId = req.user.usuarioid; // viene del middleware de auth
+    const cultivo = await cultivoService.crearCultivo(req.validatedBody, usuarioId);
+    res.status(201).json(cultivo);
+    console.log("POST /usuariocultivo ejecutado");
+
   } catch (err) {
     next(err);
   }
 };
+
+
 
 // Actualizar cultivo
 const actualizarCultivo = async (req, res, next) => {
