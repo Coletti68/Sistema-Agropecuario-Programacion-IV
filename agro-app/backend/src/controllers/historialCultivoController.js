@@ -1,6 +1,5 @@
 const historialCultivoService = require('../services/historialCultivoService');
 
-// POST /historial
 const registrarCambio = async (req, res, next) => {
   try {
     const registro = await historialCultivoService.registrarCambio(req.validatedBody);
@@ -10,7 +9,6 @@ const registrarCambio = async (req, res, next) => {
   }
 };
 
-// GET /historial
 const listarHistorial = async (req, res, next) => {
   try {
     const historial = await historialCultivoService.listarHistorial();
@@ -20,7 +18,6 @@ const listarHistorial = async (req, res, next) => {
   }
 };
 
-// GET /historial/:id
 const obtenerPorId = async (req, res, next) => {
   try {
     const registro = await historialCultivoService.obtenerPorId(req.validatedParams.id);
@@ -30,7 +27,6 @@ const obtenerPorId = async (req, res, next) => {
   }
 };
 
-// DELETE /historial/:id
 const eliminarRegistro = async (req, res, next) => {
   try {
     const resultado = await historialCultivoService.eliminarRegistro(req.validatedParams.id);
@@ -40,8 +36,6 @@ const eliminarRegistro = async (req, res, next) => {
   }
 };
 
-// GET /historial/usuario/:usuarioId
-// GET /historial/usuario/:usuarioId
 const listarPorUsuario = async (req, res, next) => {
   try {
     const { usuarioId } = req.validatedParams;
@@ -52,7 +46,6 @@ const listarPorUsuario = async (req, res, next) => {
   }
 };
 
-// GET /historial/asignacion/:usuariocultivoId
 const listarPorAsignacion = async (req, res, next) => {
   try {
     const { usuariocultivoId } = req.validatedParams;
@@ -63,7 +56,6 @@ const listarPorAsignacion = async (req, res, next) => {
   }
 };
 
-// GET /historial/detalles/:usuariocultivoId
 const listarConDetalles = async (req, res, next) => {
   try {
     const { usuariocultivoId } = req.validatedParams;
@@ -74,8 +66,6 @@ const listarConDetalles = async (req, res, next) => {
   }
 };
 
-
-// PUT /historial/:id
 const editarRegistro = async (req, res, next) => {
   try {
     const registro = await historialCultivoService.editarRegistro(
@@ -88,7 +78,6 @@ const editarRegistro = async (req, res, next) => {
   }
 };
 
-// POST /mis-cultivos/:id/historial
 const agregarEntradaDesdeRuta = async (req, res, next) => {
   try {
     const registro = await historialCultivoService.agregarEntradaDesdeRuta(
@@ -101,7 +90,6 @@ const agregarEntradaDesdeRuta = async (req, res, next) => {
   }
 };
 
-// GET /historial/cultivo/:usuariocultivoId
 const listarPorCultivoAsignado = async (req, res, next) => {
   try {
     const historial = await historialCultivoService.listarPorCultivoAsignado(

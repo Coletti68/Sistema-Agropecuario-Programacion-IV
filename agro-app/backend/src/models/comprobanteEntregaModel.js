@@ -1,4 +1,3 @@
-// src/models/comprobanteEntregaModel.js
 const { DataTypes } = require('sequelize');
 const db = require('../config/db');
 

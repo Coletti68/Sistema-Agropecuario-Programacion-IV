@@ -1,6 +1,5 @@
 const historialService = require('../services/historialEstadoSolicitudService');
 
-// Registrar un cambio de estado
 const registrarCambioEstado = async (req, res, next) => {
   try {
     const { solicitudid, estadosolicitudid, usuarioid } = req.validatedBody;
@@ -11,7 +10,6 @@ const registrarCambioEstado = async (req, res, next) => {
   }
 };
 
-// Listar todos los registros
 const listarHistorial = async (req, res, next) => {
   try {
     const historial = await historialService.listarHistorial();
@@ -21,10 +19,9 @@ const listarHistorial = async (req, res, next) => {
   }
 };
 
-// Obtener por ID
 const obtenerPorId = async (req, res, next) => {
   try {
-    const { id } = req.validated.params; 
+    const { id } = req.validated.params;
     const registro = await historialService.obtenerPorId(id);
     res.status(200).json(registro);
   } catch (err) {
@@ -32,8 +29,6 @@ const obtenerPorId = async (req, res, next) => {
   }
 };
 
-
-// Listar por solicitud
 const listarPorSolicitud = async (req, res, next) => {
   try {
     const { solicitudId } = req.validatedParams;
@@ -44,7 +39,6 @@ const listarPorSolicitud = async (req, res, next) => {
   }
 };
 
-// Listar por usuario
 const listarPorUsuario = async (req, res, next) => {
   try {
     const { usuarioId } = req.validatedParams;
@@ -55,7 +49,6 @@ const listarPorUsuario = async (req, res, next) => {
   }
 };
 
-// Listar con detalles
 const listarConDetalles = async (req, res, next) => {
   try {
     const { solicitudId } = req.validatedParams;

@@ -1,6 +1,5 @@
 const comprobanteService = require('../services/comprobanteService');
 
-// Registrar comprobante
 const registrarComprobante = async (req, res, next) => {
   try {
     const nuevo = await comprobanteService.registrarComprobante(req.validatedBody);
@@ -10,7 +9,6 @@ const registrarComprobante = async (req, res, next) => {
   }
 };
 
-// Obtener comprobantes por solicitud ID
 const obtenerComprobantesPorSolicitud = async (req, res, next) => {
   try {
     const comprobantes = await comprobanteService.obtenerComprobantesPorSolicitud(
@@ -23,7 +21,6 @@ const obtenerComprobantesPorSolicitud = async (req, res, next) => {
 };
 
 
-// Listar todos los comprobantes (admin)
 const listarComprobantes = async (req, res, next) => {
   try {
     const lista = await comprobanteService.listarComprobantes();
@@ -33,7 +30,6 @@ const listarComprobantes = async (req, res, next) => {
   }
 };
 
-// Obtener comprobante por ID
 const obtenerComprobantePorId = async (req, res, next) => {
   try {
     const comprobante = await comprobanteService.obtenerComprobantePorId(

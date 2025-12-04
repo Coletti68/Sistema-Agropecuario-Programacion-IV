@@ -14,15 +14,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Rutas principales
 app.use('/api', routes);
 
 // Middleware global de errores
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err);
+  console.error('Error:', err);
   res.status(err.status || 500).json({
     error: err.message || 'Error interno del servidor',
   });
@@ -32,10 +30,10 @@ app.use((err, req, res, next) => {
 app.listen(PORT, async () => {
   try {
     await db.authenticate();
-    console.log('✅ Base de datos conectada correctamente');
-    console.log(`🌱 Servidor escuchando en: http://localhost:${PORT}`);
-    console.log(`📘 Swagger disponible en: http://localhost:${PORT}/api-docs`);
+    console.log('Base de datos conectada');
+    console.log(`Servidor : http://localhost:${PORT}`);
+    console.log(`Swagger : http://localhost:${PORT}/api-docs`);
   } catch (error) {
-    console.error('❌ Error al conectar la base de datos:', error.message);
+    console.error('Error al conectar la base de datos:', error.message);
   }
 });

@@ -1,9 +1,8 @@
 const solicitudService = require('../services/solicitudService');
 
-// Crear solicitud
 const crearSolicitud = async (req, res, next) => {
   try {
-    const usuarioId = req.body.usuarioid; // <- viene del params !!
+    const usuarioId = req.body.usuarioid;
     const { detalle } = req.body;
 
     if (!usuarioId) {
@@ -23,8 +22,6 @@ const crearSolicitud = async (req, res, next) => {
   }
 };
 
-
-// Listar todas las solicitudes
 const listarSolicitudes = async (req, res, next) => {
   try {
     const solicitudes = await solicitudService.listarSolicitudes();
@@ -35,7 +32,6 @@ const listarSolicitudes = async (req, res, next) => {
   }
 };
 
-// Listar solicitudes por usuario
 const listarSolicitudesPorUsuario = async (req, res, next) => {
   try {
     const usuarioId = req.params.id;
@@ -49,7 +45,6 @@ const listarSolicitudesPorUsuario = async (req, res, next) => {
   }
 };
 
-// Obtener solicitud por ID
 const obtenerSolicitudPorId = async (req, res, next) => {
   try {
     const solicitudId = req.params.id;
@@ -63,7 +58,6 @@ const obtenerSolicitudPorId = async (req, res, next) => {
   }
 };
 
-// Cancelar solicitud
 const cancelarSolicitud = async (req, res, next) => {
   try {
     const solicitudId = req.params.id;
@@ -77,7 +71,6 @@ const cancelarSolicitud = async (req, res, next) => {
   }
 };
 
-// Cambiar estado
 const cambiarEstadoSolicitud = async (req, res, next) => {
   try {
     const solicitudId = req.params.id;
@@ -95,7 +88,6 @@ const cambiarEstadoSolicitud = async (req, res, next) => {
   }
 };
 
-// Listar con detalles
 const listarSolicitudesConDetalles = async (req, res, next) => {
   try {
     const solicitudes = await solicitudService.listarSolicitudesConDetalles();
@@ -106,7 +98,6 @@ const listarSolicitudesConDetalles = async (req, res, next) => {
   }
 };
 
-// Listar por estado
 const listarSolicitudesPorEstado = async (req, res, next) => {
   try {
     const estadoId = req.params.estadoId;

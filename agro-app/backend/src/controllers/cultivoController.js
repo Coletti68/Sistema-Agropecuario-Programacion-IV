@@ -1,9 +1,8 @@
 const cultivoService = require('../services/cultivoService');
 
-// Listar cultivos
 const listarCultivos = async (req, res, next) => {
   try {
-    console.log("Usuario autenticado:", req.user); // debug
+    console.log("Usuario autenticado:", req.user);
     const usuarioId = req.user.usuarioid;
     const cultivos = await cultivoService.listarCultivosPorUsuario(usuarioId);
     res.status(200).json(cultivos);
@@ -14,10 +13,9 @@ const listarCultivos = async (req, res, next) => {
 };
 
 
-// Crear cultivo
 const crearCultivo = async (req, res, next) => {
   try {
-    const usuarioId = req.user.usuarioid; // viene del middleware de auth
+    const usuarioId = req.user.usuarioid;
     const cultivo = await cultivoService.crearCultivo(req.validatedBody, usuarioId);
     res.status(201).json(cultivo);
     console.log("POST /usuariocultivo ejecutado");
@@ -27,9 +25,6 @@ const crearCultivo = async (req, res, next) => {
   }
 };
 
-
-
-// Actualizar cultivo
 const actualizarCultivo = async (req, res, next) => {
   try {
     const cultivoId = req.validatedParams?.id;
@@ -46,7 +41,6 @@ const actualizarCultivo = async (req, res, next) => {
   }
 };
 
-// Desactivar cultivo
 const desactivarCultivo = async (req, res, next) => {
   try {
     const resultado = await cultivoService.desactivarCultivo(
@@ -57,7 +51,7 @@ const desactivarCultivo = async (req, res, next) => {
     next(err);
   }
 };
-// Eliminar cultivo
+
 const eliminarCultivo = async (req, res, next) => {
   try {
     const resultado = await cultivoService.eliminarCultivo(req.validated.params.id);

@@ -1,8 +1,5 @@
 const usuarioCultivoService = require('../services/usuarioCultivoService');
 
-// ======================================================
-// Crear asignación
-// ======================================================
 async function crearAsignacion(req, res, next) {
   try {
     const data = req.validatedBody;
@@ -20,10 +17,9 @@ async function crearCultivoCompleto(req, res) {
   } catch (err) {
     console.error('❌ Error en /cultivo-completo:', err);
     res.status(500).json({ error: 'No se pudo crear el cultivo completo' });
-  }}
-// ======================================================
-// Listar todas las asignaciones
-// ======================================================
+  }
+}
+
 async function listarAsignaciones(req, res, next) {
   try {
     const asignaciones = await usuarioCultivoService.listarAsignaciones();
@@ -33,9 +29,6 @@ async function listarAsignaciones(req, res, next) {
   }
 }
 
-// ======================================================
-// Obtener asignación por ID
-// ======================================================
 async function obtenerAsignacionPorId(req, res, next) {
   try {
     const id = req.validatedParams.usuariocultivoId;
@@ -46,9 +39,6 @@ async function obtenerAsignacionPorId(req, res, next) {
   }
 }
 
-// ======================================================
-// Listar cultivos por usuario
-// ======================================================
 async function listarCultivosPorUsuario(req, res, next) {
   try {
     const id = req.validatedParams.id;
@@ -59,9 +49,6 @@ async function listarCultivosPorUsuario(req, res, next) {
   }
 }
 
-// ======================================================
-// Buscar asignaciones por cultivo
-// ======================================================
 async function buscarPorCultivo(req, res, next) {
   try {
     const cultivoId = req.validatedParams.cultivoId;
@@ -72,12 +59,9 @@ async function buscarPorCultivo(req, res, next) {
   }
 }
 
-// ======================================================
-// Buscar por ubicación
-// ======================================================
 async function buscarPorUbicacion(req, res, next) {
   try {
-    const { latitud, longitud } = req.query; // VALIDATED POR TU MIDDLEWARE
+    const { latitud, longitud } = req.query;
     const resultados = await usuarioCultivoService.buscarPorUbicacion(latitud, longitud);
     res.json(resultados);
   } catch (error) {
@@ -85,9 +69,6 @@ async function buscarPorUbicacion(req, res, next) {
   }
 }
 
-// ======================================================
-// Actualizar asignación
-// ======================================================
 async function actualizarAsignacion(req, res, next) {
   try {
     const id = req.validatedParams.usuariocultivoId;
@@ -101,9 +82,6 @@ async function actualizarAsignacion(req, res, next) {
   }
 }
 
-// ======================================================
-// Editar asignación del usuario (/mis-cultivos/:id)
-// ======================================================
 async function editarAsignacionDelUsuario(req, res, next) {
   try {
     const id = req.validatedParams.usuariocultivoId;
@@ -117,9 +95,6 @@ async function editarAsignacionDelUsuario(req, res, next) {
   }
 }
 
-// ======================================================
-// Eliminar asignación
-// ======================================================
 async function eliminarAsignacion(req, res, next) {
   try {
     const id = req.validatedParams.usuariocultivoId;
@@ -132,9 +107,6 @@ async function eliminarAsignacion(req, res, next) {
   }
 }
 
-// ======================================================
-// Desactivar asignación (mis-cultivos)
-// ======================================================
 async function desactivarAsignacionDelUsuario(req, res, next) {
   try {
     const id = req.validatedParams.usuariocultivoId;
@@ -147,9 +119,6 @@ async function desactivarAsignacionDelUsuario(req, res, next) {
   }
 }
 
-// ======================================================
-// Obtener historial
-// ======================================================
 async function listarConHistorial(req, res, next) {
   try {
     const id = req.validatedParams.id;

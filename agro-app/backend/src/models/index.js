@@ -14,10 +14,6 @@ const HistorialEstadoSolicitud = require('./historialEstadoSolicitudModel');
 const HistorialCultivo = require('./historialCultivoModel');
 const ComprobanteEntrega = require('./comprobanteEntregaModel');
 
-// =======================
-// RELACIONES
-// =======================
-
 // Roles y usuarios
 Rol.hasMany(Usuario, { foreignKey: 'rolid' });
 Usuario.belongsTo(Rol, { foreignKey: 'rolid' });
@@ -82,9 +78,6 @@ ComprobanteEntrega.belongsTo(Usuario, { foreignKey: 'entregadopor', as: 'entrega
 Usuario.hasMany(ComprobanteEntrega, { foreignKey: 'recibidopor', as: 'recibidos' });
 ComprobanteEntrega.belongsTo(Usuario, { foreignKey: 'recibidopor', as: 'receptor' });
 
-// =======================
-// EXPORTAR
-// =======================
 module.exports = {
   db,
   Rol,

@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000/api', // 👈 agrega /api si todas tus rutas usan ese prefijo
+        url: 'http://localhost:3000/api',
         description: 'Servidor local',
       },
     ],
@@ -47,11 +47,11 @@ const options = {
             rol: { type: 'string', example: 'admin' },
           },
         },
-        // Puedes agregar los demás: Solicitud, Pago, Insumo, etc.
+
       },
     },
   },
-  apis: ['./src/routes/**/*.js'], // busca anotaciones en rutas
+  apis: ['./src/routes/**/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

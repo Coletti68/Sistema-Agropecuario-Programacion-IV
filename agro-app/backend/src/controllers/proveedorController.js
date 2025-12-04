@@ -1,7 +1,5 @@
-// src/controllers/proveedorController.js
 const proveedorService = require('../services/proveedorService');
 
-// Listar proveedores
 const listarProveedores = async (req, res, next) => {
   try {
     const proveedores = await proveedorService.listarProveedores();
@@ -11,7 +9,6 @@ const listarProveedores = async (req, res, next) => {
   }
 };
 
-// Crear proveedor
 const crearProveedor = async (req, res, next) => {
   try {
     const nuevo = await proveedorService.crearProveedor(req.validatedBody);
@@ -21,7 +18,6 @@ const crearProveedor = async (req, res, next) => {
   }
 };
 
-// Actualizar proveedor
 const actualizarProveedor = async (req, res, next) => {
   try {
     const proveedorActualizado = await proveedorService.actualizarProveedor(
@@ -34,7 +30,6 @@ const actualizarProveedor = async (req, res, next) => {
   }
 };
 
-// Desactivar proveedor
 const desactivarProveedor = async (req, res, next) => {
   try {
     const resultado = await proveedorService.desactivarProveedor(
