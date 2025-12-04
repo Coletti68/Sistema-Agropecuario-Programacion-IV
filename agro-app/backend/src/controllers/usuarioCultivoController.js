@@ -3,6 +3,7 @@ const usuarioCultivoService = require('../services/usuarioCultivoService');
 async function crearAsignacion(req, res, next) {
   try {
     const data = req.validatedBody;
+    console.log('🚀 [crearAsignacion] Datos recibidos en controller:', data);
     const asignacion = await usuarioCultivoService.crearAsignacion(data);
     res.status(201).json(asignacion);
   } catch (error) {

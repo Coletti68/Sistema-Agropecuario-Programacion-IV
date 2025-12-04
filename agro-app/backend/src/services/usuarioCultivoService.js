@@ -11,13 +11,14 @@ async function crearAsignacion(data) {
     if (!data || typeof data !== 'object') throw new Error('Datos de asignación inválidos');
 
     // 1. Crear asignación con lat/long/fecha
+    // Los datos ya vienen validados y convertidos por Joi/Middleware
     const nuevaAsignacion = await UsuarioCultivo.create({
-  usuarioid: data.usuarioid,
-  cultivoid: data.cultivoid,
-  latitud: data.latitud !== '' ? parseFloat(data.latitud) : null,
-  longitud: data.longitud !== '' ? parseFloat(data.longitud) : null,
-  fechasiembra: data.fechasiembra ? new Date(data.fechasiembra) : null
-});
+      usuarioid: data.usuarioid,
+      cultivoid: data.cultivoid,
+      latitud: data.latitud,
+      longitud: data.longitud,
+      fechasiembra: data.fechasiembra
+    });
 
 
 
