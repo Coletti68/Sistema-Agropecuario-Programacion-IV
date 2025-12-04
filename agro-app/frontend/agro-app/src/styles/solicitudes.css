@@ -1,0 +1,172 @@
+/* Solicitudes Page Styles - Deep Emerald & Gold Theme */
+
+.sol-page-container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.sol-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sol-header h1 {
+  font-size: 2.5rem;
+  color: #064e3b; /* Deep Emerald */
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.sol-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.sol-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.sol-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+}
+
+.sol-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #d97706; /* Gold */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.sol-empty-state {
+  text-align: center;
+  padding: 4rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.sol-empty-state p {
+  font-size: 1.2rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+}
+
+.sol-new-btn {
+  background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sol-new-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 78, 59, 0.25);
+}
+
+.sol-table-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.sol-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sol-table th {
+  background-color: #064e3b;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.sol-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+}
+
+.sol-table tr:last-child td {
+  border-bottom: none;
+}
+
+.sol-table tr:hover {
+  background-color: #f8fafc;
+}
+
+.sol-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-pendiente {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-aprobada, .status-aprobado {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.status-rechazada, .status-rechazado {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.sol-detail-btn {
+  background-color: transparent;
+  border: 1px solid #d97706;
+  color: #d97706;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sol-detail-btn:hover {
+  background-color: #d97706;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sol-page-container {
+    padding: 1rem;
+  }
+  
+  .sol-table th, .sol-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .sol-header h1 {
+    font-size: 2rem;
+  }
+}

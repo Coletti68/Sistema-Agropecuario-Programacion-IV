@@ -1,0 +1,173 @@
+/* Detalle Solicitud Page Styles - Deep Emerald & Gold Theme */
+
+.det-page-container {
+    min-height: 100vh;
+    background-color: #f8fafc;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+.det-card {
+    background: white;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    height: fit-content;
+}
+
+.det-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1.5rem;
+}
+
+.det-back-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.det-back-btn:hover {
+    color: #064e3b;
+}
+
+.det-header h1 {
+    font-size: 1.8rem;
+    color: #0f172a;
+    margin: 0;
+}
+
+.det-status {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+}
+
+.status-pendiente {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.status-aprobada,
+.status-aprobado {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.status-rechazada,
+.status-rechazado {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.det-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.det-info-item label {
+    display: block;
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.det-info-item p {
+    font-size: 1.25rem;
+    color: #0f172a;
+    font-weight: 500;
+    margin: 0;
+}
+
+.det-items-section h2 {
+    color: #064e3b;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.det-table-container {
+    overflow-x: auto;
+}
+
+.det-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.det-table th {
+    text-align: left;
+    padding: 1rem;
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.det-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+.det-total-label {
+    text-align: right;
+    font-weight: 700;
+    color: #0f172a;
+    padding-right: 2rem;
+}
+
+.det-total-amount {
+    font-weight: 700;
+    color: #064e3b;
+    font-size: 1.25rem;
+}
+
+.det-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.det-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #064e3b;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+    .det-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .det-page-container {
+        padding: 1rem;
+    }
+}

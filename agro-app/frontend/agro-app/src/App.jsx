@@ -4,6 +4,8 @@ import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
 import Productores from "./pages/productores";
 import NuevaSolicitud from "./pages/nuevasolicitud";
+import Solicitudes from "./pages/solicitudes";
+import DetalleSolicitud from "./pages/detalleSolicitud";
 import Cultivos from "./pages/cultivos";
 import MapaLotes from "./pages/mapalotes";
 import Perfil from "./pages/perfil";
@@ -76,6 +78,24 @@ function App() {
             <>
               <Navbar />
               <NuevaSolicitud />
+            </>
+          }
+        />
+        <Route
+          path="/solicitudes"
+          element={
+            <>
+              <Navbar />
+              <Solicitudes />
+            </>
+          }
+        />
+        <Route
+          path="/solicitudes/:id"
+          element={
+            <>
+              <Navbar />
+              <DetalleSolicitud />
             </>
           }
         />

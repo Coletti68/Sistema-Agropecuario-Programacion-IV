@@ -174,3 +174,33 @@ export const register = async (userData) => {
 
   return res.json();
 };
+
+export const getSolicitudesPorUsuario = async (token, usuarioId) => {
+  const res = await fetch(`${API_URL}/solicitudes/usuario/${usuarioId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({ message: "Error al obtener solicitudes del usuario" }));
+    throw new Error(errorData.message || `Error ${res.status}: No se pudo obtener las solicitudes`);
+  }
+
+  return res.json();
+};
+
+export const getSolicitudPorId = async (token, solicitudId) => {
+  const res = await fetch(`${API_URL}/solicitudes/${solicitudId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({ message: "Error al obtener el detalle de la solicitud" }));
+    throw new Error(errorData.message || `Error ${res.status}: No se pudo obtener la solicitud`);
+  }
+
+  return res.json();
+};

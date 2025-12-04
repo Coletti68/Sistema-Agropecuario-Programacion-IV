@@ -46,15 +46,15 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link to="/cultivos" className={isActive('/cultivos')}>
-              <Sprout size={18} />
-              <span>Mis Cultivos</span>
+            <Link to="/solicitudes" className={isActive('/solicitudes')}>
+              <LayoutDashboard size={18} />
+              <span>Mis Solicitudes</span>
             </Link>
           </li>
           <li>
-            <Link to="/mapa" className={isActive('/mapa')}>
-              <Map size={18} />
-              <span>Ubicacion de mis Lotes</span>
+            <Link to="/cultivos" className={isActive('/cultivos')}>
+              <Sprout size={18} />
+              <span>Mis Cultivos</span>
             </Link>
           </li>
           <li>
