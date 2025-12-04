@@ -1,0 +1,384 @@
+.page {
+  height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom right, #f0fdf4, #ecfdf5, #f0fdfa);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Fondo */
+.backgroundImage {
+  position: absolute;
+  inset: 0;
+  background-image: url("https://images.unsplash.com/photo-1630600967074-3095a8865ca3");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+}
+
+/* Contenedor principal */
+.container {
+  width: 100%;
+  max-width: 600px;
+  min-width: 320px;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  flex-shrink: 0;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 8px;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.logoCircle {
+  width: 64px;
+  height: 64px;
+  margin: auto;
+  background: linear-gradient(to bottom right, #15803d, #059669);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: white;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.title {
+  color: #065f46;
+  margin-top: 8px;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* Card */
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cardDesc {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Formulario */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grid {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* =============== RESPONSIVE =============== */
+
+@media (max-width: 480px) {
+  .container {
+    min-width: unset;
+    max-width: 100%;
+    gap: 10px;
+  }
+  
+  .title {
+    font-size: 22px;
+  }
+
+  .logoCircle {
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+  }
+  
+  .card {
+    padding: 18px;
+  }
+  
+  .cardTitle {
+    font-size: 17px;
+  }
+  
+  .footer {
+    font-size: 11px;
+  }
+  
+  .grid {
+    gap: 10px;
+  }
+}
+
+/* Asegurar que no haya scroll en pantallas pequeñas */
+@media (max-height: 800px) {
+  .container {
+    gap: 10px;
+  }
+  
+  .logoCircle {
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+  }
+  
+  .title {
+    font-size: 20px;
+    margin-top: 6px;
+  }
+  
+  .subtitle {
+    font-size: 12px;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+  
+  .cardHeader {
+    margin-bottom: 10px;
+  }
+  
+  .cardTitle {
+    font-size: 17px;
+  }
+  
+  .cardDesc {
+    font-size: 12px;
+  }
+  
+  .form {
+    gap: 10px;
+  }
+  
+  .grid {
+    gap: 10px;
+  }
+  
+  .field input {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  .submitBtn {
+    padding: 9px;
+    font-size: 14px;
+  }
+  
+  .footer {
+    font-size: 11px;
+    margin-top: 6px;
+  }
+}
+
+@media (max-height: 700px) {
+  .container {
+    gap: 8px;
+  }
+  
+  .header {
+    margin-bottom: 8px;
+  }
+  
+  .logoCircle {
+    width: 52px;
+    height: 52px;
+    font-size: 26px;
+  }
+  
+  .title {
+    font-size: 18px;
+    margin-top: 4px;
+  }
+  
+  .subtitle {
+    font-size: 11px;
+  }
+  
+  .card {
+    padding: 14px;
+  }
+  
+  .cardHeader {
+    margin-bottom: 8px;
+  }
+  
+  .cardTitle {
+    font-size: 16px;
+  }
+  
+  .cardDesc {
+    font-size: 11px;
+  }
+  
+  .form {
+    gap: 8px;
+  }
+  
+  .grid {
+    gap: 8px;
+  }
+  
+  .field {
+    gap: 4px;
+  }
+  
+  .field label {
+    font-size: 12px;
+  }
+  
+  .field input {
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+  
+  .submitBtn {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  .loginRedirect {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  .footer {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.field input {
+  padding: 9px 11px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px #6ee7b7;
+}
+
+/* Error */
+.error {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* Botón */
+.submitBtn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: linear-gradient(to right, #15803d, #059669);
+  color: white;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.submitBtn:hover {
+  background: linear-gradient(to right, #166534, #047857);
+}
+
+/* Login redirect */
+.loginRedirect {
+  margin-top: 6px;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.loginRedirect button {
+  background: none;
+  border: none;
+  color: #059669;
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  margin-top: 8px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 12px;
+  flex-shrink: 0;
+}

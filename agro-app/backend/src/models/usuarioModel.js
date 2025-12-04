@@ -1,32 +1,46 @@
-import { db } from "../config/db.js";
+const { DataTypes } = require('sequelize');
+const db = require('../config/db');
 
-export const UsuarioModel = {
-  async getAll() {
-    const [rows] = await db.query("SELECT * FROM usuario WHERE activo = 1");
-    return rows;
+const Usuario = db.define('Usuario', {
+  usuarioid: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
-
-  async getById(id) {
-    const [rows] = await db.query("SELECT * FROM usuario WHERE usuarioid = ?", [id]);
-    return rows[0];
+  rolid: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
-
-  async create(usuario) {
-    const { rolid, nombre, email, telefono, dni, direccion, passwordhash } = usuario;
-    const [result] = await db.query(
-      "INSERT INTO usuario (rolid, nombre, email, telefono, dni, direccion, passwordhash) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [rolid, nombre, email, telefono, dni, direccion, passwordhash]
-    );
-    return { id: result.insertId, ...usuario };
+  nombre: {
+    type: DataTypes.STRING(100),
+    allowNull: false
   },
-
-  async update(id, data) {
-    const [result] = await db.query("UPDATE usuario SET ? WHERE usuarioid = ?", [data, id]);
-    return result.affectedRows;
+  email: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    unique: true
   },
-
-  async delete(id) {
-    const [result] = await db.query("UPDATE usuario SET activo = 0 WHERE usuarioid = ?", [id]);
-    return result.affectedRows;
+  telefono: {
+    type: DataTypes.STRING(30)
+  },
+  dni: {
+    type: DataTypes.STRING(20),
+    unique: true
+  },
+  direccion: {
+    type: DataTypes.STRING(255)
+  },
+  passwordhash: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  activo: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
-};
+}, {
+  tableName: 'usuario',
+  timestamps: false
+});
+
+module.exports = Usuario;
