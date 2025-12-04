@@ -1,0 +1,17 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "engines": {
+    "node": "16"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.0.0",
+    "firebase-functions": "^3.24.1",
+    "mysql2": "^3.15.3"
+  },
+  "scripts": {
+    "lint": "echo 'Lint desactivado'"
+  },
+  "private": true
+}
