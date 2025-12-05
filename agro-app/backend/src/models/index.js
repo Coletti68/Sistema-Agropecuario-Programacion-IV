@@ -1,5 +1,3 @@
-const db = require('../config/db');
-
 const Rol = require('./rolModel');
 const Usuario = require('./usuarioModel');
 const Cultivo = require('./cultivoModel');
@@ -79,7 +77,6 @@ Usuario.hasMany(ComprobanteEntrega, { foreignKey: 'recibidopor', as: 'recibidos'
 ComprobanteEntrega.belongsTo(Usuario, { foreignKey: 'recibidopor', as: 'receptor' });
 
 module.exports = {
-  db,
   Rol,
   Usuario,
   Cultivo,

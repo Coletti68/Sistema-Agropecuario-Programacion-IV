@@ -16,13 +16,13 @@ async function crearSolicitud(usuarioId, detalle) {
     }
 
     return await sequelize.transaction(async (t) => {
-      // Crear la solicitud
+   
       const solicitud = await Solicitud.create(
         { usuarioid: usuarioId },
         { transaction: t }
       );
 
-      // Insertar cada detalle
+ 
       for (const item of detalle) {
         await SolicitudDetalle.create(
           {
@@ -128,7 +128,6 @@ async function listarSolicitudesPorEstado(estadoId) {
   }
 }
 
-// Funciones que faltaban en tus exports
 async function listarSolicitudes() {
   try {
     return await Solicitud.findAll();

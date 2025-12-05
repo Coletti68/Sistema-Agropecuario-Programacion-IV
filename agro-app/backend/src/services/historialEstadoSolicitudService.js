@@ -1,7 +1,6 @@
-// services/historialEstadoSolicitudService.js
 const { HistorialEstadoSolicitud, Usuario, EstadoSolicitud, Solicitud } = require('../models');
 
-// Registrar un nuevo cambio de estado
+
 async function registrarCambioEstado(solicitudId, estadoId, usuarioId) {
   try {
     return await HistorialEstadoSolicitud.create({
@@ -15,7 +14,6 @@ async function registrarCambioEstado(solicitudId, estadoId, usuarioId) {
   }
 }
 
-// Listar todo el historial con datos relacionados
 async function listarHistorial() {
   try {
     return await HistorialEstadoSolicitud.findAll({
@@ -31,7 +29,6 @@ async function listarHistorial() {
   }
 }
 
-// Obtener un registro por su ID
 async function obtenerPorId(historialId) {
   try {
     const registro = await HistorialEstadoSolicitud.findByPk(historialId, {
@@ -49,7 +46,6 @@ async function obtenerPorId(historialId) {
   }
 }
 
-// Listar historial por solicitud
 async function listarPorSolicitud(solicitudId) {
   try {
     return await HistorialEstadoSolicitud.findAll({
@@ -65,7 +61,6 @@ async function listarPorSolicitud(solicitudId) {
   }
 }
 
-// Listar historial por usuario
 async function listarPorUsuario(usuarioId) {
   try {
     if (!usuarioId) throw new Error('usuarioId es obligatorio');
@@ -82,7 +77,6 @@ async function listarPorUsuario(usuarioId) {
   }
 }
 
-// Listar historial con detalles completos (solicitud, usuario, estado)
 async function listarConDetalles(solicitudId) {
   try {
     if (!solicitudId) throw new Error('solicitudId es obligatorio');

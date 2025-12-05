@@ -1,4 +1,3 @@
-// src/services/comprobanteService.js
 const ComprobanteEntrega = require('../models/comprobanteEntregaModel');
 
 async function registrarComprobante(data) {

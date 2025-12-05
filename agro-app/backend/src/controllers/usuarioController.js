@@ -15,7 +15,6 @@ const registrarUsuario = async (req, res, next) => {
 
     const nuevo = await usuarioService.crearUsuario(req.validatedBody);
 
-    // Avisar a Django para que dispare el WebSocket
     await fetch("http://localhost:8000/api/notify-new-user/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -27,7 +26,6 @@ const registrarUsuario = async (req, res, next) => {
       }),
     });
 
-    // Responder al cliente
     res.status(201).json(nuevo);
   } catch (err) {
     next(err);

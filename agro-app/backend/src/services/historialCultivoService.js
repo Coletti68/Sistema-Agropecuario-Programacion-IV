@@ -1,4 +1,4 @@
-const HistorialCultivo = require('../models/historialCultivoModel'); // sin {}
+const HistorialCultivo = require('../models/historialCultivoModel'); 
 const  Usuario  = require('../models/usuarioModel');
 const  UsuarioCultivo  = require('../models/usuarioCultivoModel');
 const Cultivo  = require('../models/cultivoModel');
@@ -91,7 +91,7 @@ async function listarConDetalles(usuariocultivoId) {
     throw new Error('No se pudo listar historial con detalles');
   }
 }
-//  PUT /historial/:id
+
 async function editarRegistro(historialId, data) {
   try {
     const registro = await HistorialCultivo.findByPk(historialId);
@@ -110,7 +110,7 @@ async function editarRegistro(historialId, data) {
   }
 }
 
-//  POST /mis-cultivos/:id/historial
+
 async function agregarEntradaDesdeRuta(usuariocultivoId, data) {
   try {
     const cultivo = await UsuarioCultivo.findByPk(usuariocultivoId);
@@ -129,9 +129,8 @@ async function agregarEntradaDesdeRuta(usuariocultivoId, data) {
   }
 }
 
-//  GET /historial/asignacion/:usuarioCultivoId
 async function listarPorCultivoAsignado(usuariocultivoId) {
-  return listarPorAsignacion(usuariocultivoId); // alias directo
+  return listarPorAsignacion(usuariocultivoId); 
 }
 module.exports = {
   registrarCambio,

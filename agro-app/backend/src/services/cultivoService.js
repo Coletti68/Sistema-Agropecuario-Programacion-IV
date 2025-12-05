@@ -3,10 +3,10 @@ const { Cultivo, UsuarioCultivo, HistorialCultivo } = require('../models');
 
 async function listarCultivosPorUsuario(usuarioid) {
   try {
-    if (!usuarioid) throw new Error('Usuario no identificado'); // corregido
+    if (!usuarioid) throw new Error('Usuario no identificado'); 
 
     return await UsuarioCultivo.findAll({
-      where: { usuarioid }, // usar el parámetro correctamente
+      where: { usuarioid },
       include: [
         { model: Cultivo },
         { model: HistorialCultivo }
@@ -26,25 +26,22 @@ async function crearCultivo(data, usuarioid) {
       throw new Error('Datos de cultivo inválidos');
     }
 
-    // 1. Crear el cultivo
     const cultivo = await Cultivo.create({
       nombre: data.nombre,
       descripcion: data.descripcion
     });
-
-    // 2. Crear asignación al usuario
+ 
     const usuarioCultivo = await UsuarioCultivo.create({
       usuarioid,
-      cultivoid: cultivo.cultivoid, // o cultivo.id según tu modelo
+      cultivoid: cultivo.cultivoid, 
       latitud: data.latitud,
       longitud: data.longitud,
       fechasiembra: data.fechasiembra
     });
 
-    // 3. Historial inicial
     if (data.observaciones) {
       await HistorialCultivo.create({
-  historialid: undefined, // Sequelize lo autoincrementa
+  historialid: undefined, 
   usuariocultivoid: nuevaAsignacion.usuariocultivoid,
   usuarioid: data.usuarioid,
   latitud: data.latitud !== '' ? parseFloat(data.latitud) : null,
@@ -52,11 +49,8 @@ async function crearCultivo(data, usuarioid) {
   fecha: new Date(),
   observaciones: data.observaciones
 });
+}
 
-
-    }
-
-    // Devolver la asignación completa con include
     return await UsuarioCultivo.findByPk(usuarioCultivo.usuariocultivoid, {
       include: [
         { model: Cultivo, attributes: ['nombre', 'descripcion'] },
@@ -69,8 +63,6 @@ async function crearCultivo(data, usuarioid) {
   }
 }
 
-
-
 async function actualizarCultivo(id, data) {
   try {
     const cultivo = await Cultivo.findByPk(id);
@@ -80,7 +72,6 @@ async function actualizarCultivo(id, data) {
       nombre: data.nombre,
       descripcion: data.descripcion
     });
-
 
     return cultivo;
   } catch (error) {

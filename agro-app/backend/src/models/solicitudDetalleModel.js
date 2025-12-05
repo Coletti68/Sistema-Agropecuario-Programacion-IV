@@ -42,7 +42,6 @@ const SolicitudDetalle = db.define('SolicitudDetalle', {
   timestamps: false
 });
 
-// RELACIONES
 SolicitudDetalle.belongsTo(Solicitud, { foreignKey: 'solicitudid' });
 SolicitudDetalle.belongsTo(Insumo, { foreignKey: 'insumoid' });
 

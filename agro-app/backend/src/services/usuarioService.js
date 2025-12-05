@@ -1,7 +1,6 @@
 const sequelize = require('../config/db');
 const Usuario = require('../models/usuarioModel')
 
-//  Buscar por email
 async function obtenerUsuarioPorEmail(email) {
   try {
     return await Usuario.findOne({ where: { email } });
@@ -11,7 +10,6 @@ async function obtenerUsuarioPorEmail(email) {
   }
 }
 
-//  Buscar por DNI
 async function obtenerUsuarioPorDni(dni) {
   try {
     return await Usuario.findOne({ where: { dni } });
@@ -21,7 +19,6 @@ async function obtenerUsuarioPorDni(dni) {
   }
 }
 
-//  Crear usuario (sin DTO)
 async function crearUsuario(data) {
   console.log("DATOS RECIBIDOS EN createUsuario:", data);
 
@@ -34,10 +31,6 @@ async function crearUsuario(data) {
   }
 }
 
-
-
-
-//  Listar todos
 async function listarUsuarios() {
   try {
     return await Usuario.findAll();
@@ -47,7 +40,6 @@ async function listarUsuarios() {
   }
 }
 
-//  Buscar por ID
 async function obtenerUsuarioPorId(id) {
   try {
     const usuario = await Usuario.findByPk(id);
@@ -58,7 +50,7 @@ async function obtenerUsuarioPorId(id) {
     throw new Error("No se pudo obtener el usuario");
   }
 }
-//  Editar usuario (admin)
+
 async function editarUsuario(id, data) {
   try {
     const usuario = await Usuario.findByPk(id);
@@ -72,7 +64,6 @@ async function editarUsuario(id, data) {
   }
 }
 
-//  Desactivar usuario (admin)
 async function desactivarUsuario(id) {
   try {
     const usuario = await Usuario.findByPk(id);
@@ -86,7 +77,6 @@ async function desactivarUsuario(id) {
   }
 }
 
-//  Obtener perfil propio (productor)
 async function obtenerPerfil(usuarioid) {
   try {
     const usuario = await Usuario.findByPk(usuarioid, {
@@ -100,7 +90,6 @@ async function obtenerPerfil(usuarioid) {
   }
 }
 
-//  Editar perfil propio (productor)
 async function editarPerfil(usuarioid, data) {
   try {
     const usuario = await Usuario.findByPk(usuarioid);
@@ -113,7 +102,6 @@ async function editarPerfil(usuarioid, data) {
     throw new Error('No se pudo editar el perfil');
   }
 }
-
 
 module.exports = {
   obtenerUsuarioPorEmail,

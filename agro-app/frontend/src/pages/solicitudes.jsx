@@ -32,8 +32,9 @@ export default function Solicitudes() {
       }
 
       const data = await getSolicitudesPorUsuario(token, usuarioId);
+      console.log("📌 Solicitudes recibidas del backend:", data);
+
       
-      // Ensure data is an array
       if (Array.isArray(data)) {
         setSolicitudes(data);
       } else if (data && Array.isArray(data.data)) {
@@ -62,6 +63,13 @@ export default function Solicitudes() {
       </div>
     );
   }
+  
+const estados = {
+  1: "Pendiente",
+  2: "Aprobada",
+  3: "Cancelada",
+  4: "Rechazada"
+};
 
   return (
     <div className="sol-page-container">
@@ -94,10 +102,10 @@ export default function Solicitudes() {
                   <tr key={solicitud.id || solicitud.solicitudid}>
                     <td>#{solicitud.id || solicitud.solicitudid}</td>
                     <td>{new Date(solicitud.fecha || solicitud.fechasolicitud).toLocaleDateString()}</td>
-                    <td>
-                      <span className={`sol-status status-${(solicitud.estado || 'pendiente').toLowerCase()}`}>
-                        {solicitud.estado || 'Pendiente'}
-                      </span>
+                   <td>
+                     <span className={`sol-status status-${  estados[solicitud.estadosolicitudid]?.toLowerCase() || 'pendiente' }`}>
+                     {estados[solicitud.estadosolicitudid] || 'Pendiente'}
+                     </span>
                     </td>
                     <td>
                       <button 

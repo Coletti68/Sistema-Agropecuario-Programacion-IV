@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import '../styles/cultivos.css';
 import { getCultivos, crearCultivo } from '../services/api';
 import Swal from 'sweetalert2';
+import { useRef } from 'react';
 
 export default function Cultivos() {
   const [cultivos, setCultivos] = useState([]);
@@ -17,47 +18,66 @@ export default function Cultivos() {
     observaciones: ''
   });
 
-  const fetchCultivos = async () => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-      window.location.href = '/login';
-      return;
+const fetchCultivos = async () => {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    window.location.href = '/login';
+    return;
+  }
+
+  try {
+    const data = await getCultivos(token);
+    console.log('🚀 Data cruda de la API:', data);
+
+    const asignaciones = Array.isArray(data) ? data : data.cultivos || [];
+
+    const cultivosUnicos = new Map();
+
+    for (const c of asignaciones) {
+      const key = c.cultivoid || c.Cultivo?.id;
+      const existente = cultivosUnicos.get(key);
+
+      const tieneUbicacion = c.latitud !== null && c.longitud !== null;
+
+      if (!existente || (tieneUbicacion && (existente.latitud === '—' || existente.longitud === '—'))) {
+        cultivosUnicos.set(key, {
+          id: c.usuariocultivoid || c.id || Math.random(),
+          nombre: c.Cultivo?.nombre || c.nombre || '—',
+          descripcion: c.Cultivo?.descripcion || c.descripcion || '',
+          latitud: tieneUbicacion ? c.latitud : '—',
+          longitud: tieneUbicacion ? c.longitud : '—',
+          fechasiembra:
+            c.fechasiembra && !isNaN(new Date(c.fechasiembra))
+              ? new Date(c.fechasiembra).toLocaleDateString('es-AR')
+              : '—',
+          historial: Array.isArray(c.HistorialCultivos) ? c.HistorialCultivos : []
+        });
+      }
     }
 
-    try {
-      const data = await getCultivos(token);
-      console.log('🚀 Data cruda de la API:', data);
+    const lista = Array.from(cultivosUnicos.values());
+    console.log("✅ Cultivos procesados sin duplicados:", lista);
 
-      const lista = (Array.isArray(data) ? data : data.cultivos || []).map(c => ({
-  id: c.usuariocultivoid || c.id || Math.random(),
-  nombre: c.Cultivo?.nombre || c.nombre || '—',
-  descripcion: c.Cultivo?.descripcion || c.descripcion || '',
-  latitud: c.latitud !== null ? c.latitud : '—',
-longitud: c.longitud !== null ? c.longitud : '—',
-fechasiembra: c.fechasiembra && !isNaN(new Date(c.fechasiembra)) 
-  ? new Date(c.fechasiembra).toLocaleDateString('es-AR') 
-  : '—',
+    setCultivos(lista);
 
-
-  historial: Array.isArray(c.HistorialCultivos) ? c.HistorialCultivos : []
-}));
+  } catch (err) {
+    console.error(err);
+    setError(err.message || 'Error al cargar cultivos');
+  } finally {
+    setLoading(false);
+  }
+};
 
 
-console.log('Cultivos procesados:', lista);
+const fetchedRef = useRef(false);
 
-      setCultivos(lista);
-    } catch (err) {
-      console.error(err);
-      setError(err.message || 'Error al cargar cultivos');
-    } finally {
-      setLoading(false);
-    }
-  };
+useEffect(() => {
+  if (fetchedRef.current) return;
+  fetchedRef.current = true;
+  fetchCultivos();
+}, []);
 
-  useEffect(() => {
-    fetchCultivos();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

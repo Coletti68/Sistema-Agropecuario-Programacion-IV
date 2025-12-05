@@ -3,15 +3,10 @@ const Usuario = require('../models/usuarioModel');
 const Cultivo = require('../models/cultivoModel');
 const HistorialCultivo = require('../models/historialCultivoModel');
 
-// -----------------------------
-// Crear asignación
-// -----------------------------
 async function crearAsignacion(data) {
   try {
     if (!data || typeof data !== 'object') throw new Error('Datos de asignación inválidos');
 
-    // 1. Crear asignación con lat/long/fecha
-    // Los datos ya vienen validados y convertidos por Joi/Middleware
     const nuevaAsignacion = await UsuarioCultivo.create({
       usuarioid: data.usuarioid,
       cultivoid: data.cultivoid,
@@ -20,11 +15,6 @@ async function crearAsignacion(data) {
       fechasiembra: data.fechasiembra
     });
 
-
-
-
-
-    // 2. Crear historial inicial si hay observaciones
     if (data.observaciones && typeof data.observaciones === 'string') {
       await HistorialCultivo.create({
         usuariocultivoid: nuevaAsignacion.usuariocultivoid,
@@ -33,7 +23,6 @@ async function crearAsignacion(data) {
       });
     }
 
-    // 3. Devolver la asignación con historial incluido
     return await UsuarioCultivo.findByPk(nuevaAsignacion.usuariocultivoid, {
       include: [
         { model: HistorialCultivo }
@@ -78,9 +67,6 @@ module.exports = {
   crearCultivoConAsignacion
 };
 
-// -----------------------------
-// Listar todas las asignaciones
-// -----------------------------
 async function listarAsignaciones() {
   try {
     return await UsuarioCultivo.findAll({
@@ -95,9 +81,6 @@ async function listarAsignaciones() {
   }
 }
 
-// -----------------------------
-// Listar cultivos por usuario
-// -----------------------------
 async function listarCultivosPorUsuario(usuarioId) {
   try {
     if (!usuarioId) throw new Error('usuarioId es obligatorio');
@@ -111,16 +94,10 @@ async function listarCultivosPorUsuario(usuarioId) {
   }
 }
 
-// -----------------------------
-// NUEVO: buscar por usuario (para el controller)
-// -----------------------------
 async function buscarPorUsuario(usuarioId) {
   return listarCultivosPorUsuario(usuarioId);
 }
 
-// -----------------------------
-// NUEVO: buscar por cultivo
-// -----------------------------
 async function buscarPorCultivo(cultivoId) {
   try {
     return await UsuarioCultivo.findAll({
@@ -133,9 +110,6 @@ async function buscarPorCultivo(cultivoId) {
   }
 }
 
-// -----------------------------
-// Obtener asignación por ID
-// -----------------------------
 async function obtenerAsignacionPorId(id) {
   try {
     if (!id) throw new Error('ID de asignación inválido');
@@ -153,9 +127,6 @@ async function obtenerAsignacionPorId(id) {
   }
 }
 
-// -----------------------------
-// Actualizar asignación
-// -----------------------------
 async function actualizarAsignacion(id, data) {
   try {
     if (!id || !data) throw new Error('ID y datos requeridos para actualizar');
@@ -168,16 +139,10 @@ async function actualizarAsignacion(id, data) {
   }
 }
 
-// -----------------------------
-// NUEVO: editar asignación como tu controller lo espera
-// -----------------------------
 async function editarAsignacionDelUsuario(usuariocultivoId, data) {
   return actualizarAsignacion(usuariocultivoId, data);
 }
 
-// -----------------------------
-// Eliminar asignación
-// -----------------------------
 async function eliminarAsignacion(id) {
   try {
     if (!id) throw new Error('ID de asignación inválido');
@@ -190,9 +155,6 @@ async function eliminarAsignacion(id) {
   }
 }
 
-// -----------------------------
-// Listar con historial
-// -----------------------------
 async function listarConHistorial(usuarioId) {
   try {
     if (!usuarioId) throw new Error('usuarioId es obligatorio');
@@ -209,16 +171,10 @@ async function listarConHistorial(usuarioId) {
   }
 }
 
-// -----------------------------
-// NUEVO: para controller obtenerHistorialUsuario
-// -----------------------------
 async function obtenerHistorialUsuario(usuarioId) {
   return listarConHistorial(usuarioId);
 }
 
-// -----------------------------
-// NUEVO: buscar por ubicación (dummy, si no tienes lat/lng)
-// -----------------------------
 async function buscarPorUbicacion(latitud, longitud) {
   try {
     return await UsuarioCultivo.findAll({

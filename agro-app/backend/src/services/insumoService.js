@@ -1,4 +1,3 @@
-// src/services/insumoService.js
 const { Insumo } = require('../models');
 
 async function listarInsumos() {
@@ -19,8 +18,8 @@ async function crearInsumo(data) {
     await Insumo.create({
   nombre: data.nombre,
   descripcion: data.descripcion,
-  precio: data.precio, // ✅ corregido
-  stock: data.stock,   // ✅ corregido
+  precio: data.precio, 
+  stock: data.stock,   
   proveedorid: data.proveedorid,
   stock_minimo: data.stock_minimo,
   activo: true
