@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getSolicitudesPorUsuario } from '../services/api';
-import '../styles/solicitudes.css'; // We will create this file next
+import '../styles/solicitudes.css'; 
 
 export default function Solicitudes() {
   const [solicitudes, setSolicitudes] = useState([]);

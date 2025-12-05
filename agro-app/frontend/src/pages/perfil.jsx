@@ -8,7 +8,7 @@ import '../styles/perfil.css';
 export default function Perfil() {
   const [perfil, setPerfil] = useState(null);
   const [editando, setEditando] = useState(false);
-  const [perfilOriginal, setPerfilOriginal] = useState(null); // Para cancelar cambios
+  const [perfilOriginal, setPerfilOriginal] = useState(null); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function Perfil() {
   };
 
   const handleGuardar = async () => {
-    // Validar campos vacíos
+   
     if (!perfil.nombre || !perfil.telefono || !perfil.dni || !perfil.direccion) {
       Swal.fire({
         title: 'Campos incompletos',

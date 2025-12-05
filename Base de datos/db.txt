@@ -1,142 +1,172 @@
-create database sist_agropecuario;
-use sist_agropecuario;
+CREATE DATABASE sist_agropecuario;
+USE sist_agropecuario;
 
--- roles y usuarios
-create table rol (
-    rolid int auto_increment primary key,
-    nombre varchar(50) not null,
-    activo boolean default true
+CREATE TABLE rol (
+    rolid INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    activo BOOLEAN DEFAULT TRUE
 );
 
-create table usuario (
-    usuarioid int auto_increment primary key,
-    rolid int not null,
-    nombre varchar(100) not null,
-    email varchar(100) unique not null,
-    telefono varchar(30),
-    dni varchar(20) unique,
-    direccion varchar(255),
-    passwordhash varchar(255) not null,
-    activo boolean default true,
-    foreign key (rolid) references rol(rolid)
+CREATE TABLE usuario (
+    usuarioid INT AUTO_INCREMENT PRIMARY KEY,
+    rolid INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    telefono VARCHAR(30),
+    dni VARCHAR(20) UNIQUE,
+    direccion VARCHAR(255),
+    passwordhash VARCHAR(255) NOT NULL,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (rolid) REFERENCES rol(rolid)
 );
 
-
--- cultivos y lotes
-create table cultivo (
-    cultivoid int auto_increment primary key,
-    nombre varchar(100) not null,
-    descripcion text,
-    activo boolean default true
+CREATE TABLE cultivo (
+    cultivoid INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    activo BOOLEAN DEFAULT TRUE
 );
 
-create table usuariocultivo (
-    usuariocultivoid int auto_increment primary key,
-    usuarioid int not null,
-    cultivoid int not null,
-    latitud decimal(10,8),
-    longitud decimal(11,8),
-    fechasiembra date,
-    foreign key (usuarioid) references usuario(usuarioid),
-    foreign key (cultivoid) references cultivo(cultivoid)
+CREATE TABLE usuariocultivo (
+    usuariocultivoid INT AUTO_INCREMENT PRIMARY KEY,
+    usuarioid INT NOT NULL,
+    cultivoid INT NOT NULL,
+    latitud DECIMAL(10,8),
+    longitud DECIMAL(11,8),
+    fechasiembra DATE,
+    FOREIGN KEY (usuarioid) REFERENCES usuario(usuarioid),
+    FOREIGN KEY (cultivoid) REFERENCES cultivo(cultivoid)
 );
 
-create table historialcultivo (
-    historialid int auto_increment primary key,
-    usuariocultivoid int not null,        -- referencia al cultivo actual
-    usuarioid int not null,                        -- quién hizo el cambio
-    latitud decimal(10,8) not null,
-    longitud decimal(11,8) not null,
-    fecha datetime default current_timestamp,
-    observaciones text,
-    foreign key (usuariocultivoid) references usuariocultivo(usuariocultivoid),
-    foreign key (usuarioid) references usuario(usuarioid)
+CREATE TABLE historialcultivo (
+    historialid INT AUTO_INCREMENT PRIMARY KEY,
+    usuariocultivoid INT NOT NULL,
+    usuarioid INT NOT NULL,
+    latitud DECIMAL(10,8) NOT NULL,
+    longitud DECIMAL(11,8) NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    observaciones TEXT,
+    FOREIGN KEY (usuariocultivoid) REFERENCES usuariocultivo(usuariocultivoid),
+    FOREIGN KEY (usuarioid) REFERENCES usuario(usuarioid)
 );
 
-
--- insumos y proveedores
-create table proveedor (
-    proveedorid int auto_increment primary key,
-    nombre varchar(100) not null,
-    contacto varchar(100),
-    telefono varchar(30),
-    email varchar(100),
-    activo boolean default true
+CREATE TABLE proveedor (
+    proveedorid INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    contacto VARCHAR(100),
+    telefono VARCHAR(30),
+    email VARCHAR(100),
+    activo BOOLEAN DEFAULT TRUE
 );
 
-create table insumo (
-    insumoid int auto_increment primary key,
-    nombre varchar(100) not null,
-    descripcion text,
-    precio decimal(10,2) not null,
-    proveedorid int,
-    estado int default true,
-    stock int,
-    stock_minimo int,
-    foreign key (proveedorid) references proveedor(proveedorid)
+CREATE TABLE insumo (
+    insumoid INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL,
+    proveedorid INT,
+    stock INT,
+    stock_minimo INT,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (proveedorid) REFERENCES proveedor(proveedorid)
 );
 
-
--- solicitudes y estados
-create table solicitud (
-    solicitudid int auto_increment primary key,
-    usuarioid int not null, -- productor
-    fechasolicitud datetime default current_timestamp,
-    activo boolean default true,
-    foreign key (usuarioid) references usuario(usuarioid)
+CREATE TABLE estadosolicitud (
+    estadosolicitudid INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
 );
 
-create table solicituddetalle (
-    solicituddetalleid int auto_increment primary key,
-    solicitudid int not null,
-    insumoid int not null,
-    cantidad int not null,
-    preciounitario decimal(10,2) not null,
-    foreign key (solicitudid) references solicitud(solicitudid),
-    activo boolean default true,
-    foreign key (insumoid) references insumo(insumoid)
+CREATE TABLE solicitud (
+    solicitudid INT AUTO_INCREMENT PRIMARY KEY,
+    usuarioid INT NOT NULL,
+    fechasolicitud DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estadosolicitudid INT DEFAULT 1,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (usuarioid) REFERENCES usuario(usuarioid),
+    FOREIGN KEY (estadosolicitudid) REFERENCES estadosolicitud(estadosolicitudid)
 );
 
--- ANIADIR PAGO
-create table pago (
-    pagoid int auto_increment primary key,
-    solicitudid int not null,              -- referencia directa a la solicitud
-    usuarioid int not null,                -- quién realizó el pago
-    fecha_pago datetime default current_timestamp,
-    monto decimal(12,2) not null,
-    metodo_pago varchar(50),              -- 'efectivo', 'transferencia', 'tarjeta', etc.
-    estado_pago varchar(20) default 'pendiente', -- 'pendiente', 'completado', 'fallido'
-    observaciones text,
-    activo boolean default true,
-    foreign key (solicitudid) references solicitud(solicitudid),
-    foreign key (usuarioid) references usuario(usuarioid)
+CREATE TABLE solicituddetalle (
+    solicituddetalleid INT AUTO_INCREMENT PRIMARY KEY,
+    solicitudid INT NOT NULL,
+    insumoid INT NOT NULL,
+    cantidad INT NOT NULL,
+    preciounitario DECIMAL(10,2) NOT NULL,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (solicitudid) REFERENCES solicitud(solicitudid),
+    FOREIGN KEY (insumoid) REFERENCES insumo(insumoid)
 );
 
-create table estadosolicitud (
-    estadosolicitudid int auto_increment primary key,
-    nombre varchar(50) not null
+CREATE TABLE historialestadosolicitud (
+    historialid INT AUTO_INCREMENT PRIMARY KEY,
+    solicitudid INT NOT NULL,
+    estadosolicitudid INT NOT NULL,
+    usuarioid INT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (solicitudid) REFERENCES solicitud(solicitudid),
+    FOREIGN KEY (estadosolicitudid) REFERENCES estadosolicitud(estadosolicitudid),
+    FOREIGN KEY (usuarioid) REFERENCES usuario(usuarioid)
 );
 
-create table historialestadosolicitud (
-    historialid int auto_increment primary key,
-    solicitudid int not null,
-    estadosolicitudid int not null,
-    usuarioid int, -- quién cambió el estado
-    fecha datetime default current_timestamp,
-    foreign key (solicitudid) references solicitud(solicitudid),
-    foreign key (estadosolicitudid) references estadosolicitud(estadosolicitudid),
-    foreign key (usuarioid) references usuario(usuarioid)
+CREATE TABLE pago (
+    pagoid INT AUTO_INCREMENT PRIMARY KEY,
+    solicitudid INT NOT NULL,
+    usuarioid INT NOT NULL,
+    fecha_pago DATETIME DEFAULT CURRENT_TIMESTAMP,
+    monto DECIMAL(12,2) NOT NULL,
+    metodo_pago VARCHAR(50),
+    estado_pago VARCHAR(20) DEFAULT 'pendiente',
+    observaciones TEXT,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (solicitudid) REFERENCES solicitud(solicitudid),
+    FOREIGN KEY (usuarioid) REFERENCES usuario(usuarioid)
 );
 
-create table comprobanteentrega (
-    comprobanteid int auto_increment primary key,
-    solicitudid int not null,
-    fechaentrega datetime,
-    total decimal(12,2),
-    entregadopor int not null,
-    recibidopor int not null,
-    activo boolean default true,
-    foreign key (solicitudid) references solicitud(solicitudid)
+CREATE TABLE comprobanteentrega (
+    comprobanteid INT AUTO_INCREMENT PRIMARY KEY,
+    solicitudid INT NOT NULL,
+    fechaentrega DATETIME,
+    total DECIMAL(12,2),
+    entregadopor VARCHAR(100) NOT NULL,
+    recibidopor VARCHAR(100) NOT NULL,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (solicitudid) REFERENCES solicitud(solicitudid)
 );
 
-INSERT INTO rol (nombre, activo) VALUES ('productor', TRUE), ('admin', TRUE); 
+INSERT INTO estadosolicitud (nombre) VALUES 
+    ('Pendiente'), 
+    ('Aprobada'), 
+    ('Cancelada'), 
+    ('Rechazada');
+
+INSERT INTO rol (nombre, activo) VALUES
+('productor', TRUE),
+('admin', TRUE),
+('tecnico', TRUE),
+('supervisor', TRUE),
+('inspector', TRUE),
+('gerente', TRUE);
+
+-- SUPERADMIN
+INSERT INTO usuario (rolid, nombre, email, telefono, dni, direccion, passwordhash, activo) VALUES
+
+(2, 'Juan Perez', 'admin@agro.com', '3777889977', '45188270', 'admin123', 'hash7', TRUE);
+
+
+-- PROVEEDORES
+INSERT INTO proveedor (nombre, contacto, telefono, email, activo) VALUES
+('AgroSur', 'Luis Benítez', '3794112233', 'luis@agrosur.com', TRUE),
+('CampoFertil', 'Ana Torres', '3794335566', 'ana@campofertil.com', TRUE),
+('AgroPlus', 'Daniel Ríos', '3794991122', 'daniel@agroplus.com', TRUE),
+('EcoCampo', 'Rosa Medina', '3794228899', 'rosa@ecocampo.com', TRUE),
+('InsuAgro', 'Héctor Silva', '3794772233', 'hector@insuagro.com', TRUE),
+('ProCampo', 'Gabriel Duarte', '3794559911', 'gabriel@procampo.com', TRUE);
+
+-- INSUMOS
+INSERT INTO insumo (nombre, descripcion, precio, proveedorid, stock, stock_minimo, activo) VALUES
+('Herbicida A', 'Control de malezas', 4500.00, 1, 120, 20, TRUE),
+('Fertilizante B', 'Fertilizante nitrogenado', 7800.00, 2, 80, 15, TRUE),
+('Semilla Soja Premium', 'Alta germinación', 12500.00, 3, 200, 50, TRUE),
+('Semilla Maíz Híbrido', 'Rinde alto', 15000.00, 4, 150, 40, TRUE),
+('Insecticida C', 'Control de insectos', 5900.00, 5, 60, 10, TRUE),
+('Fertilizante Fosforado', 'Mejora raíces', 6900.00, 6, 100, 25, TRUE);

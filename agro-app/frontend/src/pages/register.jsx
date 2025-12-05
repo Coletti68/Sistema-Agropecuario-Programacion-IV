@@ -23,7 +23,6 @@ export default function Register() {
     e.preventDefault();
     setError("");
 
-    // Validaciones básicas
     if (
       !formData.nombre ||
       !formData.email ||

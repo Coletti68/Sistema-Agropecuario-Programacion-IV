@@ -4,11 +4,6 @@ import '../styles/dashboard.css';
 import { Card, CardHeader, CardTitle, CardContent } from "../components/card";
 import { Button } from "../components/button";
 import {
-  Package,
-  Clock,
-  CheckCircle,
-  XCircle,
-  TrendingUp,
   ShoppingCart,
   Info
 } from 'lucide-react';
@@ -65,7 +60,6 @@ export default function Dashboard() {
     }
   }, [location]);
 
-  // Estadísticas seguras
   const estadisticas = {
     total: solicitudes.length,
     recibida: solicitudes.filter(s => s.estado === 'Recibida').length,
@@ -158,28 +152,7 @@ export default function Dashboard() {
       {/* CARRUSEL DE IMÁGENES */}
       <Carousel items={carouselItems} />
 
-      {/* ACCIÓN RÁPIDA (Comentada según estado anterior) */}
-      {/* <Card className="accion-rapida-card">
-        <CardContent className="pt-6">
-          <div className="accion-rapida-flex">
-            <div>
-              <h3 className="accion-rapida-title">¿Necesitas insumos?</h3>
-              <p className="accion-rapida-subtitle">
-                Realiza una nueva solicitud fácilmente
-              </p>
-            </div>
-
-            <Button
-              size="lg"
-              onClick={() => navigate('/solicitud/nueva')}
-              className="hero-button-primary"
-            >
-              Nueva Solicitud
-            </Button>
-          </div>
-        </CardContent>
-      </Card> */}
-
+    
       {/* SECCIÓN SOBRE NOSOTROS */}
       <div id="nosotros" className="about-us-section" style={{ marginTop: '4rem', marginBottom: '2rem' }}>
         <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-emerald-100 overflow-hidden">

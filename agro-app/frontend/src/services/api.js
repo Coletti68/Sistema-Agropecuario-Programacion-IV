@@ -1,8 +1,6 @@
 const API_URL = 'http://localhost:3000/api';
 
-// =========================
-//      CULTIVOS
-// =========================
+
 export const crearCultivo = async (token, data) => {
   const res = await fetch(`${API_URL}/cultivos`, {
     method: 'POST',
@@ -36,16 +34,13 @@ export const getCultivos = async (token) => {
 
   const data = await res.json();
 
-  // Asegurarnos de devolver siempre un array de cultivos
+
   if (Array.isArray(data)) return data;
   if (data.cultivos && Array.isArray(data.cultivos)) return data.cultivos;
 
-  return []; // fallback si no hay nada
+  return [];
 };
 
-// =========================
-//      INSUMOS & SOLICITUDES
-// =========================
 
 export const getInsumos = async (token) => {
   console.log("Fetching insumos from:", `${API_URL}/insumos`);
@@ -97,9 +92,6 @@ export const getSolicitudes = async (token) => {
   return res.json();
 };
 
-// =========================
-//      PERFIL
-// =========================
 
 export const getPerfil = async (token) => {
   const res = await fetch(`${API_URL}/auth/mi-perfil`, {
@@ -132,9 +124,6 @@ export const updatePerfil = async (token, data) => {
   return res.json();
 };
 
-// =========================
-//      LOGIN
-// =========================
 
 export const login = async (credentials) => {
   const res = await fetch(`${API_URL}/auth/login`, {
@@ -151,9 +140,6 @@ export const login = async (credentials) => {
   return res.json();
 };
 
-// =========================
-//      REGISTER
-// =========================
 
 export const register = async (userData) => {
   const res = await fetch(`${API_URL}/auth/register`, {

@@ -1,4 +1,3 @@
-import React from "react";
 import "../styles/badge.css";
 
 export function Badge({ children, variant = "default", className = "" }) {

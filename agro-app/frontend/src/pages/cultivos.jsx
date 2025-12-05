@@ -17,7 +17,6 @@ export default function Cultivos() {
     observaciones: ''
   });
 
-  // 🚀 Función para cargar cultivos desde la API
   const fetchCultivos = async () => {
     const token = localStorage.getItem('token');
     
@@ -43,6 +42,7 @@ fechasiembra: c.fechasiembra && !isNaN(new Date(c.fechasiembra))
 
   historial: Array.isArray(c.HistorialCultivos) ? c.HistorialCultivos : []
 }));
+
 
 console.log('Cultivos procesados:', lista);
 
@@ -70,13 +70,13 @@ console.log('Cultivos procesados:', lista);
   if (!token) return;
 
   try {
-    // 1️⃣ Crear el cultivo
+  
     const cultivoCreado = await crearCultivo(token, {
       nombre: nuevoCultivo.nombre,
       descripcion: nuevoCultivo.descripcion
     });
 
-    // 2️⃣ Crear la asignación en UsuarioCultivo
+ 
     const usuarioId = localStorage.getItem('usuarioid');
     const asignacion = {
       usuarioid: usuarioId ? parseInt(usuarioId) : null,
@@ -100,7 +100,6 @@ console.log('Cultivos procesados:', lista);
       body: JSON.stringify(asignacion)
     });
 
-    // 3️⃣ Resetear formulario
     setNuevoCultivo({
       nombre: '',
       descripcion: '',
@@ -110,7 +109,6 @@ console.log('Cultivos procesados:', lista);
       observaciones: ''
     });
 
-    // 4️⃣ Refrescar lista
     await fetchCultivos();
 
     Swal.fire({

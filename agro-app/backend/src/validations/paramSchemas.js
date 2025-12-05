@@ -1,15 +1,12 @@
 const Joi = require('joi');
 
-// Genérico para cualquier :id
 const idParamSchema = Joi.object({
   id: Joi.number().integer().positive().required()
 });
 
-// Específicos para cada entidad
 const usuarioIdParamSchema = Joi.object({
   id: Joi.number().integer().positive().required()
 });
-
 
 const cultivoIdParamSchema = Joi.object({
   cultivoId: Joi.number().integer().positive().required()

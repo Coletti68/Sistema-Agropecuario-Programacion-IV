@@ -1,11 +1,9 @@
-
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import "../styles/navbar.css";
 import {
   LayoutDashboard,
   PlusCircle,
   Sprout,
-  Map,
   User,
   LogOut,
   Info

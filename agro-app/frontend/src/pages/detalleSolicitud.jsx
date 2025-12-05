@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getSolicitudPorId } from '../services/api';
-import '../styles/detalleSolicitud.css'; // We will create this file next
+import '../styles/detalleSolicitud.css'; 
 
 export default function DetalleSolicitud() {
     const { id } = useParams();
@@ -44,7 +44,6 @@ export default function DetalleSolicitud() {
 
     if (!solicitud) return null;
 
-    // Handle different potential data structures from backend
     const detalles = solicitud.detalles || solicitud.Detalles || [];
     const fecha = new Date(solicitud.fecha || solicitud.fechasolicitud).toLocaleDateString();
     const estado = solicitud.estado || 'Pendiente';
